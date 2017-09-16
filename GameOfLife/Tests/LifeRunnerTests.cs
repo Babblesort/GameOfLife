@@ -142,14 +142,13 @@ namespace Tests
         }
 
         [Test]
-        public void AccessToReadonlyCurrentGeneration()
+        public void AccessToCurrentGeneration()
         {
             var grid = new Grid(2, 2);
             var runner = new LifeRunner(grid, new Rules());
             var generation = runner.CurrentGeneration;
             Assert.NotNull(generation);
             Assert.AreEqual(generation.Count, grid.Cells.Count);
-            Assert.IsInstanceOf<IReadOnlyDictionary<RowColTuple, bool>>(generation);
         }
 
         [Test]

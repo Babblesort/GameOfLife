@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Engine
 {
@@ -14,13 +11,14 @@ namespace Engine
         private Generation _cells;
         private int _generationCount;
 
-        public ReadOnlyDictionary<RowColTuple, bool> CurrentGeneration => new ReadOnlyDictionary<RowColTuple, bool>(_cells);
+        public Generation CurrentGeneration => _cells;
         public int GenerationCount => _generationCount;
         public bool LivingGeneration => _cells.Any(cell => cell.Value);
         public bool Extinction => !LivingGeneration;
 
         public event EventHandler<GenerationResolvedEventArgs> OnGenerationResolved;
         protected virtual void GenerationResolved(GenerationResolvedEventArgs e) => OnGenerationResolved?.Invoke(this, e);
+
         public LifeRunner(Grid grid, Rules rules, Generation cells = null)
         {
             if (grid == null) throw new ArgumentNullException(nameof(grid), "Cannot be null");
