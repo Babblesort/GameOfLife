@@ -2,5 +2,5 @@
 
 namespace Engine
 {
-    public class Generation : Dictionary<RowColTuple, bool> { }
+    public class Generation : Dictionary<RowCol, bool> { }
 }

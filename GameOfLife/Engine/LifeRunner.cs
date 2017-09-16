@@ -52,7 +52,7 @@ namespace Engine
             return nextGen;
         }
 
-        public int NeighborsCount(RowColTuple cell)
+        public int NeighborsCount(RowCol cell)
         {
             var count = 0;
             count += NeighborCount(_grid.NeighborTL(cell));
@@ -66,7 +66,7 @@ namespace Engine
             return count;
         }
 
-        private int NeighborCount(RowColTuple neighbor) =>  _cells[neighbor] ? 1 : 0;
+        private int NeighborCount(RowCol neighbor) =>  _cells[neighbor] ? 1 : 0;
 
         public bool CellAliveNextGen(bool alive, int neighborCount)
         {

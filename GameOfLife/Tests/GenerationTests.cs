@@ -11,7 +11,7 @@ namespace Tests
         public void HasExpectedDataStructure()
         {
             var generation = new Generation();
-            Assert.IsInstanceOf<Dictionary<RowColTuple, bool>>(generation);
+            Assert.IsInstanceOf<Dictionary<RowCol, bool>>(generation);
         }
     }
 }

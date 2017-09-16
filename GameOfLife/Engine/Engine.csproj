@@ -45,7 +45,7 @@
     <Compile Include="Grid.cs" />
     <Compile Include="LifeRunner.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RowColTuple.cs" />
+    <Compile Include="RowCol.cs" />
     <Compile Include="Rules.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

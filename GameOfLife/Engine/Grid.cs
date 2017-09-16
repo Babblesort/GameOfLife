@@ -10,7 +10,7 @@ namespace Engine
         public static readonly int MaxRows = 250;
         public static readonly int MinCols = 1;
         public static readonly int MaxCols = 250;
-        public List<RowColTuple> Cells { get; private set; }
+        public List<RowCol> Cells { get; private set; }
         public int RowCount { get; private set; }
         public int ColCount { get; private set; }
 
@@ -24,7 +24,7 @@ namespace Engine
             Cells = CreateGridCells();
         }
 
-        public int CellIndex(RowColTuple tuple)
+        public int CellIndex(RowCol tuple)
         {
             if (tuple.Row < 0) throw new ArgumentOutOfRangeException(nameof(tuple.Row), "Must be zero or greater");
             if (tuple.Col < 0) throw new ArgumentOutOfRangeException(nameof(tuple.Col), "Must be zero or greater");
@@ -38,7 +38,7 @@ namespace Engine
             return index;
         }
 
-        public RowColTuple CellRowCol(int index)
+        public RowCol CellRowCol(int index)
         {
             if (index < 0) throw new ArgumentOutOfRangeException(nameof(index), "Must be zero or greater");
             if (index >= Cells.Count) throw new ArgumentOutOfRangeException(nameof(index), "Requested index is outside grid");
@@ -46,7 +46,7 @@ namespace Engine
             var row = (int)(index / ColCount);
             var col = index % ColCount;
 
-            return new RowColTuple(row, col);
+            return new RowCol(row, col);
         }
 
         public Generation CreateEmptyGeneration()
@@ -56,14 +56,14 @@ namespace Engine
             return generation;
         }
 
-        public RowColTuple NeighborTL(RowColTuple cell) => new RowColTuple(Up(cell.Row), Left(cell.Col));
-        public RowColTuple NeighborTT(RowColTuple cell) => new RowColTuple(Up(cell.Row), cell.Col);
-        public RowColTuple NeighborTR(RowColTuple cell) => new RowColTuple(Up(cell.Row), Right(cell.Col));
-        public RowColTuple NeighborLL(RowColTuple cell) => new RowColTuple(cell.Row, Left(cell.Col));
-        public RowColTuple NeighborRR(RowColTuple cell) => new RowColTuple(cell.Row, Right(cell.Col));
-        public RowColTuple NeighborBL(RowColTuple cell) => new RowColTuple(Down(cell.Row), Left(cell.Col));
-        public RowColTuple NeighborBB(RowColTuple cell) => new RowColTuple(Down(cell.Row), cell.Col);
-        public RowColTuple NeighborBR(RowColTuple cell) => new RowColTuple(Down(cell.Row), Right(cell.Col));
+        public RowCol NeighborTL(RowCol cell) => new RowCol(Up(cell.Row), Left(cell.Col));
+        public RowCol NeighborTT(RowCol cell) => new RowCol(Up(cell.Row), cell.Col);
+        public RowCol NeighborTR(RowCol cell) => new RowCol(Up(cell.Row), Right(cell.Col));
+        public RowCol NeighborLL(RowCol cell) => new RowCol(cell.Row, Left(cell.Col));
+        public RowCol NeighborRR(RowCol cell) => new RowCol(cell.Row, Right(cell.Col));
+        public RowCol NeighborBL(RowCol cell) => new RowCol(Down(cell.Row), Left(cell.Col));
+        public RowCol NeighborBB(RowCol cell) => new RowCol(Down(cell.Row), cell.Col);
+        public RowCol NeighborBR(RowCol cell) => new RowCol(Down(cell.Row), Right(cell.Col));
 
         private int Left(int col) => col - 1 < 0 ? ColCount - 1 : col - 1;
         private int Right(int col) => col + 1 == ColCount ? 0 : col + 1;
@@ -83,9 +83,9 @@ namespace Engine
             }
         }
 
-        private List<RowColTuple> CreateGridCells()
+        private List<RowCol> CreateGridCells()
         {
-            var tuples = new List<RowColTuple>(RowCount * ColCount);
+            var tuples = new List<RowCol>(RowCount * ColCount);
             var rowIndices = Enumerable.Range(0, RowCount);
             var colIndices = Enumerable.Range(0, ColCount);
 
@@ -93,7 +93,7 @@ namespace Engine
             {
                 foreach (var c in colIndices)
                 {
-                    tuples.Add(new RowColTuple(r, c));
+                    tuples.Add(new RowCol(r, c));
                 }
             }
             return tuples;

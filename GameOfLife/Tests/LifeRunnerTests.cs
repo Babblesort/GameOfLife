@@ -9,15 +9,15 @@ namespace Tests
     public class LifeRunnerTests
     {
         private Grid grid;
-        private RowColTuple cell0;
-        private RowColTuple cell1;
-        private RowColTuple cell2;
-        private RowColTuple cell3;
-        private RowColTuple cell4;
-        private RowColTuple cell5;
-        private RowColTuple cell6;
-        private RowColTuple cell7;
-        private RowColTuple cell8;
+        private RowCol cell0;
+        private RowCol cell1;
+        private RowCol cell2;
+        private RowCol cell3;
+        private RowCol cell4;
+        private RowCol cell5;
+        private RowCol cell6;
+        private RowCol cell7;
+        private RowCol cell8;
         private Generation generation;
         private Generation expectedNextGen;
 
@@ -27,15 +27,15 @@ namespace Tests
             // OXO
             // OOX
             grid = new Grid(3, 3);
-            cell0 = new RowColTuple(0, 0);
-            cell1 = new RowColTuple(0, 1);
-            cell2 = new RowColTuple(0, 2);
-            cell3 = new RowColTuple(1, 0);
-            cell4 = new RowColTuple(1, 1);
-            cell5 = new RowColTuple(1, 2);
-            cell6 = new RowColTuple(2, 0);
-            cell7 = new RowColTuple(2, 1);
-            cell8 = new RowColTuple(2, 2);
+            cell0 = new RowCol(0, 0);
+            cell1 = new RowCol(0, 1);
+            cell2 = new RowCol(0, 2);
+            cell3 = new RowCol(1, 0);
+            cell4 = new RowCol(1, 1);
+            cell5 = new RowCol(1, 2);
+            cell6 = new RowCol(2, 0);
+            cell7 = new RowCol(2, 1);
+            cell8 = new RowCol(2, 2);
             generation = new Generation
             {
                 { cell0, true },
@@ -70,15 +70,15 @@ namespace Tests
             // OXO
             // OOO
             grid = new Grid(3, 3);
-            cell0 = new RowColTuple(0, 0);
-            cell1 = new RowColTuple(0, 1);
-            cell2 = new RowColTuple(0, 2);
-            cell3 = new RowColTuple(1, 0);
-            cell4 = new RowColTuple(1, 1);
-            cell5 = new RowColTuple(1, 2);
-            cell6 = new RowColTuple(2, 0);
-            cell7 = new RowColTuple(2, 1);
-            cell8 = new RowColTuple(2, 2);
+            cell0 = new RowCol(0, 0);
+            cell1 = new RowCol(0, 1);
+            cell2 = new RowCol(0, 2);
+            cell3 = new RowCol(1, 0);
+            cell4 = new RowCol(1, 1);
+            cell5 = new RowCol(1, 2);
+            cell6 = new RowCol(2, 0);
+            cell7 = new RowCol(2, 1);
+            cell8 = new RowCol(2, 2);
             generation = new Generation
             {
                 { cell0, false },
@@ -129,7 +129,7 @@ namespace Tests
         public void ThrowsOnGridAndGenerationSizeMismatch()
         {
             var grid = new Grid(2, 2);
-            var generation = new Generation { { new RowColTuple(0, 0), false } };
+            var generation = new Generation { { new RowCol(0, 0), false } };
 
             Assert.Throws<ArgumentOutOfRangeException>(() => new LifeRunner(grid, new Rules(), generation));
         }
@@ -159,7 +159,7 @@ namespace Tests
             Assert.IsTrue(runner.Extinction);
 
             var grid = new Grid(1, 1);
-            var cell0 = new RowColTuple(0, 0);
+            var cell0 = new RowCol(0, 0);
             var generation = new Generation
             {
                 { cell0, true },

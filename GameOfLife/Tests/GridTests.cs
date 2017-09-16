@@ -21,7 +21,7 @@ namespace Tests
             const int rows = 10;
             const int cols = 10;
             var grid = new Grid(rows, cols);
-            Assert.AreEqual(grid.Cells.GetType(), typeof(List<RowColTuple>));
+            Assert.AreEqual(grid.Cells.GetType(), typeof(List<RowCol>));
             Assert.AreEqual(100, grid.Cells.Count);
         }
 
@@ -95,59 +95,59 @@ namespace Tests
             Assert.AreEqual(typeof(Generation), generation.GetType());
             Assert.AreEqual(4, generation.Count);
 
-            Assert.IsFalse(generation[new RowColTuple(0, 0)]);
-            Assert.IsFalse(generation[new RowColTuple(0, 1)]);
-            Assert.IsFalse(generation[new RowColTuple(1, 0)]);
-            Assert.IsFalse(generation[new RowColTuple(1, 1)]);
+            Assert.IsFalse(generation[new RowCol(0, 0)]);
+            Assert.IsFalse(generation[new RowCol(0, 1)]);
+            Assert.IsFalse(generation[new RowCol(1, 0)]);
+            Assert.IsFalse(generation[new RowCol(1, 1)]);
 
             bool unused;
-            Assert.Throws<KeyNotFoundException>(() => unused = generation[new RowColTuple(1, 2)]);
+            Assert.Throws<KeyNotFoundException>(() => unused = generation[new RowCol(1, 2)]);
         }
 
         [Test]
         public void GridCanDeriveCellIndexFromTuple()
         {
             var grid = new Grid(3, 3);
-            Assert.AreEqual(0, grid.CellIndex(new RowColTuple(0, 0)));
-            Assert.AreEqual(1, grid.CellIndex(new RowColTuple(0, 1)));
-            Assert.AreEqual(2, grid.CellIndex(new RowColTuple(0, 2)));
-            Assert.AreEqual(3, grid.CellIndex(new RowColTuple(1, 0)));
-            Assert.AreEqual(4, grid.CellIndex(new RowColTuple(1, 1)));
-            Assert.AreEqual(5, grid.CellIndex(new RowColTuple(1, 2)));
-            Assert.AreEqual(6, grid.CellIndex(new RowColTuple(2, 0)));
-            Assert.AreEqual(7, grid.CellIndex(new RowColTuple(2, 1)));
-            Assert.AreEqual(8, grid.CellIndex(new RowColTuple(2, 2)));
+            Assert.AreEqual(0, grid.CellIndex(new RowCol(0, 0)));
+            Assert.AreEqual(1, grid.CellIndex(new RowCol(0, 1)));
+            Assert.AreEqual(2, grid.CellIndex(new RowCol(0, 2)));
+            Assert.AreEqual(3, grid.CellIndex(new RowCol(1, 0)));
+            Assert.AreEqual(4, grid.CellIndex(new RowCol(1, 1)));
+            Assert.AreEqual(5, grid.CellIndex(new RowCol(1, 2)));
+            Assert.AreEqual(6, grid.CellIndex(new RowCol(2, 0)));
+            Assert.AreEqual(7, grid.CellIndex(new RowCol(2, 1)));
+            Assert.AreEqual(8, grid.CellIndex(new RowCol(2, 2)));
         }
 
         [Test]
         public void CellIndexEnforcesMinRowAndCol()
         {
             var grid = new Grid(1, 1);
-            Assert.Throws<ArgumentOutOfRangeException>(() => grid.CellIndex(new RowColTuple(row: -1, col: 1)));
-            Assert.Throws<ArgumentOutOfRangeException>(() => grid.CellIndex(new RowColTuple(row: 1, col: -1)));
+            Assert.Throws<ArgumentOutOfRangeException>(() => grid.CellIndex(new RowCol(row: -1, col: 1)));
+            Assert.Throws<ArgumentOutOfRangeException>(() => grid.CellIndex(new RowCol(row: 1, col: -1)));
         }
 
         [Test]
         public void CellIndexEnforcesMaxRowColCombo()
         {
             var grid = new Grid(2, 2);
-            Assert.Throws<ArgumentOutOfRangeException>(() => grid.CellIndex(new RowColTuple(row: 2, col: 1)));
-            Assert.Throws<ArgumentOutOfRangeException>(() => grid.CellIndex(new RowColTuple(row: 1, col: 2)));
+            Assert.Throws<ArgumentOutOfRangeException>(() => grid.CellIndex(new RowCol(row: 2, col: 1)));
+            Assert.Throws<ArgumentOutOfRangeException>(() => grid.CellIndex(new RowCol(row: 1, col: 2)));
         }
 
         [Test]
         public void GridCanDeriveCellRowColTupleFromIndex()
         {
             var grid = new Grid(3, 3);
-            Assert.AreEqual(new RowColTuple(0, 0), grid.CellRowCol(index: 0));
-            Assert.AreEqual(new RowColTuple(0, 1), grid.CellRowCol(index: 1));
-            Assert.AreEqual(new RowColTuple(0, 2), grid.CellRowCol(index: 2));
-            Assert.AreEqual(new RowColTuple(1, 0), grid.CellRowCol(index: 3));
-            Assert.AreEqual(new RowColTuple(1, 1), grid.CellRowCol(index: 4));
-            Assert.AreEqual(new RowColTuple(1, 2), grid.CellRowCol(index: 5));
-            Assert.AreEqual(new RowColTuple(2, 0), grid.CellRowCol(index: 6));
-            Assert.AreEqual(new RowColTuple(2, 1), grid.CellRowCol(index: 7));
-            Assert.AreEqual(new RowColTuple(2, 2), grid.CellRowCol(index: 8));
+            Assert.AreEqual(new RowCol(0, 0), grid.CellRowCol(index: 0));
+            Assert.AreEqual(new RowCol(0, 1), grid.CellRowCol(index: 1));
+            Assert.AreEqual(new RowCol(0, 2), grid.CellRowCol(index: 2));
+            Assert.AreEqual(new RowCol(1, 0), grid.CellRowCol(index: 3));
+            Assert.AreEqual(new RowCol(1, 1), grid.CellRowCol(index: 4));
+            Assert.AreEqual(new RowCol(1, 2), grid.CellRowCol(index: 5));
+            Assert.AreEqual(new RowCol(2, 0), grid.CellRowCol(index: 6));
+            Assert.AreEqual(new RowCol(2, 1), grid.CellRowCol(index: 7));
+            Assert.AreEqual(new RowCol(2, 2), grid.CellRowCol(index: 8));
         }
 
         [Test]
@@ -165,7 +165,7 @@ namespace Tests
         }
 
         [Test, TestCaseSource("RowColExpectedNeighbors")]
-        public void GridCanDeriveNeighborsForCell(RowColTuple cell, RowColTuple[] neighbors)
+        public void GridCanDeriveNeighborsForCell(RowCol cell, RowCol[] neighbors)
         {
             var grid = new Grid(3, 3);
             Assert.AreEqual(neighbors[0], grid.NeighborTL(cell));
@@ -184,75 +184,75 @@ namespace Tests
             get
             {
                 yield return new TestCaseData(
-                    new RowColTuple(0, 0), new RowColTuple[]
+                    new RowCol(0, 0), new RowCol[]
                     {
-                        new RowColTuple(2, 2), new RowColTuple(2, 0), new RowColTuple(2, 1),
-                        new RowColTuple(0, 2), new RowColTuple(0, 1),
-                        new RowColTuple(1, 2), new RowColTuple(1, 0), new RowColTuple(1, 1)
+                        new RowCol(2, 2), new RowCol(2, 0), new RowCol(2, 1),
+                        new RowCol(0, 2), new RowCol(0, 1),
+                        new RowCol(1, 2), new RowCol(1, 0), new RowCol(1, 1)
                     }
                 );
                 yield return new TestCaseData(
-                    new RowColTuple(0, 1), new RowColTuple[]
+                    new RowCol(0, 1), new RowCol[]
                     {
-                        new RowColTuple(2, 0), new RowColTuple(2, 1), new RowColTuple(2, 2),
-                        new RowColTuple(0, 0), new RowColTuple(0, 2),
-                        new RowColTuple(1, 0), new RowColTuple(1, 1), new RowColTuple(1, 2)
+                        new RowCol(2, 0), new RowCol(2, 1), new RowCol(2, 2),
+                        new RowCol(0, 0), new RowCol(0, 2),
+                        new RowCol(1, 0), new RowCol(1, 1), new RowCol(1, 2)
                     }
                 );
                 yield return new TestCaseData(
-                    new RowColTuple(0, 2), new RowColTuple[]
+                    new RowCol(0, 2), new RowCol[]
                     {
-                        new RowColTuple(2, 1), new RowColTuple(2, 2), new RowColTuple(2, 0),
-                        new RowColTuple(0, 1), new RowColTuple(0, 0),
-                        new RowColTuple(1, 1), new RowColTuple(1, 2), new RowColTuple(1, 0)
+                        new RowCol(2, 1), new RowCol(2, 2), new RowCol(2, 0),
+                        new RowCol(0, 1), new RowCol(0, 0),
+                        new RowCol(1, 1), new RowCol(1, 2), new RowCol(1, 0)
                     }
                 );
                 yield return new TestCaseData(
-                    new RowColTuple(1, 0), new RowColTuple[]
+                    new RowCol(1, 0), new RowCol[]
                     {
-                        new RowColTuple(0, 2), new RowColTuple(0, 0), new RowColTuple(0, 1),
-                        new RowColTuple(1, 2), new RowColTuple(1, 1),
-                        new RowColTuple(2, 2), new RowColTuple(2, 0), new RowColTuple(2, 1)
+                        new RowCol(0, 2), new RowCol(0, 0), new RowCol(0, 1),
+                        new RowCol(1, 2), new RowCol(1, 1),
+                        new RowCol(2, 2), new RowCol(2, 0), new RowCol(2, 1)
                     }
                 );
                 yield return new TestCaseData(
-                    new RowColTuple(1, 1), new RowColTuple[]
+                    new RowCol(1, 1), new RowCol[]
                     {
-                        new RowColTuple(0, 0), new RowColTuple(0, 1), new RowColTuple(0, 2),
-                        new RowColTuple(1, 0), new RowColTuple(1, 2),
-                        new RowColTuple(2, 0), new RowColTuple(2, 1), new RowColTuple(2, 2)
+                        new RowCol(0, 0), new RowCol(0, 1), new RowCol(0, 2),
+                        new RowCol(1, 0), new RowCol(1, 2),
+                        new RowCol(2, 0), new RowCol(2, 1), new RowCol(2, 2)
                     }
                 );
                 yield return new TestCaseData(
-                    new RowColTuple(1, 2), new RowColTuple[]
+                    new RowCol(1, 2), new RowCol[]
                     {
-                        new RowColTuple(0, 1), new RowColTuple(0, 2), new RowColTuple(0, 0),
-                        new RowColTuple(1, 1), new RowColTuple(1, 0),
-                        new RowColTuple(2, 1), new RowColTuple(2, 2), new RowColTuple(2, 0)
+                        new RowCol(0, 1), new RowCol(0, 2), new RowCol(0, 0),
+                        new RowCol(1, 1), new RowCol(1, 0),
+                        new RowCol(2, 1), new RowCol(2, 2), new RowCol(2, 0)
                     }
                 );
                 yield return new TestCaseData(
-                    new RowColTuple(2, 0), new RowColTuple[]
+                    new RowCol(2, 0), new RowCol[]
                     {
-                        new RowColTuple(1, 2), new RowColTuple(1, 0), new RowColTuple(1, 1),
-                        new RowColTuple(2, 2), new RowColTuple(2, 1),
-                        new RowColTuple(0, 2), new RowColTuple(0, 0), new RowColTuple(0, 1)
+                        new RowCol(1, 2), new RowCol(1, 0), new RowCol(1, 1),
+                        new RowCol(2, 2), new RowCol(2, 1),
+                        new RowCol(0, 2), new RowCol(0, 0), new RowCol(0, 1)
                     }
                 );
                 yield return new TestCaseData(
-                    new RowColTuple(2, 1), new RowColTuple[]
+                    new RowCol(2, 1), new RowCol[]
                     {
-                        new RowColTuple(1, 0), new RowColTuple(1, 1), new RowColTuple(1, 2),
-                        new RowColTuple(2, 0), new RowColTuple(2, 2),
-                        new RowColTuple(0, 0), new RowColTuple(0, 1), new RowColTuple(0, 2)
+                        new RowCol(1, 0), new RowCol(1, 1), new RowCol(1, 2),
+                        new RowCol(2, 0), new RowCol(2, 2),
+                        new RowCol(0, 0), new RowCol(0, 1), new RowCol(0, 2)
                     }
                 );
                 yield return new TestCaseData(
-                    new RowColTuple(2, 2), new RowColTuple[]
+                    new RowCol(2, 2), new RowCol[]
                     {
-                        new RowColTuple(1, 1), new RowColTuple(1, 2), new RowColTuple(1, 0),
-                        new RowColTuple(2, 1), new RowColTuple(2, 0),
-                        new RowColTuple(0, 1), new RowColTuple(0, 2), new RowColTuple(0, 0)
+                        new RowCol(1, 1), new RowCol(1, 2), new RowCol(1, 0),
+                        new RowCol(2, 1), new RowCol(2, 0),
+                        new RowCol(0, 1), new RowCol(0, 2), new RowCol(0, 0)
                     }
                 );
             }
