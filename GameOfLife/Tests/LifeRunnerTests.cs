@@ -8,6 +8,49 @@ namespace Tests
     [TestFixture]
     public class LifeRunnerTests
     {
+        private Grid grid;
+        private RowColTuple cell0;
+        private RowColTuple cell1;
+        private RowColTuple cell2;
+        private RowColTuple cell3;
+        private RowColTuple cell4;
+        private RowColTuple cell5;
+        private RowColTuple cell6;
+        private RowColTuple cell7;
+        private RowColTuple cell8;
+        private Generation generation;
+
+        public LifeRunner CreateBasicLifeRunner()
+        {
+            // XOO
+            // OXO
+            // OOX
+            grid = new Grid(3, 3);
+            cell0 = new RowColTuple(0, 0);
+            cell1 = new RowColTuple(0, 1);
+            cell2 = new RowColTuple(0, 2);
+            cell3 = new RowColTuple(1, 0);
+            cell4 = new RowColTuple(1, 1);
+            cell5 = new RowColTuple(1, 2);
+            cell6 = new RowColTuple(2, 0);
+            cell7 = new RowColTuple(2, 1);
+            cell8 = new RowColTuple(2, 2);
+            generation = new Generation
+            {
+                { cell0, true },
+                { cell1, false },
+                { cell2, false },
+                { cell3, false },
+                { cell4, true },
+                { cell5, false },
+                { cell6, false },
+                { cell7, false },
+                { cell8, true }
+            };
+
+            return new LifeRunner(grid, new Rules(), generation);
+        }
+
         [Test]
         public void CanBeCreated()
         {
@@ -74,33 +117,7 @@ namespace Tests
         [Test]
         public void CellNeighborCount()
         {
-            // XOO
-            // OXO
-            // OOX
-            var grid = new Grid(3, 3);
-            var cell0 = new RowColTuple(0, 0);
-            var cell1 = new RowColTuple(0, 1);
-            var cell2 = new RowColTuple(0, 2);
-            var cell3 = new RowColTuple(1, 0);
-            var cell4 = new RowColTuple(1, 1);
-            var cell5 = new RowColTuple(1, 2);
-            var cell6 = new RowColTuple(2, 0);
-            var cell7 = new RowColTuple(2, 1);
-            var cell8 = new RowColTuple(2, 2);
-            var generation = new Generation
-            {
-                { cell0, true },
-                { cell1, false },
-                { cell2, false },
-                { cell3, false },
-                { cell4, true },
-                { cell5, false },
-                { cell6, false },
-                { cell7, false },
-                { cell8, true }
-            };
-
-            var runner = new LifeRunner(grid, new Rules(), generation);
+            var runner = CreateBasicLifeRunner();
 
             Assert.AreEqual(2, runner.NeighborsCount(cell0));
             Assert.AreEqual(3, runner.NeighborsCount(cell1));
@@ -116,33 +133,7 @@ namespace Tests
         [Test]
         public void NextGeneration()
         {
-            // XOO
-            // OXO
-            // OOX
-            var grid = new Grid(3, 3);
-            var cell0 = new RowColTuple(0, 0);
-            var cell1 = new RowColTuple(0, 1);
-            var cell2 = new RowColTuple(0, 2);
-            var cell3 = new RowColTuple(1, 0);
-            var cell4 = new RowColTuple(1, 1);
-            var cell5 = new RowColTuple(1, 2);
-            var cell6 = new RowColTuple(2, 0);
-            var cell7 = new RowColTuple(2, 1);
-            var cell8 = new RowColTuple(2, 2);
-            var generation = new Generation
-            {
-                { cell0, true },
-                { cell1, false },
-                { cell2, false },
-                { cell3, false },
-                { cell4, true },
-                { cell5, false },
-                { cell6, false },
-                { cell7, false },
-                { cell8, true }
-            };
-
-            var runner = new LifeRunner(grid, new Rules(), generation);
+            var runner = CreateBasicLifeRunner();
             var nextGen = runner.NextGen(generation);
 
             Assert.IsTrue(nextGen[cell0]);
