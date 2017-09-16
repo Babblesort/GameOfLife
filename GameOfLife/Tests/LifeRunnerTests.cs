@@ -19,6 +19,7 @@ namespace Tests
         private RowColTuple cell7;
         private RowColTuple cell8;
         private Generation generation;
+        private Generation expectedNextGen;
 
         public LifeRunner CreateBasicLifeRunner()
         {
@@ -48,7 +49,63 @@ namespace Tests
                 { cell8, true }
             };
 
+            expectedNextGen = new Generation
+            {
+                { cell0, true },
+                { cell1, true },
+                { cell2, true },
+                { cell3, true },
+                { cell4, true },
+                { cell5, true },
+                { cell6, true },
+                { cell7, true },
+                { cell8, true }
+            };
             return new LifeRunner(grid, new Rules(), generation);
+        }
+
+        public LifeRunner CreateExpiringLifeRunner()
+        {
+            // OOO
+            // OXO
+            // OOO
+            grid = new Grid(3, 3);
+            cell0 = new RowColTuple(0, 0);
+            cell1 = new RowColTuple(0, 1);
+            cell2 = new RowColTuple(0, 2);
+            cell3 = new RowColTuple(1, 0);
+            cell4 = new RowColTuple(1, 1);
+            cell5 = new RowColTuple(1, 2);
+            cell6 = new RowColTuple(2, 0);
+            cell7 = new RowColTuple(2, 1);
+            cell8 = new RowColTuple(2, 2);
+            generation = new Generation
+            {
+                { cell0, false },
+                { cell1, false },
+                { cell2, false },
+                { cell3, false },
+                { cell4, true },
+                { cell5, false },
+                { cell6, false },
+                { cell7, false },
+                { cell8, false }
+            };
+
+            expectedNextGen = new Generation
+            {
+                { cell0, false },
+                { cell1, false },
+                { cell2, false },
+                { cell3, false },
+                { cell4, false },
+                { cell5, false },
+                { cell6, false },
+                { cell7, false },
+                { cell8, false }
+            };
+            return new LifeRunner(grid, new Rules(), generation);
+
         }
 
         [Test]
@@ -112,6 +169,49 @@ namespace Tests
             runner = new LifeRunner(grid, new Rules(), generation);
             Assert.IsTrue(runner.LivingGeneration);
             Assert.IsFalse(runner.Extinction);
+        }
+
+        [Test]
+        public void NextGenResolutionCanBeRequested()
+        {
+            var runner = CreateBasicLifeRunner();
+            Assert.AreEqual(runner.CurrentGeneration, generation);
+            Assert.IsTrue(runner.LivingGeneration);
+            runner.ResolveNextGen();
+            Assert.AreEqual(runner.CurrentGeneration, expectedNextGen);
+            Assert.IsTrue(runner.LivingGeneration);
+
+            runner = CreateExpiringLifeRunner();
+            Assert.AreEqual(runner.CurrentGeneration, generation);
+            Assert.IsTrue(runner.LivingGeneration);
+            runner.ResolveNextGen();
+            Assert.AreEqual(runner.CurrentGeneration, expectedNextGen);
+            Assert.IsFalse(runner.LivingGeneration);
+        }
+
+        [Test]
+        public void GenerationCountIsAvailable()
+        {
+            var runner = CreateBasicLifeRunner();
+            Assert.AreEqual(0, runner.GenerationCount);
+            runner.ResolveNextGen();
+            Assert.AreEqual(1, runner.GenerationCount);
+        }
+
+        [Test]
+        public void NextGenResolutionRaisesGenerationResolved()
+        {
+            var eventRaised = false;
+            var runner = CreateBasicLifeRunner();
+            runner.OnGenerationResolved += (sender, e) =>
+            {
+                eventRaised = true;
+                Assert.IsInstanceOf<LifeRunner>(sender);
+                Assert.AreEqual(1, e.GenerationCount);
+                Assert.AreEqual(expectedNextGen, e.Generation);
+            };
+            runner.ResolveNextGen();
+            Assert.IsTrue(eventRaised);
         }
 
         [Test]

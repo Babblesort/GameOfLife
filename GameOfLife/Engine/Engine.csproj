@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Generation.cs" />
+    <Compile Include="GenerationResolvedEventArgs.cs" />
     <Compile Include="Grid.cs" />
     <Compile Include="LifeRunner.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

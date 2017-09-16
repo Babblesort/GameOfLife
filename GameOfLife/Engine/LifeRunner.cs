@@ -12,11 +12,15 @@ namespace Engine
         private Grid _grid;
         private Rules _rules;
         private Generation _cells;
+        private int _generationCount;
 
         public ReadOnlyDictionary<RowColTuple, bool> CurrentGeneration => new ReadOnlyDictionary<RowColTuple, bool>(_cells);
+        public int GenerationCount => _generationCount;
         public bool LivingGeneration => _cells.Any(cell => cell.Value);
         public bool Extinction => !LivingGeneration;
 
+        public event EventHandler<GenerationResolvedEventArgs> OnGenerationResolved;
+        protected virtual void GenerationResolved(GenerationResolvedEventArgs e) => OnGenerationResolved?.Invoke(this, e);
         public LifeRunner(Grid grid, Rules rules, Generation cells = null)
         {
             if (grid == null) throw new ArgumentNullException(nameof(grid), "Cannot be null");
@@ -31,6 +35,14 @@ namespace Engine
             _grid = grid;
             _rules = rules;
             _cells = cells;
+            _generationCount = 0;
+        }
+
+        public void ResolveNextGen()
+        {
+            _cells = NextGen(_cells);
+            _generationCount++;
+            GenerationResolved(new GenerationResolvedEventArgs { GenerationCount = _generationCount, Generation = _cells });
         }
 
         public Generation NextGen(Generation cells)
