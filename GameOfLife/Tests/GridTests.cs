@@ -87,6 +87,24 @@ namespace Tests
         }
 
         [Test]
+        public void CanGenerateAnEmptyGeneration()
+        {
+            var grid = new Grid(2, 2);
+            var generation = grid.CreateEmptyGeneration();
+
+            Assert.AreEqual(typeof(Generation), generation.GetType());
+            Assert.AreEqual(4, generation.Count);
+
+            Assert.IsFalse(generation[new RowColTuple(0, 0)]);
+            Assert.IsFalse(generation[new RowColTuple(0, 1)]);
+            Assert.IsFalse(generation[new RowColTuple(1, 0)]);
+            Assert.IsFalse(generation[new RowColTuple(1, 1)]);
+
+            bool unused;
+            Assert.Throws<KeyNotFoundException>(() => unused = generation[new RowColTuple(1, 2)]);
+        }
+
+        [Test]
         public void GridCanDeriveCellIndexFromTuple()
         {
             var grid = new Grid(3, 3);

@@ -49,6 +49,13 @@ namespace Engine
             return new RowColTuple(row, col);
         }
 
+        public Generation CreateEmptyGeneration()
+        {
+            var generation = new Generation();
+            Cells.ForEach(cell => generation.Add(cell, false));
+            return generation;
+        }
+
         public RowColTuple NeighborTL(RowColTuple cell) => new RowColTuple(Up(cell.Row), Left(cell.Col));
         public RowColTuple NeighborTT(RowColTuple cell) => new RowColTuple(Up(cell.Row), cell.Col);
         public RowColTuple NeighborTR(RowColTuple cell) => new RowColTuple(Up(cell.Row), Right(cell.Col));
