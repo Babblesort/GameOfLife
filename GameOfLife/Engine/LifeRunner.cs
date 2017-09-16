@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,6 +12,10 @@ namespace Engine
         private Grid _grid;
         private Rules _rules;
         private Generation _cells;
+
+        public ReadOnlyDictionary<RowColTuple, bool> CurrentGeneration => new ReadOnlyDictionary<RowColTuple, bool>(_cells);
+        public bool LivingGeneration => _cells.Any(cell => cell.Value);
+        public bool Extinction => !LivingGeneration;
 
         public LifeRunner(Grid grid, Rules rules, Generation cells = null)
         {
