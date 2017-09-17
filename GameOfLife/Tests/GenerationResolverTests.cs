@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace Tests
 {
     [TestFixture]
-    public class LifeRunnerTests
+    public class GenerationResolverTests
     {
         private Grid grid;
         private RowCol cell0;
@@ -21,7 +21,7 @@ namespace Tests
         private Generation generation;
         private Generation expectedNextGen;
 
-        public LifeRunner CreateBasicLifeRunner()
+        public GenerationResolver CreateBasicResolver()
         {
             // XOO
             // OXO
@@ -61,10 +61,10 @@ namespace Tests
                 { cell7, true },
                 { cell8, true }
             };
-            return new LifeRunner(grid, new Rules(), generation);
+            return new GenerationResolver(grid, new Rules(), generation);
         }
 
-        public LifeRunner CreateExpiringLifeRunner()
+        public GenerationResolver CreateExpiringResolver()
         {
             // OOO
             // OXO
@@ -104,7 +104,7 @@ namespace Tests
                 { cell7, false },
                 { cell8, false }
             };
-            return new LifeRunner(grid, new Rules(), generation);
+            return new GenerationResolver(grid, new Rules(), generation);
 
         }
 
@@ -114,15 +114,15 @@ namespace Tests
             var grid = new Grid(1, 1);
             var generation = grid.CreateEmptyGeneration();
 
-            var runner = new LifeRunner(grid, new Rules(), generation);
+            var runner = new GenerationResolver(grid, new Rules(), generation);
             Assert.NotNull(runner);
         }
 
         [Test]
         public void ThrowsOnNullDependencies()
         {
-            Assert.Throws<ArgumentNullException>(() => new LifeRunner(null, new Rules(), new Generation()));
-            Assert.Throws<ArgumentNullException>(() => new LifeRunner(new Grid(), null, new Generation()));
+            Assert.Throws<ArgumentNullException>(() => new GenerationResolver(null, new Rules(), new Generation()));
+            Assert.Throws<ArgumentNullException>(() => new GenerationResolver(new Grid(), null, new Generation()));
         }
 
         [Test]
@@ -131,21 +131,21 @@ namespace Tests
             var grid = new Grid(2, 2);
             var generation = new Generation { { new RowCol(0, 0), false } };
 
-            Assert.Throws<ArgumentOutOfRangeException>(() => new LifeRunner(grid, new Rules(), generation));
+            Assert.Throws<ArgumentOutOfRangeException>(() => new GenerationResolver(grid, new Rules(), generation));
         }
 
         [Test]
         public void InitialGenerationDefaultsToEmptyGeneration()
         {
             var grid = new Grid(1, 1);
-            Assert.DoesNotThrow(() => new LifeRunner(grid, new Rules()));
+            Assert.DoesNotThrow(() => new GenerationResolver(grid, new Rules()));
         }
 
         [Test]
         public void AccessToCurrentGeneration()
         {
             var grid = new Grid(2, 2);
-            var runner = new LifeRunner(grid, new Rules());
+            var runner = new GenerationResolver(grid, new Rules());
             var generation = runner.CurrentGeneration;
             Assert.NotNull(generation);
             Assert.AreEqual(generation.Count, grid.Cells.Count);
@@ -154,7 +154,7 @@ namespace Tests
         [Test]
         public void ExtinctionStatusIsAvailable()
         {
-            var runner = new LifeRunner(new Grid(), new Rules());
+            var runner = new GenerationResolver(new Grid(), new Rules());
             Assert.IsFalse(runner.LivingGeneration);
             Assert.IsTrue(runner.Extinction);
 
@@ -165,7 +165,7 @@ namespace Tests
                 { cell0, true },
             };
 
-            runner = new LifeRunner(grid, new Rules(), generation);
+            runner = new GenerationResolver(grid, new Rules(), generation);
             Assert.IsTrue(runner.LivingGeneration);
             Assert.IsFalse(runner.Extinction);
         }
@@ -173,14 +173,14 @@ namespace Tests
         [Test]
         public void NextGenResolutionCanBeRequested()
         {
-            var runner = CreateBasicLifeRunner();
+            var runner = CreateBasicResolver();
             Assert.AreEqual(runner.CurrentGeneration, generation);
             Assert.IsTrue(runner.LivingGeneration);
             runner.ResolveNextGen();
             Assert.AreEqual(runner.CurrentGeneration, expectedNextGen);
             Assert.IsTrue(runner.LivingGeneration);
 
-            runner = CreateExpiringLifeRunner();
+            runner = CreateExpiringResolver();
             Assert.AreEqual(runner.CurrentGeneration, generation);
             Assert.IsTrue(runner.LivingGeneration);
             runner.ResolveNextGen();
@@ -191,7 +191,7 @@ namespace Tests
         [Test]
         public void GenerationCountIsAvailable()
         {
-            var runner = CreateBasicLifeRunner();
+            var runner = CreateBasicResolver();
             Assert.AreEqual(0, runner.GenerationCount);
             runner.ResolveNextGen();
             Assert.AreEqual(1, runner.GenerationCount);
@@ -201,11 +201,11 @@ namespace Tests
         public void NextGenResolutionRaisesGenerationResolved()
         {
             var eventRaised = false;
-            var runner = CreateBasicLifeRunner();
+            var runner = CreateBasicResolver();
             runner.OnGenerationResolved += (sender, e) =>
             {
                 eventRaised = true;
-                Assert.IsInstanceOf<LifeRunner>(sender);
+                Assert.IsInstanceOf<GenerationResolver>(sender);
                 Assert.AreEqual(1, e.GenerationCount);
                 Assert.AreEqual(expectedNextGen, e.Generation);
             };
@@ -216,7 +216,7 @@ namespace Tests
         [Test]
         public void CellNeighborCount()
         {
-            var runner = CreateBasicLifeRunner();
+            var runner = CreateBasicResolver();
 
             Assert.AreEqual(2, runner.NeighborsCount(cell0));
             Assert.AreEqual(3, runner.NeighborsCount(cell1));
@@ -232,7 +232,7 @@ namespace Tests
         [Test]
         public void NextGeneration()
         {
-            var runner = CreateBasicLifeRunner();
+            var runner = CreateBasicResolver();
             var nextGen = runner.NextGen(generation);
 
             Assert.IsTrue(nextGen[cell0]);
@@ -252,7 +252,7 @@ namespace Tests
             var grid = new Grid(1, 1);
             var generation = grid.CreateEmptyGeneration();
 
-            var runner = new LifeRunner(grid, new Rules(), generation);
+            var runner = new GenerationResolver(grid, new Rules(), generation);
 
             Assert.IsFalse(runner.CellAliveNextGen(alive: true, neighborCount: 1));
             Assert.IsTrue(runner.CellAliveNextGen(alive: true, neighborCount: 2));
@@ -272,7 +272,7 @@ namespace Tests
             var grid = new Grid(1, 1);
             var generation = grid.CreateEmptyGeneration();
 
-            var runner = new LifeRunner(grid, new Rules(surviveCounts, birthCounts), generation);
+            var runner = new GenerationResolver(grid, new Rules(surviveCounts, birthCounts), generation);
 
             Assert.IsFalse(runner.CellAliveNextGen(alive: true, neighborCount: 1));
             Assert.IsTrue(runner.CellAliveNextGen(alive: true, neighborCount: 2));

@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Engine
 {
-    public class LifeRunner
+    public class GenerationResolver
     {
         private Grid _grid;
         private Rules _rules;
@@ -18,7 +18,7 @@ namespace Engine
         public event EventHandler<GenerationResolvedEventArgs> OnGenerationResolved;
         protected virtual void GenerationResolved(GenerationResolvedEventArgs e) => OnGenerationResolved?.Invoke(this, e);
 
-        public LifeRunner(Grid grid, Rules rules, Generation cells = null)
+        public GenerationResolver(Grid grid, Rules rules, Generation cells = null)
         {
             if (grid == null) throw new ArgumentNullException(nameof(grid), "Cannot be null");
             if (rules == null) throw new ArgumentNullException(nameof(rules), "Cannot be null");
