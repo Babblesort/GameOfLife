@@ -1,6 +1,5 @@
 ﻿using Engine;
 using NUnit.Framework;
-using System;
 using System.Collections.Generic;
 
 namespace Tests
@@ -21,7 +20,7 @@ namespace Tests
         private Generation generation;
         private Generation expectedNextGen;
 
-        public GenerationResolver CreateBasicResolver()
+        public void SetupBasicResolver()
         {
             // XOO
             // OXO
@@ -61,10 +60,9 @@ namespace Tests
                 { cell7, true },
                 { cell8, true }
             };
-            return new GenerationResolver(grid, new Rules(), generation);
         }
 
-        public GenerationResolver CreateExpiringResolver()
+        public void SetupExpiringResolver()
         {
             // OOO
             // OXO
@@ -104,118 +102,48 @@ namespace Tests
                 { cell7, false },
                 { cell8, false }
             };
-            return new GenerationResolver(grid, new Rules(), generation);
-
-        }
-
-        [Test]
-        public void CanBeCreated()
-        {
-            var grid = new Grid(1, 1);
-            var generation = grid.CreateEmptyGeneration();
-
-            var resolver = new GenerationResolver(grid, new Rules(), generation);
-            Assert.NotNull(resolver);
-        }
-
-        [Test]
-        public void ThrowsOnNullDependencies()
-        {
-            Assert.Throws<ArgumentNullException>(() => new GenerationResolver(null, new Rules(), new Generation()));
-            Assert.Throws<ArgumentNullException>(() => new GenerationResolver(new Grid(), null, new Generation()));
-        }
-
-        [Test]
-        public void ThrowsOnGridAndGenerationSizeMismatch()
-        {
-            var grid = new Grid(2, 2);
-            var generation = new Generation { { new RowCol(0, 0), false } };
-
-            Assert.Throws<ArgumentOutOfRangeException>(() => new GenerationResolver(grid, new Rules(), generation));
         }
 
         [Test]
         public void NextGenResolutionCanBeRequested()
         {
-            var resolver = CreateBasicResolver();
-            Assert.AreEqual(resolver.CurrentGeneration, generation);
-            Assert.IsTrue(resolver.LivingGeneration);
-            resolver.ResolveNextGen();
-            Assert.AreEqual(resolver.CurrentGeneration, expectedNextGen);
-            Assert.IsTrue(resolver.LivingGeneration);
+            SetupBasicResolver();
+            var nextGen = GenerationResolver.ResolveNextGeneration(grid, new Rules(), generation);
+            Assert.AreEqual(expectedNextGen, nextGen);
 
-            resolver = CreateExpiringResolver();
-            Assert.AreEqual(resolver.CurrentGeneration, generation);
-            Assert.IsTrue(resolver.LivingGeneration);
-            resolver.ResolveNextGen();
-            Assert.AreEqual(resolver.CurrentGeneration, expectedNextGen);
-            Assert.IsFalse(resolver.LivingGeneration);
-        }
-
-        [Test]
-        public void NextGenResolutionRaisesGenerationResolved()
-        {
-            var eventRaised = false;
-            var resolver = CreateBasicResolver();
-            resolver.OnGenerationResolved += (sender, e) =>
-            {
-                eventRaised = true;
-                Assert.IsInstanceOf<GenerationResolver>(sender);
-                Assert.AreEqual(expectedNextGen, e.Generation);
-            };
-            resolver.ResolveNextGen();
-            Assert.IsTrue(eventRaised);
+            SetupExpiringResolver();
+            nextGen = GenerationResolver.ResolveNextGeneration(grid, new Rules(), generation);
+            Assert.AreEqual(expectedNextGen, nextGen);
         }
 
         [Test]
         public void CellNeighborCount()
         {
-            var resolver = CreateBasicResolver();
-
-            Assert.AreEqual(2, resolver.NeighborsCount(cell0));
-            Assert.AreEqual(3, resolver.NeighborsCount(cell1));
-            Assert.AreEqual(3, resolver.NeighborsCount(cell2));
-            Assert.AreEqual(3, resolver.NeighborsCount(cell3));
-            Assert.AreEqual(2, resolver.NeighborsCount(cell4));
-            Assert.AreEqual(3, resolver.NeighborsCount(cell5));
-            Assert.AreEqual(3, resolver.NeighborsCount(cell6));
-            Assert.AreEqual(3, resolver.NeighborsCount(cell7));
-            Assert.AreEqual(2, resolver.NeighborsCount(cell8));
-        }
-
-        [Test]
-        public void NextGeneration()
-        {
-            var resolver = CreateBasicResolver();
-            var nextGen = resolver.NextGen(generation);
-
-            Assert.IsTrue(nextGen[cell0]);
-            Assert.IsTrue(nextGen[cell1]);
-            Assert.IsTrue(nextGen[cell2]);
-            Assert.IsTrue(nextGen[cell3]);
-            Assert.IsTrue(nextGen[cell4]);
-            Assert.IsTrue(nextGen[cell5]);
-            Assert.IsTrue(nextGen[cell6]);
-            Assert.IsTrue(nextGen[cell7]);
-            Assert.IsTrue(nextGen[cell8]);
+            SetupBasicResolver();
+            Assert.AreEqual(2, GenerationResolver.NeighborsCount(cell0, grid, generation));
+            Assert.AreEqual(3, GenerationResolver.NeighborsCount(cell1, grid, generation));
+            Assert.AreEqual(3, GenerationResolver.NeighborsCount(cell2, grid, generation));
+            Assert.AreEqual(3, GenerationResolver.NeighborsCount(cell3, grid, generation));
+            Assert.AreEqual(2, GenerationResolver.NeighborsCount(cell4, grid, generation));
+            Assert.AreEqual(3, GenerationResolver.NeighborsCount(cell5, grid, generation));
+            Assert.AreEqual(3, GenerationResolver.NeighborsCount(cell6, grid, generation));
+            Assert.AreEqual(3, GenerationResolver.NeighborsCount(cell7, grid, generation));
+            Assert.AreEqual(2, GenerationResolver.NeighborsCount(cell8, grid, generation));
         }
 
         [Test]
         public void CellAliveNextGen()
         {
-            var grid = new Grid(1, 1);
-            var generation = grid.CreateEmptyGeneration();
+            var rules = new Rules();
 
-            var resolver = new GenerationResolver(grid, new Rules(), generation);
+            Assert.IsFalse(GenerationResolver.CellAliveNextGen(true, 1, rules));
+            Assert.IsTrue(GenerationResolver.CellAliveNextGen (true, 2, rules));
+            Assert.IsTrue(GenerationResolver.CellAliveNextGen (true, 3, rules));
+            Assert.IsFalse(GenerationResolver.CellAliveNextGen(true, 4, rules));
 
-            Assert.IsFalse(resolver.CellAliveNextGen(alive: true, neighborCount: 1));
-            Assert.IsTrue(resolver.CellAliveNextGen(alive: true, neighborCount: 2));
-            Assert.IsTrue(resolver.CellAliveNextGen(alive: true, neighborCount: 3));
-            Assert.IsFalse(resolver.CellAliveNextGen(alive: true, neighborCount: 4));
-
-            Assert.IsFalse(resolver.CellAliveNextGen(alive: false, neighborCount: 2));
-            Assert.IsTrue(resolver.CellAliveNextGen(alive: false, neighborCount: 3));
-            Assert.IsFalse(resolver.CellAliveNextGen(alive: false, neighborCount: 4));
+            Assert.IsFalse(GenerationResolver.CellAliveNextGen(false, 2, rules));
+            Assert.IsTrue(GenerationResolver.CellAliveNextGen (false, 3, rules));
+            Assert.IsFalse(GenerationResolver.CellAliveNextGen(false, 4, rules));
         }
 
         [Test]
@@ -223,18 +151,15 @@ namespace Tests
         {
             var surviveCounts = new List<int> { 2 };
             var birthCounts = new List<int> { 4 };
-            var grid = new Grid(1, 1);
-            var generation = grid.CreateEmptyGeneration();
+            var rules = new Rules(surviveCounts, birthCounts);
 
-            var resolver = new GenerationResolver(grid, new Rules(surviveCounts, birthCounts), generation);
+            Assert.IsFalse(GenerationResolver.CellAliveNextGen(true, 1, rules));
+            Assert.IsTrue(GenerationResolver. CellAliveNextGen(true, 2, rules));
+            Assert.IsFalse(GenerationResolver.CellAliveNextGen(true, 3, rules));
 
-            Assert.IsFalse(resolver.CellAliveNextGen(alive: true, neighborCount: 1));
-            Assert.IsTrue(resolver.CellAliveNextGen(alive: true, neighborCount: 2));
-            Assert.IsFalse(resolver.CellAliveNextGen(alive: true, neighborCount: 3));
-
-            Assert.IsFalse(resolver.CellAliveNextGen(alive: false, neighborCount: 3));
-            Assert.IsTrue(resolver.CellAliveNextGen(alive: false, neighborCount: 4));
-            Assert.IsFalse(resolver.CellAliveNextGen(alive: false, neighborCount: 5));
+            Assert.IsFalse(GenerationResolver.CellAliveNextGen(false, 3, rules));
+            Assert.IsTrue(GenerationResolver. CellAliveNextGen(false, 4, rules));
+            Assert.IsFalse(GenerationResolver.CellAliveNextGen(false, 5, rules));
         }
     }
 }

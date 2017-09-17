@@ -1,69 +1,37 @@
-﻿using System;
-using System.Linq;
-
-namespace Engine
+﻿namespace Engine
 {
-    public class GenerationResolver
+    public static class GenerationResolver
     {
-        private Grid _grid;
-        private Rules _rules;
-        private Generation _cells;
-
-        public Generation CurrentGeneration => _cells;
-        public bool LivingGeneration => _cells.Any(cell => cell.Value);
-        public bool Extinction => !LivingGeneration;
-
-        public event EventHandler<GenerationResolvedEventArgs> OnGenerationResolved;
-        protected virtual void GenerationResolved(GenerationResolvedEventArgs e) => OnGenerationResolved?.Invoke(this, e);
-
-        public GenerationResolver(Grid grid, Rules rules, Generation cells = null)
-        {
-            if (grid == null) throw new ArgumentNullException(nameof(grid), "Cannot be null");
-            if (rules == null) throw new ArgumentNullException(nameof(rules), "Cannot be null");
-            if (cells == null) throw new ArgumentNullException(nameof(cells), "Cannot be null");
-            if (grid.Cells.Count != cells.Count) throw new ArgumentOutOfRangeException(nameof(cells), "Grid cell count does not match generation cells count");
-
-            _grid = grid;
-            _rules = rules;
-            _cells = cells;
-        }
-
-        public void ResolveNextGen()
-        {
-            _cells = NextGen(_cells);
-            GenerationResolved(new GenerationResolvedEventArgs { Generation = _cells });
-        }
-
-        public Generation NextGen(Generation cells)
+        public static Generation ResolveNextGeneration(Grid grid, Rules rules, Generation cells)
         {
             var nextGen = new Generation();
-            foreach(var cell in cells)
+            foreach (var cell in cells)
             {
-                nextGen.Add(cell.Key, CellAliveNextGen(cell.Value, NeighborsCount(cell.Key)));
+                nextGen.Add(cell.Key, CellAliveNextGen(cell.Value, NeighborsCount(cell.Key, grid, cells), rules));
             }
             return nextGen;
         }
 
-        public int NeighborsCount(RowCol cell)
+        public static int NeighborsCount(RowCol cell, Grid grid, Generation cells)
         {
             var count = 0;
-            count += NeighborCount(_grid.NeighborTL(cell));
-            count += NeighborCount(_grid.NeighborTT(cell));
-            count += NeighborCount(_grid.NeighborTR(cell));
-            count += NeighborCount(_grid.NeighborLL(cell));
-            count += NeighborCount(_grid.NeighborRR(cell));
-            count += NeighborCount(_grid.NeighborBL(cell));
-            count += NeighborCount(_grid.NeighborBB(cell));
-            count += NeighborCount(_grid.NeighborBR(cell));
+            count += NeighborCount(grid.NeighborTL(cell), cells);
+            count += NeighborCount(grid.NeighborTT(cell), cells);
+            count += NeighborCount(grid.NeighborTR(cell), cells);
+            count += NeighborCount(grid.NeighborLL(cell), cells);
+            count += NeighborCount(grid.NeighborRR(cell), cells);
+            count += NeighborCount(grid.NeighborBL(cell), cells);
+            count += NeighborCount(grid.NeighborBB(cell), cells);
+            count += NeighborCount(grid.NeighborBR(cell), cells);
             return count;
         }
 
-        private int NeighborCount(RowCol neighbor) =>  _cells[neighbor] ? 1 : 0;
+        public static int NeighborCount(RowCol neighbor, Generation cells) =>  cells[neighbor] ? 1 : 0;
 
-        public bool CellAliveNextGen(bool alive, int neighborCount)
+        public static bool CellAliveNextGen(bool alive, int neighborCount, Rules rules)
         {
-            var survives = alive && _rules.SurviveNeighborCounts.Contains(neighborCount);
-            var born = !alive && _rules.BirthNeighborCounts.Contains(neighborCount);
+            var survives = alive && rules.SurviveNeighborCounts.Contains(neighborCount);
+            var born = !alive && rules.BirthNeighborCounts.Contains(neighborCount);
 
             return survives || born;
         }
