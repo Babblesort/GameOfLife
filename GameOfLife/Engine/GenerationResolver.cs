@@ -8,10 +8,8 @@ namespace Engine
         private Grid _grid;
         private Rules _rules;
         private Generation _cells;
-        private int _generationCount;
 
         public Generation CurrentGeneration => _cells;
-        public int GenerationCount => _generationCount;
         public bool LivingGeneration => _cells.Any(cell => cell.Value);
         public bool Extinction => !LivingGeneration;
 
@@ -22,24 +20,18 @@ namespace Engine
         {
             if (grid == null) throw new ArgumentNullException(nameof(grid), "Cannot be null");
             if (rules == null) throw new ArgumentNullException(nameof(rules), "Cannot be null");
-            if (cells == null)
-            {
-                cells = grid.CreateEmptyGeneration();
-            }
-
+            if (cells == null) throw new ArgumentNullException(nameof(cells), "Cannot be null");
             if (grid.Cells.Count != cells.Count) throw new ArgumentOutOfRangeException(nameof(cells), "Grid cell count does not match generation cells count");
 
             _grid = grid;
             _rules = rules;
             _cells = cells;
-            _generationCount = 0;
         }
 
         public void ResolveNextGen()
         {
             _cells = NextGen(_cells);
-            _generationCount++;
-            GenerationResolved(new GenerationResolvedEventArgs { GenerationCount = _generationCount, Generation = _cells });
+            GenerationResolved(new GenerationResolvedEventArgs { Generation = _cells });
         }
 
         public Generation NextGen(Generation cells)
