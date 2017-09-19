@@ -15,6 +15,7 @@ namespace UI
     public partial class GameForm : Form
     {
         TaskScheduler _scheduler;
+        private Grid _grid;
 
         public GameForm()
         {
@@ -29,13 +30,13 @@ namespace UI
         private void GameForm_Load(object sender, EventArgs e)
         {
             _scheduler = TaskScheduler.FromCurrentSynchronizationContext();
+            _grid = new Grid();
+            gamePanel.Grid = _grid;
         }
 
         private void btnRun_Click(object sender, EventArgs e)
         {
-            var grid = new Grid();
-            var gaea = new Gaea(grid, new Rules());
-            gamePanel.Grid = grid;
+            var gaea = new Gaea(_grid, new Rules());
             gaea.Run((generationNumber, cells) => UpdateGameVisualization(generationNumber, cells));
 
         }
