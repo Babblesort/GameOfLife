@@ -46,7 +46,7 @@ namespace Engine
                     {
                         _generationNumber++;
                         var nextCells = GenerationResolver.ResolveNextGeneration(Grid, Rules, Cells);
-                        Thread.Sleep(500);
+                        Thread.Sleep(50);
                         updateVisualizationFn(_generationNumber, nextCells);
                         Cells = nextCells;
                     }

@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using Engine;
@@ -11,6 +12,8 @@ namespace UI
         private int ColCount => _grid.ColCount;
         private float CellHeight => (float)(Height-5) / _grid.RowCount;
         private float CellWidth => (float)(Width-5) / _grid.ColCount;
+        private float GridWidth => ColCount * CellWidth;
+        private float GridHeight => RowCount * CellHeight;
         private static readonly Pen GridLinePen = Pens.LightGray;
         private static readonly Brush CellBrush = new SolidBrush(Color.FromArgb(180, Color.ForestGreen));
         private Grid _grid;
@@ -52,14 +55,30 @@ namespace UI
         {
             if (_grid == null) return;
 
-            for (var r=0; r < RowCount; r++)
+            var rowBoxes = new RectangleF[(int)Math.Ceiling((float)RowCount / 2)];
+            var counter = 0;
+            for (var r = 0; r < RowCount; r += 2)
             {
-                for (var c=0; c < ColCount; c++)
-                {
-                    e.Graphics.DrawLine(GridLinePen, 0, r * CellHeight, ColCount * CellWidth, r * CellHeight);
-                    e.Graphics.DrawLine(GridLinePen, c * CellWidth, 0, c * CellWidth, RowCount * CellHeight);
-                }
+                rowBoxes[counter++] = new RectangleF(0, r * CellHeight, GridWidth, CellHeight);
             }
+            if (RowCount % 2 == 0)
+            {
+                e.Graphics.DrawLine(GridLinePen, 0, GridHeight, GridWidth, GridHeight);
+            }
+
+            var colBoxes = new RectangleF[(int)Math.Ceiling((float)ColCount / 2)];
+            counter = 0;
+            for (var c = 0; c < ColCount; c += 2)
+            {
+                colBoxes[counter++] = new RectangleF(c * CellWidth, 0, CellWidth, RowCount * CellHeight);
+            }
+            if (ColCount % 2 == 0)
+            {
+                e.Graphics.DrawLine(GridLinePen, GridWidth, 0, GridWidth, RowCount * CellHeight);
+            }
+
+            e.Graphics.DrawRectangles(GridLinePen, rowBoxes);
+            e.Graphics.DrawRectangles(GridLinePen, colBoxes);
 
             if (_cells?.Count > 0)
             {

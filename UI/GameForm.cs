@@ -30,7 +30,7 @@ namespace UI
         private void GameForm_Load(object sender, EventArgs e)
         {
             _scheduler = TaskScheduler.FromCurrentSynchronizationContext();
-            _grid = new Grid();
+            _grid = new Grid(35, 35);
             gamePanel.Grid = _grid;
         }
 
