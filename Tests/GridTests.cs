@@ -105,6 +105,16 @@ namespace Tests
         }
 
         [Test]
+        public void CanGenerateARandomizedGeneration()
+        {
+            var grid = new Grid(2, 2);
+            var generation = grid.CreateRandomGeneration();
+
+            Assert.AreEqual(typeof(Generation), generation.GetType());
+            Assert.AreEqual(4, generation.Count);
+        }
+
+        [Test]
         public void GridCanDeriveCellIndexFromTuple()
         {
             var grid = new Grid(3, 3);

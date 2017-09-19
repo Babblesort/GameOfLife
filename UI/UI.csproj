@@ -55,6 +55,12 @@
     <Compile Include="GameForm.Designer.cs">
       <DependentUpon>GameForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="GamePanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="GamePanel.designer.cs">
+      <DependentUpon>GamePanel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="GameForm.resx">
@@ -84,6 +90,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="babblesort.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Engine\Engine.csproj">
+      <Project>{27A65BED-F32B-44DC-8456-F58F3654C607}</Project>
+      <Name>Engine</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

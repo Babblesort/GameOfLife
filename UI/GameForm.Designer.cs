@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GameForm));
-            this.pnlGame = new System.Windows.Forms.Panel();
             this.btnRun = new System.Windows.Forms.Button();
             this.btnPause = new System.Windows.Forms.Button();
             this.btnClear = new System.Windows.Forms.Button();
@@ -37,18 +36,8 @@
             this.btnExit = new System.Windows.Forms.Button();
             this.lblGenerationLabel = new System.Windows.Forms.Label();
             this.lblGeneration = new System.Windows.Forms.Label();
+            this.gamePanel = new UI.GamePanel();
             this.SuspendLayout();
-            // 
-            // pnlGame
-            // 
-            this.pnlGame.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.pnlGame.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.pnlGame.Location = new System.Drawing.Point(12, 12);
-            this.pnlGame.Name = "pnlGame";
-            this.pnlGame.Size = new System.Drawing.Size(1070, 738);
-            this.pnlGame.TabIndex = 0;
             // 
             // btnRun
             // 
@@ -59,6 +48,7 @@
             this.btnRun.TabIndex = 1;
             this.btnRun.Text = "Run";
             this.btnRun.UseVisualStyleBackColor = true;
+            this.btnRun.Click += new System.EventHandler(this.btnRun_Click);
             // 
             // btnPause
             // 
@@ -124,11 +114,26 @@
             this.lblGeneration.TabIndex = 7;
             this.lblGeneration.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
+            // gamePanel
+            // 
+            this.gamePanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.gamePanel.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.gamePanel.Cells = null;
+            this.gamePanel.Grid = null;
+            this.gamePanel.Location = new System.Drawing.Point(12, 12);
+            this.gamePanel.Name = "gamePanel";
+            this.gamePanel.Padding = new System.Windows.Forms.Padding(2);
+            this.gamePanel.Size = new System.Drawing.Size(1070, 738);
+            this.gamePanel.TabIndex = 8;
+            // 
             // GameForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1299, 797);
+            this.Controls.Add(this.gamePanel);
             this.Controls.Add(this.lblGeneration);
             this.Controls.Add(this.lblGenerationLabel);
             this.Controls.Add(this.btnExit);
@@ -136,18 +141,16 @@
             this.Controls.Add(this.btnStep);
             this.Controls.Add(this.btnPause);
             this.Controls.Add(this.btnRun);
-            this.Controls.Add(this.pnlGame);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "GameForm";
             this.Text = "Game Of Life";
+            this.Load += new System.EventHandler(this.GameForm_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
 
         #endregion
-
-        private System.Windows.Forms.Panel pnlGame;
         private System.Windows.Forms.Button btnRun;
         private System.Windows.Forms.Button btnPause;
         private System.Windows.Forms.Button btnClear;
@@ -155,6 +158,7 @@
         private System.Windows.Forms.Button btnExit;
         private System.Windows.Forms.Label lblGenerationLabel;
         private System.Windows.Forms.Label lblGeneration;
+        private GamePanel gamePanel;
     }
 }
 
