@@ -37,8 +37,7 @@ namespace UI
         private void btnRun_Click(object sender, EventArgs e)
         {
             var gaea = new Gaea(_grid, new Rules());
-            gaea.Run((generationNumber, cells) => UpdateGameVisualization(generationNumber, cells));
-
+            gaea.Run(UpdateGameVisualization);
         }
 
         private void UpdateGameVisualization(int generationNumber, Generation cells)
@@ -53,8 +52,6 @@ namespace UI
         {
             lblGeneration.Text = generation.ToString();
             gamePanel.Cells = cells;
-
         }
-
     }
 }
