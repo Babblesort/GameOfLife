@@ -8,7 +8,7 @@ namespace UI
 {
     public partial class GameForm : Form
     {
-        TaskScheduler _scheduler;
+        private TaskScheduler _scheduler;
         private Grid _grid;
 
         public GameForm()
