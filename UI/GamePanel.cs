@@ -87,7 +87,10 @@ namespace UI
                     .Select(c => new RectangleF(c.Key.Col * CellWidth, c.Key.Row * CellHeight, CellWidth, CellHeight))
                     .ToArray();
 
-                e.Graphics.FillRectangles(CellBrush, paintCells);
+                if (paintCells.Length > 0)
+                {
+                    e.Graphics.FillRectangles(CellBrush, paintCells);
+                }
             }
         }
     }
