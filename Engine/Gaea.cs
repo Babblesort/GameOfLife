@@ -6,11 +6,11 @@ namespace Engine
 {
     public class Gaea
     {
-        public Grid Grid { get; private set; }
-        public Rules Rules { get; private set; }
+        public Grid Grid { get; }
+        public Rules Rules { get; }
         public Generation Cells { get; private set; }
         public RunStates RunState { get; }
-        private int _generationNumber = 0;
+        private int _generationNumber;
         public enum RunStates
         {
             Idle = 0,

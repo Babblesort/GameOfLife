@@ -10,9 +10,9 @@ namespace Engine
         public static readonly int MaxRows = 250;
         public static readonly int MinCols = 1;
         public static readonly int MaxCols = 250;
-        public List<RowCol> Cells { get; private set; }
-        public int RowCount { get; private set; }
-        public int ColCount { get; private set; }
+        public List<RowCol> Cells { get; }
+        public int RowCount { get; }
+        public int ColCount { get; }
 
         public Grid() : this(MaxRows, MaxCols) { }
 
@@ -43,7 +43,7 @@ namespace Engine
             if (index < 0) throw new ArgumentOutOfRangeException(nameof(index), "Must be zero or greater");
             if (index >= Cells.Count) throw new ArgumentOutOfRangeException(nameof(index), "Requested index is outside grid");
 
-            var row = (int)(index / ColCount);
+            var row = index / ColCount;
             var col = index % ColCount;
 
             return new RowCol(row, col);
@@ -97,13 +97,7 @@ namespace Engine
             var rowIndices = Enumerable.Range(0, RowCount);
             var colIndices = Enumerable.Range(0, ColCount);
 
-            foreach (var r in rowIndices)
-            {
-                foreach (var c in colIndices)
-                {
-                    tuples.Add(new RowCol(r, c));
-                }
-            }
+            tuples.AddRange(from r in rowIndices from c in colIndices select new RowCol(r, c));
             return tuples;
         }
     }

@@ -13,8 +13,8 @@ namespace Engine
         public IList<int> SurviveNeighborCounts { get; }
         public IList<int> BirthNeighborCounts { get; }
 
-        private static List<int> DefaultSurviveNeighborCounts = new List<int> { 2, 3 };
-        private static List<int> DefaultBirthNeighborCounts = new List<int> { 3 };
+        private static readonly List<int> DefaultSurviveNeighborCounts = new List<int> { 2, 3 };
+        private static readonly List<int> DefaultBirthNeighborCounts = new List<int> { 3 };
 
         public Rules() : this(DefaultSurviveNeighborCounts, DefaultBirthNeighborCounts) { }
 

@@ -194,7 +194,7 @@ namespace Tests
             get
             {
                 yield return new TestCaseData(
-                    new RowCol(0, 0), new RowCol[]
+                    new RowCol(0, 0), new[]
                     {
                         new RowCol(2, 2), new RowCol(2, 0), new RowCol(2, 1),
                         new RowCol(0, 2), new RowCol(0, 1),
@@ -202,7 +202,7 @@ namespace Tests
                     }
                 );
                 yield return new TestCaseData(
-                    new RowCol(0, 1), new RowCol[]
+                    new RowCol(0, 1), new[]
                     {
                         new RowCol(2, 0), new RowCol(2, 1), new RowCol(2, 2),
                         new RowCol(0, 0), new RowCol(0, 2),
@@ -210,7 +210,7 @@ namespace Tests
                     }
                 );
                 yield return new TestCaseData(
-                    new RowCol(0, 2), new RowCol[]
+                    new RowCol(0, 2), new[]
                     {
                         new RowCol(2, 1), new RowCol(2, 2), new RowCol(2, 0),
                         new RowCol(0, 1), new RowCol(0, 0),
@@ -218,7 +218,7 @@ namespace Tests
                     }
                 );
                 yield return new TestCaseData(
-                    new RowCol(1, 0), new RowCol[]
+                    new RowCol(1, 0), new[]
                     {
                         new RowCol(0, 2), new RowCol(0, 0), new RowCol(0, 1),
                         new RowCol(1, 2), new RowCol(1, 1),
@@ -226,7 +226,7 @@ namespace Tests
                     }
                 );
                 yield return new TestCaseData(
-                    new RowCol(1, 1), new RowCol[]
+                    new RowCol(1, 1), new[]
                     {
                         new RowCol(0, 0), new RowCol(0, 1), new RowCol(0, 2),
                         new RowCol(1, 0), new RowCol(1, 2),
@@ -234,7 +234,7 @@ namespace Tests
                     }
                 );
                 yield return new TestCaseData(
-                    new RowCol(1, 2), new RowCol[]
+                    new RowCol(1, 2), new[]
                     {
                         new RowCol(0, 1), new RowCol(0, 2), new RowCol(0, 0),
                         new RowCol(1, 1), new RowCol(1, 0),
@@ -242,7 +242,7 @@ namespace Tests
                     }
                 );
                 yield return new TestCaseData(
-                    new RowCol(2, 0), new RowCol[]
+                    new RowCol(2, 0), new[]
                     {
                         new RowCol(1, 2), new RowCol(1, 0), new RowCol(1, 1),
                         new RowCol(2, 2), new RowCol(2, 1),
@@ -250,7 +250,7 @@ namespace Tests
                     }
                 );
                 yield return new TestCaseData(
-                    new RowCol(2, 1), new RowCol[]
+                    new RowCol(2, 1), new[]
                     {
                         new RowCol(1, 0), new RowCol(1, 1), new RowCol(1, 2),
                         new RowCol(2, 0), new RowCol(2, 2),
@@ -258,7 +258,7 @@ namespace Tests
                     }
                 );
                 yield return new TestCaseData(
-                    new RowCol(2, 2), new RowCol[]
+                    new RowCol(2, 2), new[]
                     {
                         new RowCol(1, 1), new RowCol(1, 2), new RowCol(1, 0),
                         new RowCol(2, 1), new RowCol(2, 0),
