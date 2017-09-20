@@ -13,8 +13,11 @@ namespace Engine
         public static int MinDelayMilliseconds = 50;
         public static int MaxDelayMilliseconds = 5000;
         public static int DefaultDelayMilliseconds = 500;
+        public static int DefaultStopOnGeneration = 250;
         private int _generationNumber;
+        private int _stopOnGeneration = DefaultStopOnGeneration;
         private int _delay = DefaultDelayMilliseconds;
+
         public enum RunStates
         {
             Idle = 0,
@@ -51,11 +54,24 @@ namespace Engine
             }
         }
 
+        public int StopOnGeneration
+        { 
+            get { return _stopOnGeneration; }
+            set
+            {
+                if (value <= 0)
+                    throw new ArgumentOutOfRangeException(nameof(value), $"Must be greater than zero");
+
+                _stopOnGeneration = value;
+            }
+        }
+
+
         public void Run(Action<int, Generation> updateVisualizationFn)
         {
             Task.Factory.StartNew(() =>
                 {
-                    for (int i = 0; i < 100; i++)
+                    while (_generationNumber < StopOnGeneration)
                     {
                         _generationNumber++;
                         var nextCells = GenerationResolver.ResolveNextGeneration(Grid, Rules, Cells);

@@ -78,5 +78,29 @@ namespace Tests
             Assert.Throws<ArgumentOutOfRangeException>(() => gaea.DelayMilliseconds = tooSmall);
             Assert.Throws<ArgumentOutOfRangeException>(() => gaea.DelayMilliseconds = tooBig);
         }
+
+        [Test]
+        public void DefaultStopOnGeneration()
+        {
+            Assert.AreEqual(250, Gaea.DefaultStopOnGeneration);
+        }
+
+        [Test]
+        public void StopOnGenerationPropertyDefaultsAndSets()
+        {
+            var gaea = new Gaea(new Grid(), new Rules());
+            Assert.AreEqual(Gaea.DefaultStopOnGeneration, gaea.StopOnGeneration);
+
+            gaea.StopOnGeneration = 1000;
+            Assert.AreEqual(1000, gaea.StopOnGeneration);
+        }
+
+        [Test]
+        public void ThrowsOnTooSmallStopOnGeneration()
+        {
+            var gaea = new Gaea(new Grid(), new Rules());
+            Assert.Throws<ArgumentOutOfRangeException>(() => gaea.StopOnGeneration = -1);
+            Assert.Throws<ArgumentOutOfRangeException>(() => gaea.StopOnGeneration = 0);
+        }
     }
 }
