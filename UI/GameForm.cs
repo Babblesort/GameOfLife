@@ -10,6 +10,7 @@ namespace UI
     {
         private TaskScheduler _scheduler;
         private Grid _grid;
+        private Gaea _gaea;
 
         public GameForm()
         {
@@ -26,12 +27,18 @@ namespace UI
             _scheduler = TaskScheduler.FromCurrentSynchronizationContext();
             _grid = new Grid(35, 35);
             gamePanel.Grid = _grid;
+            _gaea = new Gaea(_grid, new Rules());
+
         }
 
         private void btnRun_Click(object sender, EventArgs e)
         {
-            var gaea = new Gaea(_grid, new Rules());
-            gaea.Run(UpdateGameVisualization);
+            _gaea.Run(UpdateGameVisualization);
+        }
+
+        private void btnPause_Click(object sender, EventArgs e)
+        {
+            _gaea.PauseRun();
         }
 
         private void UpdateGameVisualization(int generationNumber, Generation cells)

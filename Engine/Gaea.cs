@@ -18,6 +18,9 @@ namespace Engine
         private int _stopOnGeneration = DefaultStopOnGeneration;
         private int _delay = DefaultDelayMilliseconds;
 
+        private CancellationTokenSource _tokenSource;
+        private CancellationToken _token;
+
         public enum RunStates
         {
             Idle = 0,
@@ -68,12 +71,14 @@ namespace Engine
         
         public void Run(Action<int, Generation> updateGui)
         {
-            Task.Factory.StartNew(() => RunToStopGeneration(updateGui));
+            _tokenSource = new CancellationTokenSource();
+            _token = _tokenSource.Token;
+            Task.Factory.StartNew(() => RunToStopGeneration(updateGui, _token), _token);
         }
 
-        public void RunToStopGeneration(Action<int, Generation> updateGui)
+        public void RunToStopGeneration(Action<int, Generation> updateGui, CancellationToken ct)
         {
-            while (_generationNumber < StopOnGeneration)
+            while (_generationNumber < StopOnGeneration && !ct.IsCancellationRequested)
             {
                 _generationNumber++;
                 var nextCells = GenerationResolver.ResolveNextGeneration(Grid, Rules, Cells);
@@ -81,7 +86,14 @@ namespace Engine
                 updateGui(_generationNumber, nextCells);
                 Cells = nextCells;
             }
+        }
 
+        public void PauseRun()
+        {
+            if (!_token.IsCancellationRequested)
+            {
+                _tokenSource?.Cancel();
+            }
         }
     }
 }
