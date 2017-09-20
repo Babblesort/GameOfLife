@@ -54,9 +54,9 @@ namespace Tests
         [Test]
         public void DelayMillisecondsSettings()
         {
-            Assert.AreEqual(50, Gaea.MinDelayMilliseconds);
-            Assert.AreEqual(5000, Gaea.MaxDelayMilliseconds);
-            Assert.AreEqual(500, Gaea.DefaultDelayMilliseconds);
+            Assert.AreEqual(25, Gaea.MinDelayMilliseconds);
+            Assert.AreEqual(500, Gaea.MaxDelayMilliseconds);
+            Assert.AreEqual(225, Gaea.DefaultDelayMilliseconds);
         }
 
         [Test]
@@ -65,8 +65,8 @@ namespace Tests
             var gaea = new Gaea(new Grid(), new Rules());
             Assert.AreEqual(Gaea.DefaultDelayMilliseconds, gaea.DelayMilliseconds);
 
-            gaea.DelayMilliseconds = 1000;
-            Assert.AreEqual(1000, gaea.DelayMilliseconds);
+            gaea.DelayMilliseconds = 100;
+            Assert.AreEqual(100, gaea.DelayMilliseconds);
         }
 
         [Test]

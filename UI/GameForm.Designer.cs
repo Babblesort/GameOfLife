@@ -36,7 +36,11 @@
             this.btnExit = new System.Windows.Forms.Button();
             this.lblGenerationLabel = new System.Windows.Forms.Label();
             this.lblGeneration = new System.Windows.Forms.Label();
+            this.SpeedSlider = new System.Windows.Forms.TrackBar();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.gamePanel = new UI.GamePanel();
+            ((System.ComponentModel.ISupportInitialize)(this.SpeedSlider)).BeginInit();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnRun
@@ -116,6 +120,29 @@
             this.lblGeneration.TabIndex = 7;
             this.lblGeneration.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
+            // SpeedSlider
+            // 
+            this.SpeedSlider.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.SpeedSlider.Location = new System.Drawing.Point(6, 40);
+            this.SpeedSlider.Name = "SpeedSlider";
+            this.SpeedSlider.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.SpeedSlider.Size = new System.Drawing.Size(187, 56);
+            this.SpeedSlider.TabIndex = 9;
+            this.SpeedSlider.TickFrequency = 100;
+            this.SpeedSlider.ValueChanged += new System.EventHandler(this.SpeedSlider_ValueChanged);
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Controls.Add(this.SpeedSlider);
+            this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.groupBox1.Location = new System.Drawing.Point(1088, 131);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(199, 103);
+            this.groupBox1.TabIndex = 11;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Speed";
+            // 
             // gamePanel
             // 
             this.gamePanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -135,6 +162,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1299, 797);
+            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.gamePanel);
             this.Controls.Add(this.lblGeneration);
             this.Controls.Add(this.lblGenerationLabel);
@@ -147,6 +175,9 @@
             this.Name = "GameForm";
             this.Text = "Game Of Life";
             this.Load += new System.EventHandler(this.GameForm_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.SpeedSlider)).EndInit();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -161,6 +192,8 @@
         private System.Windows.Forms.Label lblGenerationLabel;
         private System.Windows.Forms.Label lblGeneration;
         private GamePanel gamePanel;
+        private System.Windows.Forms.TrackBar SpeedSlider;
+        private System.Windows.Forms.GroupBox groupBox1;
     }
 }
 

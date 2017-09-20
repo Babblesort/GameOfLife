@@ -10,9 +10,9 @@ namespace Engine
         public Rules Rules { get; }
         public Generation Cells { get; private set; }
         public RunStates RunState { get; }
-        public static int MinDelayMilliseconds = 50;
-        public static int MaxDelayMilliseconds = 5000;
-        public static int DefaultDelayMilliseconds = 500;
+        public static int MinDelayMilliseconds = 25;
+        public static int MaxDelayMilliseconds = 500;
+        public static int DefaultDelayMilliseconds = 225;
         public static int DefaultStopOnGeneration = 250;
         private int _generationNumber;
         private int _stopOnGeneration = DefaultStopOnGeneration;

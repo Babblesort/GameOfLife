@@ -25,10 +25,15 @@ namespace UI
         private void GameForm_Load(object sender, EventArgs e)
         {
             _scheduler = TaskScheduler.FromCurrentSynchronizationContext();
-            _grid = new Grid(35, 35);
+            _grid = new Grid(40, 40);
             gamePanel.Grid = _grid;
             _gaea = new Gaea(_grid, new Rules());
-
+            SpeedSlider.Minimum = Gaea.MinDelayMilliseconds;
+            SpeedSlider.Maximum = Gaea.MaxDelayMilliseconds;
+            SpeedSlider.TickFrequency = 100;
+            SpeedSlider.SmallChange = 50;
+            SpeedSlider.Value = Gaea.DefaultDelayMilliseconds;
+            SpeedSlider.TickStyle = TickStyle.BottomRight;
         }
 
         private void btnRun_Click(object sender, EventArgs e)
@@ -58,6 +63,11 @@ namespace UI
         {
             lblGeneration.Text = generation.ToString();
             gamePanel.Cells = cells;
+        }
+
+        private void SpeedSlider_ValueChanged(object sender, EventArgs e)
+        {
+            _gaea.DelayMilliseconds = SpeedSlider.Value;
         }
     }
 }
