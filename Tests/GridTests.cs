@@ -26,6 +26,15 @@ namespace Tests
         }
 
         [Test]
+        public void GridDefinesDefaultRowsAndCols()
+        {
+            Assert.NotNull(Grid.DefaultRows);
+            Assert.NotNull(Grid.DefaultCols);
+            Assert.IsTrue(Grid.DefaultRows >= Grid.MinRows && Grid.DefaultRows <= Grid.MaxRows);
+            Assert.IsTrue(Grid.DefaultCols >= Grid.MinCols && Grid.DefaultCols <= Grid.MaxCols);
+        }
+
+        [Test]
         public void GridDefinesMinAndMaxRows()
         {
             Assert.NotNull(Grid.MinRows);
@@ -51,7 +60,7 @@ namespace Tests
         public void GridCanBeCreatedWithDefaultSize()
         {
             var grid = new Grid();
-            Assert.AreEqual(Grid.MaxRows * Grid.MaxCols, grid.Cells.Count);
+            Assert.AreEqual(Grid.DefaultRows * Grid.DefaultCols, grid.Cells.Count);
         }
 
         [Test]

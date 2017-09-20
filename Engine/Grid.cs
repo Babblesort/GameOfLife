@@ -7,14 +7,17 @@ namespace Engine
     public class Grid
     {
         public static readonly int MinRows = 1;
-        public static readonly int MaxRows = 250;
+        public static readonly int MaxRows = 300;
         public static readonly int MinCols = 1;
-        public static readonly int MaxCols = 250;
+        public static readonly int MaxCols = 300;
+        public static readonly int DefaultRows = 45;
+        public static readonly int DefaultCols = 45;
+
         public List<RowCol> Cells { get; }
         public int RowCount { get; }
         public int ColCount { get; }
 
-        public Grid() : this(MaxRows, MaxCols) { }
+        public Grid() : this(DefaultRows, DefaultCols) { }
 
         public Grid(int rows, int cols)
         {
