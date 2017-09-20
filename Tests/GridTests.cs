@@ -114,66 +114,6 @@ namespace Tests
             Assert.AreEqual(4, generation.Count);
         }
 
-        [Test]
-        public void GridCanDeriveCellIndexFromTuple()
-        {
-            var grid = new Grid(3, 3);
-            Assert.AreEqual(0, grid.CellIndex(new RowCol(0, 0)));
-            Assert.AreEqual(1, grid.CellIndex(new RowCol(0, 1)));
-            Assert.AreEqual(2, grid.CellIndex(new RowCol(0, 2)));
-            Assert.AreEqual(3, grid.CellIndex(new RowCol(1, 0)));
-            Assert.AreEqual(4, grid.CellIndex(new RowCol(1, 1)));
-            Assert.AreEqual(5, grid.CellIndex(new RowCol(1, 2)));
-            Assert.AreEqual(6, grid.CellIndex(new RowCol(2, 0)));
-            Assert.AreEqual(7, grid.CellIndex(new RowCol(2, 1)));
-            Assert.AreEqual(8, grid.CellIndex(new RowCol(2, 2)));
-        }
-
-        [Test]
-        public void CellIndexEnforcesMinRowAndCol()
-        {
-            var grid = new Grid(1, 1);
-            Assert.Throws<ArgumentOutOfRangeException>(() => grid.CellIndex(new RowCol(row: -1, col: 1)));
-            Assert.Throws<ArgumentOutOfRangeException>(() => grid.CellIndex(new RowCol(row: 1, col: -1)));
-        }
-
-        [Test]
-        public void CellIndexEnforcesMaxRowColCombo()
-        {
-            var grid = new Grid(2, 2);
-            Assert.Throws<ArgumentOutOfRangeException>(() => grid.CellIndex(new RowCol(row: 2, col: 1)));
-            Assert.Throws<ArgumentOutOfRangeException>(() => grid.CellIndex(new RowCol(row: 1, col: 2)));
-        }
-
-        [Test]
-        public void GridCanDeriveCellRowColTupleFromIndex()
-        {
-            var grid = new Grid(3, 3);
-            Assert.AreEqual(new RowCol(0, 0), grid.CellRowCol(index: 0));
-            Assert.AreEqual(new RowCol(0, 1), grid.CellRowCol(index: 1));
-            Assert.AreEqual(new RowCol(0, 2), grid.CellRowCol(index: 2));
-            Assert.AreEqual(new RowCol(1, 0), grid.CellRowCol(index: 3));
-            Assert.AreEqual(new RowCol(1, 1), grid.CellRowCol(index: 4));
-            Assert.AreEqual(new RowCol(1, 2), grid.CellRowCol(index: 5));
-            Assert.AreEqual(new RowCol(2, 0), grid.CellRowCol(index: 6));
-            Assert.AreEqual(new RowCol(2, 1), grid.CellRowCol(index: 7));
-            Assert.AreEqual(new RowCol(2, 2), grid.CellRowCol(index: 8));
-        }
-
-        [Test]
-        public void CellRowCol_ThrowsOnIndexTooSmall()
-        {
-            var grid = new Grid(2, 2);
-            Assert.Throws<ArgumentOutOfRangeException>(() => grid.CellRowCol(-1));
-        }
-
-        [Test]
-        public void CellRowCol_ThrowsOnIndexTooLarge()
-        {
-            var grid = new Grid(2, 2);
-            Assert.Throws<ArgumentOutOfRangeException>(() => grid.CellRowCol(4));
-        }
-
         [Test, TestCaseSource("RowColExpectedNeighbors")]
         public void GridCanDeriveNeighborsForCell(RowCol cell, RowCol[] neighbors)
         {

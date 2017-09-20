@@ -24,31 +24,6 @@ namespace Engine
             Cells = CreateGridCells();
         }
 
-        public int CellIndex(RowCol tuple)
-        {
-            if (tuple.Row < 0) throw new ArgumentOutOfRangeException(nameof(tuple.Row), "Must be zero or greater");
-            if (tuple.Col < 0) throw new ArgumentOutOfRangeException(nameof(tuple.Col), "Must be zero or greater");
-
-            var index = tuple.Row * ColCount + tuple.Col;
-            if (index > Cells.Count - 1)
-            {
-                throw new ArgumentOutOfRangeException(nameof(tuple), "Requested index is outside grid");
-            }
-
-            return index;
-        }
-
-        public RowCol CellRowCol(int index)
-        {
-            if (index < 0) throw new ArgumentOutOfRangeException(nameof(index), "Must be zero or greater");
-            if (index >= Cells.Count) throw new ArgumentOutOfRangeException(nameof(index), "Requested index is outside grid");
-
-            var row = index / ColCount;
-            var col = index % ColCount;
-
-            return new RowCol(row, col);
-        }
-
         public Generation CreateEmptyGeneration()
         {
             var generation = new Generation();
