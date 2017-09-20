@@ -80,6 +80,7 @@
             this.btnStep.TabIndex = 3;
             this.btnStep.Text = "Step";
             this.btnStep.UseVisualStyleBackColor = true;
+            this.btnStep.Click += new System.EventHandler(this.btnStep_Click);
             // 
             // btnExit
             // 

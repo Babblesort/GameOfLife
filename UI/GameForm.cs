@@ -41,6 +41,11 @@ namespace UI
             _gaea.PauseRun();
         }
 
+        private void btnStep_Click(object sender, EventArgs e)
+        {
+            _gaea.StepGeneration(UpdateGameVisualization);
+        }
+
         private void UpdateGameVisualization(int generationNumber, Generation cells)
         {
             Task.Factory.StartNew(() => UpdateVisualization(generationNumber, cells), 
