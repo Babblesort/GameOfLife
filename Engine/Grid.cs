@@ -13,9 +13,10 @@ namespace Engine
         public static readonly int DefaultRows = 45;
         public static readonly int DefaultCols = 45;
 
-        public List<RowCol> Cells { get; }
-        public int RowCount { get; }
-        public int ColCount { get; }
+        private int _rowCount = DefaultRows;
+        private int _colCount = DefaultCols;
+
+        public List<RowCol> Cells { get; private set; }
 
         public Grid() : this(DefaultRows, DefaultCols) { }
 
@@ -24,7 +25,28 @@ namespace Engine
             ValidateGridSize(rows, cols);
             RowCount = rows;
             ColCount = cols;
-            Cells = CreateGridCells();
+            UpdateGridCells();
+        }
+
+        public int RowCount
+        {
+            get { return _rowCount; }
+            set
+            {
+                if (value < MinRows || value > MaxRows) throw new ArgumentOutOfRangeException(nameof(RowCount), $"Must be between {MinRows} and {MaxRows} inclusive");
+                _rowCount = value;
+                UpdateGridCells();
+            }
+        }
+        public int ColCount
+        {
+            get { return _colCount; }
+            set
+            {
+                if (value < MinCols || value > MaxCols) throw new ArgumentOutOfRangeException(nameof(ColCount), $"Must be between {MinCols} and {MaxCols} inclusive");
+                _colCount = value;
+                UpdateGridCells();
+            }
         }
 
         public Generation CreateEmptyGeneration()
@@ -67,6 +89,11 @@ namespace Engine
             {
                 throw new ArgumentOutOfRangeException(nameof(cols), $"Must be between {MinCols} and {MaxCols} inclusive");
             }
+        }
+
+        private void UpdateGridCells()
+        {
+            Cells = CreateGridCells();
         }
 
         private List<RowCol> CreateGridCells()

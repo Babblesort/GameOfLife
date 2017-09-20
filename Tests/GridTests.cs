@@ -96,6 +96,62 @@ namespace Tests
         }
 
         [Test]
+        public void RowCountCanBeSet()
+        {
+            var grid = new Grid(2, 3);
+            Assert.AreEqual(2, grid.RowCount);
+
+            grid.RowCount = 50;
+            Assert.AreEqual(50, grid.RowCount);
+        }
+
+        [Test]
+        public void SettingRowCountUpdatesCells()
+        {
+            var grid = new Grid(2, 3);
+            Assert.AreEqual(6, grid.Cells.Count);
+
+            grid.RowCount = 5;
+            Assert.AreEqual(15, grid.Cells.Count);
+        }
+
+        [Test]
+        public void ColCountCanBeSet()
+        {
+            var grid = new Grid(2, 3);
+            Assert.AreEqual(3, grid.ColCount);
+
+            grid.ColCount = 5;
+            Assert.AreEqual(5, grid.ColCount);
+        }
+
+        [Test]
+        public void SettingColCountUpdatesCells()
+        {
+            var grid = new Grid(2, 3);
+            Assert.AreEqual(6, grid.Cells.Count);
+
+            grid.ColCount = 5;
+            Assert.AreEqual(10, grid.Cells.Count);
+        }
+
+        [Test]
+        public void RowAndColMinAndMaxAreEnforced()
+        {
+            var tooFewRows = Grid.MinRows - 1;
+            var tooManyRows = Grid.MaxRows + 1;
+            var tooFewCols = Grid.MinCols - 1;
+            var tooManyCols = Grid.MaxCols + 1;
+
+            var grid = new Grid();
+
+            Assert.Throws<ArgumentOutOfRangeException>(() => grid.RowCount = tooFewRows);
+            Assert.Throws<ArgumentOutOfRangeException>(() => grid.RowCount = tooManyRows);
+            Assert.Throws<ArgumentOutOfRangeException>(() => grid.ColCount = tooFewCols);
+            Assert.Throws<ArgumentOutOfRangeException>(() => grid.ColCount = tooFewCols);
+        }
+
+        [Test]
         public void CanGenerateAnEmptyGeneration()
         {
             var grid = new Grid(2, 2);
