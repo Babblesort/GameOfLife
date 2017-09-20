@@ -38,7 +38,7 @@ namespace UI
 
         private void btnPause_Click(object sender, EventArgs e)
         {
-            _gaea.PauseRun();
+            _gaea.Pause();
         }
 
         private void btnStep_Click(object sender, EventArgs e)

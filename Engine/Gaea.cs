@@ -87,7 +87,7 @@ namespace Engine
             Task.Factory.StartNew(() => RunStep(updateGui));
         }
 
-        public void PauseRun()
+        public void Pause()
         {
             if (!_token.IsCancellationRequested)
             {
