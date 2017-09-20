@@ -65,21 +65,23 @@ namespace Engine
                 _stopOnGeneration = value;
             }
         }
-
-
-        public void Run(Action<int, Generation> updateVisualizationFn)
+        
+        public void Run(Action<int, Generation> updateGui)
         {
-            Task.Factory.StartNew(() =>
-                {
-                    while (_generationNumber < StopOnGeneration)
-                    {
-                        _generationNumber++;
-                        var nextCells = GenerationResolver.ResolveNextGeneration(Grid, Rules, Cells);
-                        Thread.Sleep(DelayMilliseconds);
-                        updateVisualizationFn(_generationNumber, nextCells);
-                        Cells = nextCells;
-                    }
-                });
+            Task.Factory.StartNew(() => RunToStopGeneration(updateGui));
+        }
+
+        public void RunToStopGeneration(Action<int, Generation> updateGui)
+        {
+            while (_generationNumber < StopOnGeneration)
+            {
+                _generationNumber++;
+                var nextCells = GenerationResolver.ResolveNextGeneration(Grid, Rules, Cells);
+                Thread.Sleep(DelayMilliseconds);
+                updateGui(_generationNumber, nextCells);
+                Cells = nextCells;
+            }
+
         }
     }
 }
