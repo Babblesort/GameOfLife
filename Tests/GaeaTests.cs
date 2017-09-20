@@ -50,5 +50,33 @@ namespace Tests
             var gaea = new Gaea(new Grid(), new Rules());
             Assert.AreEqual(gaea.RunState, Gaea.RunStates.Idle);
         }
+
+        [Test]
+        public void DelayMillisecondsSettings()
+        {
+            Assert.AreEqual(50, Gaea.MinDelayMilliseconds);
+            Assert.AreEqual(5000, Gaea.MaxDelayMilliseconds);
+            Assert.AreEqual(500, Gaea.DefaultDelayMilliseconds);
+        }
+
+        [Test]
+        public void DelayMillisecondsPropertyDefaultsAndSets()
+        {
+            var gaea = new Gaea(new Grid(), new Rules());
+            Assert.AreEqual(Gaea.DefaultDelayMilliseconds, gaea.DelayMilliseconds);
+
+            gaea.DelayMilliseconds = 1000;
+            Assert.AreEqual(1000, gaea.DelayMilliseconds);
+        }
+
+        [Test]
+        public void ThrowsOnInvalidDelay()
+        {
+            var tooSmall = Gaea.MinDelayMilliseconds - 1;
+            var tooBig = Gaea.MaxDelayMilliseconds + 1;
+            var gaea = new Gaea(new Grid(), new Rules());
+            Assert.Throws<ArgumentOutOfRangeException>(() => gaea.DelayMilliseconds = tooSmall);
+            Assert.Throws<ArgumentOutOfRangeException>(() => gaea.DelayMilliseconds = tooBig);
+        }
     }
 }

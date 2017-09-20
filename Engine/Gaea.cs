@@ -10,7 +10,11 @@ namespace Engine
         public Rules Rules { get; }
         public Generation Cells { get; private set; }
         public RunStates RunState { get; }
+        public static int MinDelayMilliseconds = 50;
+        public static int MaxDelayMilliseconds = 5000;
+        public static int DefaultDelayMilliseconds = 500;
         private int _generationNumber;
+        private int _delay = DefaultDelayMilliseconds;
         public enum RunStates
         {
             Idle = 0,
@@ -35,6 +39,18 @@ namespace Engine
             RunState = RunStates.Idle;
         }
 
+        public int DelayMilliseconds
+        {
+            get { return _delay; }
+            set
+            {
+                if (value < MinDelayMilliseconds || value > MaxDelayMilliseconds)
+                    throw new ArgumentOutOfRangeException(nameof(value), $"Must be between {MinDelayMilliseconds} and {MaxDelayMilliseconds} inclusive.");
+
+                _delay = value;
+            }
+        }
+
         public void Run(Action<int, Generation> updateVisualizationFn)
         {
             Task.Factory.StartNew(() =>
@@ -43,12 +59,11 @@ namespace Engine
                     {
                         _generationNumber++;
                         var nextCells = GenerationResolver.ResolveNextGeneration(Grid, Rules, Cells);
-                        Thread.Sleep(50);
+                        Thread.Sleep(DelayMilliseconds);
                         updateVisualizationFn(_generationNumber, nextCells);
                         Cells = nextCells;
                     }
                 });
         }
-
     }
 }
