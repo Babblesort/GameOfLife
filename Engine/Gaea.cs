@@ -20,8 +20,7 @@ namespace Engine
 
         private CancellationTokenSource _tokenSource;
         private CancellationToken _token;
-
-        private bool _runningFlag = false;
+        private Task _runTask;
 
         public enum RunStates
         {
@@ -75,21 +74,17 @@ namespace Engine
         {
             _tokenSource = new CancellationTokenSource();
             _token = _tokenSource.Token;
-            Task.Factory.StartNew(() => RunToStopGeneration(updateGui, _token), _token);
+            _runTask = Task.Factory.StartNew(() => RunToStopGeneration(updateGui, _token), _token);
         }
 
-        public void RunToStopGeneration(Action<int, Generation> updateGui, CancellationToken ct)
+        public void Step(Action<int, Generation> updateGui)
         {
-            _runningFlag = true;
-            while (_generationNumber < StopOnGeneration && !ct.IsCancellationRequested)
+            if(_runTask?.Status == TaskStatus.Running)
             {
-                _generationNumber++;
-                var nextCells = GenerationResolver.ResolveNextGeneration(Grid, Rules, Cells);
-                Thread.Sleep(DelayMilliseconds);
-                updateGui(_generationNumber, nextCells);
-                Cells = nextCells;
+                _tokenSource.Cancel();
+                _runTask.Wait();
             }
-            _runningFlag = false;
+            Task.Factory.StartNew(() => RunStep(updateGui));
         }
 
         public void PauseRun()
@@ -100,18 +95,27 @@ namespace Engine
             }
         }
 
-        public void StepGeneration(Action<int, Generation> updateGui)
+        public void RunToStopGeneration(Action<int, Generation> updateGui, CancellationToken ct)
         {
-            if (!_runningFlag)
+            while (_generationNumber < StopOnGeneration && !ct.IsCancellationRequested)
             {
-                Task.Factory.StartNew(() => RunStep(updateGui));
+                ExecuteLifeGeneration(updateGui, useDelay: true);
             }
         }
 
         public void RunStep(Action<int, Generation> updateGui)
         {
+            ExecuteLifeGeneration(updateGui, useDelay: false);
+        }
+
+        public void ExecuteLifeGeneration(Action<int, Generation> updateGui, bool useDelay = false)
+        {
             _generationNumber++;
             var nextCells = GenerationResolver.ResolveNextGeneration(Grid, Rules, Cells);
+            if(useDelay)
+            {
+                Thread.Sleep(DelayMilliseconds);
+            }
             updateGui(_generationNumber, nextCells);
             Cells = nextCells;
         }
