@@ -3,8 +3,6 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Engine;
 using System.Threading;
-using System.Linq;
-using System.Collections.Generic;
 
 namespace UI
 {
@@ -13,16 +11,6 @@ namespace UI
         private TaskScheduler _scheduler;
         private Grid _grid;
         private Gaea _gaea;
-
-        public GameForm()
-        {
-            InitializeComponent();
-        }
-
-        private void btnExit_Click(object sender, EventArgs e)
-        {
-            Environment.Exit(0);
-        }
 
         public enum GameStates
         {
@@ -33,6 +21,16 @@ namespace UI
         }
 
         public GameStates GameState { get; private set; } = GameStates.Idle;
+
+        public GameForm()
+        {
+            InitializeComponent();
+        }
+
+        private void btnExit_Click(object sender, EventArgs e)
+        {
+            Environment.Exit(0);
+        }
 
         private void GameForm_Load(object sender, EventArgs e)
         {
