@@ -51,15 +51,22 @@ namespace UI
             TrackRows.Maximum = Grid.MaxRows;
             TrackRows.TickFrequency = 25;
             TrackRows.SmallChange = 10;
+            UpDownRows.DecimalPlaces = 0;
+            UpDownRows.Minimum = Grid.MinRows;
+            UpDownRows.Maximum = Grid.MaxRows;
+
             TrackCols.Minimum = Grid.MinCols;
             TrackCols.Maximum = Grid.MaxCols;
             TrackCols.TickFrequency = 25;
             TrackCols.SmallChange = 10;
+            UpDownCols.DecimalPlaces = 0;
+            UpDownCols.Minimum = Grid.MinCols;
+            UpDownCols.Maximum = Grid.MaxCols;
 
             TrackRows.Value = Grid.DefaultRows;
             TrackCols.Value = Grid.DefaultCols;
-
-            RefreshRowColLabels();
+            UpDownRows.Value = Grid.DefaultRows;
+            UpDownCols.Value = Grid.DefaultCols;
         }
 
         private void RaiseGaeaOnDemand()
@@ -121,19 +128,13 @@ namespace UI
             }
         }
 
-        private void RefreshRowColLabels()
-        {
-            LabelRowsValue.Text = TrackRows.Value.ToString();
-            LabelColsValue.Text = TrackCols.Value.ToString();
-        }
-
         private void TrackRows_ValueChanged(object sender, EventArgs e)
         {
             if (CheckboxLockRowAndCols.Checked)
             {
                 TrackCols.Value = TrackRows.Value;
             }
-            RefreshRowColLabels();
+            UpDownRows.Value = TrackRows.Value;
             _grid.RowCount = TrackRows.Value;
             gamePanel.Refresh();
         }
@@ -144,11 +145,33 @@ namespace UI
             {
                 TrackRows.Value = TrackCols.Value;
             }
-            RefreshRowColLabels();
+            UpDownCols.Value = TrackCols.Value;
             _grid.ColCount = TrackCols.Value;
             gamePanel.Refresh();
         }
 
+        private void UpDownRows_ValueChanged(object sender, EventArgs e)
+        {
+            if (CheckboxLockRowAndCols.Checked)
+            {
+                UpDownCols.Value = UpDownRows.Value;
+            }
+            TrackRows.Value = (int) UpDownRows.Value;
+            _grid.RowCount = (int) UpDownRows.Value;
+            gamePanel.Refresh();
+        }
+
+        private void UpDownCols_ValueChanged(object sender, EventArgs e)
+        {
+            if (CheckboxLockRowAndCols.Checked)
+            {
+                UpDownRows.Value = UpDownCols.Value;
+            }
+            TrackCols.Value = (int) UpDownCols.Value;
+            _grid.ColCount = (int) UpDownCols.Value;
+            gamePanel.Refresh();
+        }
+        
         private void CheckboxLockRowAndCols_CheckedChanged(object sender, EventArgs e)
         {
             if (!CheckboxLockRowAndCols.Checked) return;
@@ -172,6 +195,8 @@ namespace UI
                     CheckboxLockRowAndCols.Enabled = true;
                     TrackRows.Enabled = true;
                     TrackCols.Enabled = true;
+                    UpDownRows.Enabled = true;
+                    UpDownCols.Enabled = true;
                     break;
                 case GameStates.Run:
                     btnRun.Enabled = false;
@@ -182,6 +207,8 @@ namespace UI
                     CheckboxLockRowAndCols.Enabled = false;
                     TrackRows.Enabled = false;
                     TrackCols.Enabled = false;
+                    UpDownRows.Enabled = false;
+                    UpDownCols.Enabled = false;
                     break;
                 case GameStates.Step:
                     btnRun.Enabled = true;
@@ -192,6 +219,8 @@ namespace UI
                     CheckboxLockRowAndCols.Enabled = false;
                     TrackRows.Enabled = false;
                     TrackCols.Enabled = false;
+                    UpDownRows.Enabled = false;
+                    UpDownCols.Enabled = false;
                     break;
                 case GameStates.Pause:
                     btnRun.Enabled = true;
@@ -202,6 +231,8 @@ namespace UI
                     CheckboxLockRowAndCols.Enabled = false;
                     TrackRows.Enabled = false;
                     TrackCols.Enabled = false;
+                    UpDownRows.Enabled = false;
+                    UpDownCols.Enabled = false;
                     break;
             }
         }
