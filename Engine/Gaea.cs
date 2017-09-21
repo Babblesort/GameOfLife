@@ -51,7 +51,7 @@ namespace Engine
         {
             _tokenSource = new CancellationTokenSource();
             _token = _tokenSource.Token;
-            _runTask = Task.Factory.StartNew(() => RunContinuous(updateGui, _token), _token);
+            _runTask = Task.Factory.StartNew(() => RunContinuous(updateGui), _token);
         }
 
         public void Step(Action<int, Generation> updateGui)
@@ -83,9 +83,9 @@ namespace Engine
             updateGui(_generationNumber, Grid.CreateEmptyGeneration());
         }
 
-        public void RunContinuous(Action<int, Generation> updateGui, CancellationToken ct)
+        public void RunContinuous(Action<int, Generation> updateGui)
         {
-            while (!ct.IsCancellationRequested)
+            while (!_token.IsCancellationRequested)
             {
                 ExecuteLifeGeneration(updateGui, useDelay: true);
             }
