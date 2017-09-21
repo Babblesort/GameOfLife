@@ -100,12 +100,12 @@ namespace Engine
         {
             _generationNumber++;
             var nextCells = GenerationResolver.ResolveNextGeneration(Grid, Rules, Cells);
-            if(useDelay)
+            updateGui(_generationNumber, nextCells);
+            Cells = nextCells;
+            if (useDelay)
             {
                 Thread.Sleep(DelayMilliseconds);
             }
-            updateGui(_generationNumber, nextCells);
-            Cells = nextCells;
         }
     }
 }
