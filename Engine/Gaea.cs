@@ -56,23 +56,23 @@ namespace Engine
 
         public void Step(Action<int, Generation> updateGui)
         {
-            CancelCurrentRun();
+            CancelIfRunning();
             Task.Factory.StartNew(() => RunStep(updateGui));
         }
 
         public void Pause()
         {
-            CancelCurrentRun();
+            CancelIfRunning();
         }
 
         public void Clear(Action<int, Generation> updateGui)
         {
-            CancelCurrentRun();
+            CancelIfRunning();
             _generationNumber = 0;
             updateGui(_generationNumber, Grid.CreateEmptyGeneration());
         }
 
-        private void CancelCurrentRun()
+        private void CancelIfRunning()
         {
             if (_runTask?.Status != TaskStatus.Running) return;
             _tokenSource.Cancel();
