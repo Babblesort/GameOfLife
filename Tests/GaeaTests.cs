@@ -37,21 +37,6 @@ namespace Tests
         }
 
         [Test]
-        public void ExposesRunStatesEnum()
-        {
-            Assert.AreEqual(0, (int)Gaea.RunStates.Idle);
-            Assert.AreEqual(1, (int)Gaea.RunStates.Step);
-            Assert.AreEqual(2, (int)Gaea.RunStates.Run);
-        }
-
-        [Test]
-        public void DefaultsToIdleState()
-        {
-            var gaea = new Gaea(new Grid(), new Rules());
-            Assert.AreEqual(gaea.RunState, Gaea.RunStates.Idle);
-        }
-
-        [Test]
         public void DelayMillisecondsSettings()
         {
             Assert.AreEqual(25, Gaea.MinDelayMilliseconds);

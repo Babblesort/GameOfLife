@@ -9,7 +9,6 @@ namespace Engine
         public Grid Grid { get; }
         public Rules Rules { get; }
         public Generation Cells { get; private set; }
-        public RunStates RunState { get; }
         public static int MinDelayMilliseconds = 25;
         public static int MaxDelayMilliseconds = 500;
         public static int DefaultDelayMilliseconds = 225;
@@ -21,13 +20,6 @@ namespace Engine
         private CancellationTokenSource _tokenSource;
         private CancellationToken _token;
         private Task _runTask;
-
-        public enum RunStates
-        {
-            Idle = 0,
-            Step = 1,
-            Run = 2
-        }
 
         public Gaea(Grid grid, Rules rules, Generation initialCells = null)
         {
@@ -43,7 +35,6 @@ namespace Engine
             Grid = grid;
             Rules = rules;
             Cells = initialCells;
-            RunState = RunStates.Idle;
         }
 
         public int DelayMilliseconds
@@ -93,6 +84,17 @@ namespace Engine
             {
                 _tokenSource?.Cancel();
             }
+        }
+
+        public void Clear(Action<int, Generation> updateGui)
+        {
+            if (_runTask?.Status == TaskStatus.Running)
+            {
+                _tokenSource.Cancel();
+                _runTask.Wait();
+            }
+            _generationNumber = 0;
+            updateGui(_generationNumber, Grid.CreateEmptyGeneration());
         }
 
         public void RunToStopGeneration(Action<int, Generation> updateGui, CancellationToken ct)
