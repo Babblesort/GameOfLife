@@ -7,9 +7,9 @@ namespace Engine
     public class Grid
     {
         public static readonly int MinRows = 1;
-        public static readonly int MaxRows = 300;
+        public static readonly int MaxRows = 200;
         public static readonly int MinCols = 1;
-        public static readonly int MaxCols = 300;
+        public static readonly int MaxCols = 200;
         public static readonly int DefaultRows = 45;
         public static readonly int DefaultCols = 45;
 
