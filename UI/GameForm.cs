@@ -130,48 +130,50 @@ namespace UI
 
         private void TrackRows_ValueChanged(object sender, EventArgs e)
         {
-            if (CheckboxLockRowAndCols.Checked)
-            {
-                TrackCols.Value = TrackRows.Value;
-            }
-            UpDownRows.Value = TrackRows.Value;
-            _grid.RowCount = TrackRows.Value;
-            gamePanel.Refresh();
+            SynchronizeRowsValue(TrackRows.Value);
         }
 
         private void TrackCols_ValueChanged(object sender, EventArgs e)
         {
-            if (CheckboxLockRowAndCols.Checked)
-            {
-                TrackRows.Value = TrackCols.Value;
-            }
-            UpDownCols.Value = TrackCols.Value;
-            _grid.ColCount = TrackCols.Value;
-            gamePanel.Refresh();
+            SynchronizeColsValue(TrackCols.Value);
         }
 
         private void UpDownRows_ValueChanged(object sender, EventArgs e)
         {
-            if (CheckboxLockRowAndCols.Checked)
-            {
-                UpDownCols.Value = UpDownRows.Value;
-            }
-            TrackRows.Value = (int) UpDownRows.Value;
-            _grid.RowCount = (int) UpDownRows.Value;
-            gamePanel.Refresh();
+            SynchronizeRowsValue((int) UpDownRows.Value);
         }
 
         private void UpDownCols_ValueChanged(object sender, EventArgs e)
         {
+            SynchronizeColsValue((int) UpDownCols.Value);
+        }
+
+        private void SynchronizeRowsValue(int value)
+        {
             if (CheckboxLockRowAndCols.Checked)
             {
-                UpDownRows.Value = UpDownCols.Value;
+                TrackCols.Value = value;
+                UpDownCols.Value = value;
             }
-            TrackCols.Value = (int) UpDownCols.Value;
-            _grid.ColCount = (int) UpDownCols.Value;
+            UpDownRows.Value = value;
+            TrackRows.Value = value;
+            _grid.RowCount = value;
             gamePanel.Refresh();
         }
-        
+
+        private void SynchronizeColsValue(int value)
+        {
+            if (CheckboxLockRowAndCols.Checked)
+            {
+                TrackRows.Value = value;
+                UpDownRows.Value = value;
+            }
+            UpDownCols.Value = value;
+            TrackCols.Value = value;
+            _grid.ColCount = value;
+            gamePanel.Refresh();
+        }
+
         private void CheckboxLockRowAndCols_CheckedChanged(object sender, EventArgs e)
         {
             if (!CheckboxLockRowAndCols.Checked) return;
