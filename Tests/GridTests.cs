@@ -96,6 +96,13 @@ namespace Tests
         }
 
         [Test]
+        public void GridProvidesCellCount()
+        {
+            var grid = new Grid(3, 5);
+            Assert.AreEqual(15, grid.CellCount);
+        }
+
+        [Test]
         public void RowCountCanBeSet()
         {
             var grid = new Grid(2, 3);

@@ -27,7 +27,7 @@ namespace Engine
             {
                 initialCells = grid.CreateRandomGeneration();
             }
-            if (initialCells.Count != grid.RowCount * grid.ColCount)
+            if (initialCells.Count != grid.CellCount)
                 throw new ArgumentOutOfRangeException(nameof(initialCells), "Grid cell count does not match generation cells count");
 
             Grid = grid;

@@ -49,6 +49,8 @@ namespace Engine
             }
         }
 
+        public int CellCount => RowCount * ColCount;
+
         public Generation CreateEmptyGeneration()
         {
             var generation = new Generation();
