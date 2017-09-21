@@ -37,7 +37,7 @@ namespace UI
         private void GameForm_Load(object sender, EventArgs e)
         {
             _scheduler = TaskScheduler.FromCurrentSynchronizationContext();
-            _grid = new Grid(40, 40);
+            _grid = new Grid();
             gamePanel.Grid = _grid;
 
             SpeedSlider.Minimum = Gaea.MinDelayMilliseconds;
