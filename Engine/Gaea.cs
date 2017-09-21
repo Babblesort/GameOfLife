@@ -83,7 +83,7 @@ namespace Engine
             updateGui(_generationNumber, Grid.CreateEmptyGeneration());
         }
 
-        public void RunContinuous(Action<int, Generation> updateGui)
+        private void RunContinuous(Action<int, Generation> updateGui)
         {
             while (!_token.IsCancellationRequested)
             {
@@ -91,12 +91,12 @@ namespace Engine
             }
         }
 
-        public void RunStep(Action<int, Generation> updateGui)
+        private void RunStep(Action<int, Generation> updateGui)
         {
-            ExecuteLifeGeneration(updateGui, useDelay: false);
+            ExecuteLifeGeneration(updateGui);
         }
 
-        public void ExecuteLifeGeneration(Action<int, Generation> updateGui, bool useDelay = false)
+        private void ExecuteLifeGeneration(Action<int, Generation> updateGui, bool useDelay = false)
         {
             _generationNumber++;
             var nextCells = GenerationResolver.ResolveNextGeneration(Grid, Rules, Cells);
