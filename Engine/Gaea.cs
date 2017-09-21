@@ -12,9 +12,7 @@ namespace Engine
         public static int MinDelayMilliseconds = 25;
         public static int MaxDelayMilliseconds = 500;
         public static int DefaultDelayMilliseconds = 225;
-        public static int DefaultStopOnGeneration = 250;
         private int _generationNumber;
-        private int _stopOnGeneration = DefaultStopOnGeneration;
         private int _delay = DefaultDelayMilliseconds;
 
         private CancellationTokenSource _tokenSource;
@@ -49,23 +47,11 @@ namespace Engine
             }
         }
 
-        public int StopOnGeneration
-        { 
-            get { return _stopOnGeneration; }
-            set
-            {
-                if (value <= 0)
-                    throw new ArgumentOutOfRangeException(nameof(value), $"Must be greater than zero");
-
-                _stopOnGeneration = value;
-            }
-        }
-        
         public void Run(Action<int, Generation> updateGui)
         {
             _tokenSource = new CancellationTokenSource();
             _token = _tokenSource.Token;
-            _runTask = Task.Factory.StartNew(() => RunToStopGeneration(updateGui, _token), _token);
+            _runTask = Task.Factory.StartNew(() => RunContinuous(updateGui, _token), _token);
         }
 
         public void Step(Action<int, Generation> updateGui)
@@ -97,9 +83,9 @@ namespace Engine
             updateGui(_generationNumber, Grid.CreateEmptyGeneration());
         }
 
-        public void RunToStopGeneration(Action<int, Generation> updateGui, CancellationToken ct)
+        public void RunContinuous(Action<int, Generation> updateGui, CancellationToken ct)
         {
-            while (_generationNumber < StopOnGeneration && !ct.IsCancellationRequested)
+            while (!ct.IsCancellationRequested)
             {
                 ExecuteLifeGeneration(updateGui, useDelay: true);
             }
