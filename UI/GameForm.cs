@@ -73,32 +73,28 @@ namespace UI
 
         private void btnRun_Click(object sender, EventArgs e)
         {
-            GameState = GameStates.Run;
-            SetUiForGameState();
+            SetUiForGameState(GameStates.Run);
             RaiseGaeaOnDemand();
             _gaea.Run(UpdateGameVisualization);
         }
 
         private void btnPause_Click(object sender, EventArgs e)
         {
-            GameState = GameStates.Pause;
-            SetUiForGameState();
+            SetUiForGameState(GameStates.Pause);
             RaiseGaeaOnDemand();
             _gaea.Pause();
         }
 
         private void btnStep_Click(object sender, EventArgs e)
         {
-            GameState = GameStates.Step;
-            SetUiForGameState();
+            SetUiForGameState(GameStates.Step);
             RaiseGaeaOnDemand();
             _gaea.Step(UpdateGameVisualization);
         }
 
         private void btnClear_Click(object sender, EventArgs e)
         {
-            GameState = GameStates.Idle;
-            SetUiForGameState();
+            SetUiForGameState(GameStates.Idle);
             _gaea?.Clear(UpdateGameVisualization);
             _gaea = null;
         }
@@ -133,7 +129,6 @@ namespace UI
 
         private void TrackRows_ValueChanged(object sender, EventArgs e)
         {
-            SetUiForGameState();
             if (CheckboxLockRowAndCols.Checked)
             {
                 TrackCols.Value = TrackRows.Value;
@@ -145,7 +140,6 @@ namespace UI
 
         private void TrackCols_ValueChanged(object sender, EventArgs e)
         {
-            SetUiForGameState();
             if (CheckboxLockRowAndCols.Checked)
             {
                 TrackRows.Value = TrackCols.Value;
@@ -157,17 +151,16 @@ namespace UI
 
         private void CheckboxLockRowAndCols_CheckedChanged(object sender, EventArgs e)
         {
-            SetUiForGameState();
-            if (CheckboxLockRowAndCols.Checked)
-            {
-                var lower = new List<int> { TrackRows.Value, TrackCols.Value }.Min();
-                TrackRows.Value = lower;
-                TrackCols.Value = lower;
-            }
+            if (!CheckboxLockRowAndCols.Checked) return;
+
+            var lower = Math.Min(TrackRows.Value, TrackCols.Value);
+            TrackRows.Value = lower;
+            TrackCols.Value = lower;
         }
 
-        private void SetUiForGameState()
+        private void SetUiForGameState(GameStates state)
         {
+            GameState = state;
             switch (GameState)
             {
                 case GameStates.Idle:
@@ -209,8 +202,6 @@ namespace UI
                     CheckboxLockRowAndCols.Enabled = false;
                     TrackRows.Enabled = false;
                     TrackCols.Enabled = false;
-                    break;
-                default:
                     break;
             }
         }
