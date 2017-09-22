@@ -16,7 +16,7 @@ namespace UI
         private float GridWidth => ColCount * CellWidth;
         private float GridHeight => RowCount * CellHeight;
         private static readonly Pen GridLinePen = Pens.LightGray;
-        private static readonly Brush CellBrush = new SolidBrush(Color.FromArgb(180, Color.ForestGreen));
+        private static readonly Brush CellBrush = new SolidBrush(Color.FromArgb(alpha: 180, baseColor: Color.ForestGreen));
         private Grid _grid;
         private Generation _cells;
 

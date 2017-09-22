@@ -221,7 +221,7 @@ namespace Tests
             Assert.AreEqual(4, generation.Count);
         }
 
-        [Test, TestCaseSource("RowColExpectedNeighbors")]
+        [Test, TestCaseSource(nameof(RowColExpectedNeighbors))]
         public void GridCanDeriveNeighborsForCell(RowCol cell, RowCol[] neighbors)
         {
             var grid = new Grid(3, 3);
