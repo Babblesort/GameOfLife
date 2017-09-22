@@ -29,7 +29,7 @@ namespace UI
 
         private void btnExit_Click(object sender, EventArgs e)
         {
-            Environment.Exit(0);
+            Environment.Exit(exitCode: 0);
         }
 
         private void GameForm_Load(object sender, EventArgs e)
