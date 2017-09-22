@@ -156,7 +156,6 @@ namespace UI
             UpDownRows.Value = value;
             TrackRows.Value = value;
             _grid.RowCount = value;
-            gamePanel.Refresh();
         }
 
         private void SynchronizeColsValue(int value)
@@ -169,7 +168,6 @@ namespace UI
             UpDownCols.Value = value;
             TrackCols.Value = value;
             _grid.ColCount = value;
-            gamePanel.Refresh();
         }
 
         private void CheckboxLockRowAndCols_CheckedChanged(object sender, EventArgs e)

@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using Engine.Annotations;
 
 namespace Engine
 {
-    public class Grid
+    public class Grid : INotifyPropertyChanged
     {
         public static readonly int MinRows = 1;
         public static readonly int MaxRows = 200;
@@ -18,6 +21,8 @@ namespace Engine
 
         public List<RowCol> Cells { get; private set; }
 
+        public event PropertyChangedEventHandler PropertyChanged;
+
         public Grid() : this(DefaultRows, DefaultCols) { }
 
         public Grid(int rows, int cols)
@@ -28,6 +33,12 @@ namespace Engine
             UpdateGridCells();
         }
 
+        [NotifyPropertyChangedInvocator]
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
         public int RowCount
         {
             get { return _rowCount; }
@@ -35,6 +46,7 @@ namespace Engine
             {
                 if (value < MinRows || value > MaxRows) throw new ArgumentOutOfRangeException(nameof(RowCount), $"Must be between {MinRows} and {MaxRows} inclusive");
                 _rowCount = value;
+                OnPropertyChanged(nameof(RowCount));
                 UpdateGridCells();
             }
         }
@@ -45,6 +57,7 @@ namespace Engine
             {
                 if (value < MinCols || value > MaxCols) throw new ArgumentOutOfRangeException(nameof(ColCount), $"Must be between {MinCols} and {MaxCols} inclusive");
                 _colCount = value;
+                OnPropertyChanged(nameof(ColCount));
                 UpdateGridCells();
             }
         }

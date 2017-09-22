@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
@@ -28,9 +29,19 @@ namespace UI
             set
             {
                 _grid = value;
+                if (_grid != null)
+                {
+                    _grid.PropertyChanged += GridPropertyChanged;
+                }
                 Refresh();
             }
         }
+
+        private void GridPropertyChanged(object sender, PropertyChangedEventArgs e) 
+        {
+            Refresh();
+        }
+
         public Generation Cells
         {
             get

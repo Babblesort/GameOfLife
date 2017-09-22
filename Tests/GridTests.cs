@@ -2,6 +2,7 @@
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace Tests
 {
@@ -155,7 +156,41 @@ namespace Tests
             Assert.Throws<ArgumentOutOfRangeException>(() => grid.RowCount = tooFewRows);
             Assert.Throws<ArgumentOutOfRangeException>(() => grid.RowCount = tooManyRows);
             Assert.Throws<ArgumentOutOfRangeException>(() => grid.ColCount = tooFewCols);
-            Assert.Throws<ArgumentOutOfRangeException>(() => grid.ColCount = tooFewCols);
+            Assert.Throws<ArgumentOutOfRangeException>(() => grid.ColCount = tooManyCols);
+        }
+
+        [Test]
+        public void RowCountPropertyChangeEventsCanBeSubscribedTo()
+        {
+            var grid = new Grid();
+            var callBackCalled = false;
+            var callBackAction = new PropertyChangedEventHandler((sender, args) =>
+            {
+                Assert.IsInstanceOf<Grid>(sender);
+                Assert.AreEqual("RowCount", args.PropertyName);
+                callBackCalled = true;
+            });
+
+            grid.PropertyChanged += callBackAction;
+            grid.RowCount = 9;
+            Assert.IsTrue(callBackCalled);
+        }
+
+        [Test]
+        public void ColCountPropertyChangeEventsCanBeSubscribedTo()
+        {
+            var grid = new Grid();
+            var callBackCalled = false;
+            var callBackAction = new PropertyChangedEventHandler((sender, args) =>
+            {
+                Assert.IsInstanceOf<Grid>(sender);
+                Assert.AreEqual("ColCount", args.PropertyName);
+                callBackCalled = true;
+            });
+
+            grid.PropertyChanged += callBackAction;
+            grid.ColCount = 9;
+            Assert.IsTrue(callBackCalled);
         }
 
         [Test]
