@@ -6,21 +6,17 @@ namespace Engine
 {
     public class Gaea
     {
-        public Grid Grid { get; }
-        public Rules Rules { get; }
-        public Generation Cells { get; private set; }
-        public Action<int, Generation> UpdateVisualization { get; set; }
         public static int MinDelayMilliseconds = 25;
         public static int MaxDelayMilliseconds = 500;
         public static int DefaultDelayMilliseconds = 225;
         private int _generationNumber;
         private int _delay = DefaultDelayMilliseconds;
-
         private CancellationTokenSource _tokenSource;
         private CancellationToken _token;
         private Task _task;
 
         public Gaea(Grid grid, Rules rules) : this(grid, rules,  updateFn: (i, c) => { }, cells: null) { }
+
         public Gaea(Grid grid, Rules rules, Action<int, Generation> updateFn, Generation cells = null)
         {
             if (grid == null) throw new ArgumentNullException(nameof(grid), "Cannot be null");
@@ -31,6 +27,11 @@ namespace Engine
             Cells = cells;
             UpdateVisualization = updateFn;
         }
+
+        public Grid Grid { get; }
+        public Rules Rules { get; }
+        public Generation Cells { get; private set; }
+        public Action<int, Generation> UpdateVisualization { get; set; }
 
         public int DelayMilliseconds
         {
