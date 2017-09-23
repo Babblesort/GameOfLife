@@ -75,7 +75,7 @@ namespace Engine
 
         private void ValidateExecuteGenerationConditions()
         {
-            if (Cells == null) throw new ArgumentNullException(nameof(Cells), $"Cannot {nameof(Step)} with null Cells");
+            if (Cells == null) throw new ArgumentNullException(nameof(Cells), $"Cannot {nameof(ResolveGenerations)} with null Cells");
             if (Cells.Count != Grid.CellCount) throw new ArgumentException(nameof(Cells), $"{nameof(Cells)} count and {nameof(Grid)} cell count do not match");
         }
 
