@@ -15,18 +15,18 @@
         public static int NeighborsCount(RowCol cell, Grid grid, Generation cells)
         {
             var count = 0;
-            count += NeighborCount(grid.NeighborTL(cell), cells);
-            count += NeighborCount(grid.NeighborTT(cell), cells);
-            count += NeighborCount(grid.NeighborTR(cell), cells);
-            count += NeighborCount(grid.NeighborLL(cell), cells);
-            count += NeighborCount(grid.NeighborRR(cell), cells);
-            count += NeighborCount(grid.NeighborBL(cell), cells);
-            count += NeighborCount(grid.NeighborBB(cell), cells);
-            count += NeighborCount(grid.NeighborBR(cell), cells);
+            count += LiveCellAtLocation(grid.NeighborTL(cell), cells);
+            count += LiveCellAtLocation(grid.NeighborTT(cell), cells);
+            count += LiveCellAtLocation(grid.NeighborTR(cell), cells);
+            count += LiveCellAtLocation(grid.NeighborLL(cell), cells);
+            count += LiveCellAtLocation(grid.NeighborRR(cell), cells);
+            count += LiveCellAtLocation(grid.NeighborBL(cell), cells);
+            count += LiveCellAtLocation(grid.NeighborBB(cell), cells);
+            count += LiveCellAtLocation(grid.NeighborBR(cell), cells);
             return count;
         }
 
-        public static int NeighborCount(RowCol neighbor, Generation cells) =>  cells[neighbor] ? 1 : 0;
+        public static int LiveCellAtLocation(RowCol location, Generation cells) =>  cells[location] ? 1 : 0;
 
         public static bool CellAliveNextGen(bool alive, int neighborCount, Rules rules)
         {
