@@ -59,30 +59,30 @@ namespace Tests
         public void StepThrowsOnNullCells()
         {
             var gaea = new Gaea(new Grid(), new Rules());
-            Assert.Throws<ArgumentNullException>(() => gaea.Step((i, cells) => { Assert.True(false, "Should not be here"); }));
+            Assert.Throws<ArgumentNullException>(() => gaea.Step());
         }
 
         [Test]
         public void StepThrowsOnMissizedCells()
         {
             var gen = new Generation { { new RowCol(0, 0), false } };
-            var gaea = new Gaea(new Grid(2, 2), new Rules(), gen);
-            Assert.Throws<ArgumentException>(() => gaea.Step((i, cells) => { Assert.True(false, "Should not be here"); }));
+            var gaea = new Gaea(new Grid(2, 2), new Rules(), (i, c) => { }, gen);
+            Assert.Throws<ArgumentException>(() => gaea.Step());
         }
 
         [Test]
         public void RunThrowsOnNullCells()
         {
             var gaea = new Gaea(new Grid(), new Rules());
-            Assert.Throws<ArgumentNullException>(() => gaea.Run((i, cells) => { Assert.True(false, "Should not be here"); }));
+            Assert.Throws<ArgumentNullException>(() => gaea.Run());
         }
 
         [Test]
         public void RunThrowsOnMissizedCells()
         {
             var gen = new Generation { { new RowCol(0, 0), false } };
-            var gaea = new Gaea(new Grid(2, 2), new Rules(), gen);
-            Assert.Throws<ArgumentException>(() => gaea.Run((i, cells) => { Assert.True(false, "Should not be here"); }));
+            var gaea = new Gaea(new Grid(2, 2), new Rules(), (i, c) => { }, gen);
+            Assert.Throws<ArgumentException>(() => gaea.Run());
         }
 
     }

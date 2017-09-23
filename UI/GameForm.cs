@@ -71,7 +71,7 @@ namespace UI
         {
             if(_gaea == null)
             {
-                _gaea = new Gaea(_grid, new Rules(), _grid.CreateRandomGeneration());
+                _gaea = new Gaea(_grid, new Rules(), UpdateGameVisualization, _grid.CreateRandomGeneration());
             }
             _gaea.DelayMilliseconds = SpeedSlider.Value;
         }
@@ -80,7 +80,7 @@ namespace UI
         {
             SetUiForGameState(GameStates.Run);
             RaiseGaeaOnDemand();
-            _gaea.Run(UpdateGameVisualization);
+            _gaea.Run();
         }
 
         private void btnPause_Click(object sender, EventArgs e)
@@ -94,13 +94,13 @@ namespace UI
         {
             SetUiForGameState(GameStates.Step);
             RaiseGaeaOnDemand();
-            _gaea.Step(UpdateGameVisualization);
+            _gaea.Step();
         }
 
         private void btnClear_Click(object sender, EventArgs e)
         {
             SetUiForGameState(GameStates.Idle);
-            _gaea?.Clear(UpdateGameVisualization);
+            _gaea?.Clear();
             _gaea = null;
         }
 

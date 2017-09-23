@@ -9,6 +9,7 @@ namespace Engine
         public Grid Grid { get; }
         public Rules Rules { get; }
         public Generation Cells { get; private set; }
+        public Action<int, Generation> UpdateVisualization { get; set; }
         public static int MinDelayMilliseconds = 25;
         public static int MaxDelayMilliseconds = 500;
         public static int DefaultDelayMilliseconds = 225;
@@ -19,7 +20,8 @@ namespace Engine
         private CancellationToken _token;
         private Task _task;
 
-        public Gaea(Grid grid, Rules rules, Generation cells = null)
+        public Gaea(Grid grid, Rules rules) : this(grid, rules,  updateFn: (i, c) => { }, cells: null) { }
+        public Gaea(Grid grid, Rules rules, Action<int, Generation> updateFn, Generation cells = null)
         {
             if (grid == null) throw new ArgumentNullException(nameof(grid), "Cannot be null");
             if (rules == null) throw new ArgumentNullException(nameof(rules), "Cannot be null");
@@ -27,6 +29,7 @@ namespace Engine
             Grid = grid;
             Rules = rules;
             Cells = cells;
+            UpdateVisualization = updateFn;
         }
 
         public int DelayMilliseconds
@@ -41,14 +44,14 @@ namespace Engine
             }
         }
 
-        public void Run(Action<int, Generation> updateGui)
+        public void Run()
         {
-            PerformGenerationTask(updateGui, runMode: true);
+            PerformGenerationTask(runMode: true);
         }
 
-        public void Step(Action<int, Generation> updateGui)
+        public void Step()
         {
-            PerformGenerationTask(updateGui, runMode: false);
+            PerformGenerationTask(runMode: false);
         }
 
         public void Pause()
@@ -56,20 +59,20 @@ namespace Engine
             CancelIfRunning();
         }
 
-        public void Clear(Action<int, Generation> updateGui)
+        public void Clear()
         {
             CancelIfRunning();
             _generationNumber = 0;
-            updateGui(_generationNumber, Grid.CreateEmptyGeneration());
+            UpdateVisualization(_generationNumber, Grid.CreateEmptyGeneration());
         }
 
-        private Task PerformGenerationTask(Action<int, Generation> updateGui, bool runMode)
+        private Task PerformGenerationTask(bool runMode)
         {
             CancelIfRunning();
             _tokenSource = new CancellationTokenSource();
             _token = _tokenSource.Token;
             ValidateExecuteGenerationConditions();
-            _task = Task.Factory.StartNew(() => ResolveGenerations(updateGui, runMode), _token);
+            _task = Task.Factory.StartNew(() => ResolveGenerations(runMode), _token);
             return _task;
         }
 
@@ -86,13 +89,13 @@ namespace Engine
             _task.Wait();
         }
 
-        private void ResolveGenerations(Action<int, Generation> updateGui, bool runMode = false)
+        private void ResolveGenerations(bool runMode = false)
         {
             do
             {
                 _generationNumber++;
                 var nextCells = GenerationResolver.ResolveNextGeneration(Grid, Rules, Cells);
-                updateGui(_generationNumber, nextCells);
+                UpdateVisualization(_generationNumber, nextCells);
                 Cells = nextCells;
                 if (runMode)
                 {
