@@ -19,16 +19,14 @@ namespace Engine
         private CancellationToken _token;
         private Task _task;
 
-        public Gaea(Grid grid, Rules rules) : this(grid, rules, initialCells: null) { }
-
-        public Gaea(Grid grid, Rules rules, Generation initialCells)
+        public Gaea(Grid grid, Rules rules, Generation cells = null)
         {
             if (grid == null) throw new ArgumentNullException(nameof(grid), "Cannot be null");
             if (rules == null) throw new ArgumentNullException(nameof(rules), "Cannot be null");
 
             Grid = grid;
             Rules = rules;
-            Cells = initialCells;
+            Cells = cells;
         }
 
         public int DelayMilliseconds
