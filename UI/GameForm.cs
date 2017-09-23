@@ -71,7 +71,7 @@ namespace UI
         {
             if(_gaea == null)
             {
-                _gaea = new Gaea(_grid, new Rules());
+                _gaea = new Gaea(_grid, new Rules(), _grid.CreateRandomGeneration());
             }
             _gaea.DelayMilliseconds = SpeedSlider.Value;
         }

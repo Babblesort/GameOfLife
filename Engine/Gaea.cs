@@ -17,18 +17,14 @@ namespace Engine
 
         private CancellationTokenSource _tokenSource;
         private CancellationToken _token;
-        private Task _runTask;
+        private Task _task;
 
-        public Gaea(Grid grid, Rules rules, Generation initialCells = null)
+        public Gaea(Grid grid, Rules rules) : this(grid, rules, initialCells: null) { }
+
+        public Gaea(Grid grid, Rules rules, Generation initialCells)
         {
             if (grid == null) throw new ArgumentNullException(nameof(grid), "Cannot be null");
             if (rules == null) throw new ArgumentNullException(nameof(rules), "Cannot be null");
-            if (initialCells == null)
-            {
-                initialCells = grid.CreateRandomGeneration();
-            }
-            if (initialCells.Count != grid.CellCount)
-                throw new ArgumentOutOfRangeException(nameof(initialCells), "Grid cell count does not match generation cells count");
 
             Grid = grid;
             Rules = rules;
@@ -49,15 +45,12 @@ namespace Engine
 
         public void Run(Action<int, Generation> updateGui)
         {
-            _tokenSource = new CancellationTokenSource();
-            _token = _tokenSource.Token;
-            _runTask = Task.Factory.StartNew(() => RunContinuous(updateGui), _token);
+            PerformGenerationTask(updateGui, runMode: true);
         }
 
         public void Step(Action<int, Generation> updateGui)
         {
-            CancelIfRunning();
-            Task.Factory.StartNew(() => RunStep(updateGui));
+            PerformGenerationTask(updateGui, runMode: false);
         }
 
         public void Pause()
@@ -72,36 +65,43 @@ namespace Engine
             updateGui(_generationNumber, Grid.CreateEmptyGeneration());
         }
 
+        private Task PerformGenerationTask(Action<int, Generation> updateGui, bool runMode)
+        {
+            CancelIfRunning();
+            _tokenSource = new CancellationTokenSource();
+            _token = _tokenSource.Token;
+            ValidateExecuteGenerationConditions();
+            _task = Task.Factory.StartNew(() => ResolveGenerations(updateGui, runMode), _token);
+            return _task;
+        }
+
+        private void ValidateExecuteGenerationConditions()
+        {
+            if (Cells == null) throw new ArgumentNullException(nameof(Cells), $"Cannot {nameof(Step)} with null Cells");
+            if (Cells.Count != Grid.CellCount) throw new ArgumentException(nameof(Cells), $"{nameof(Cells)} count and {nameof(Grid)} cell count do not match");
+        }
+
         private void CancelIfRunning()
         {
-            if (_runTask?.Status != TaskStatus.Running) return;
+            if (_task?.Status != TaskStatus.Running) return;
             _tokenSource.Cancel();
-            _runTask.Wait();
+            _task.Wait();
         }
 
-        private void RunContinuous(Action<int, Generation> updateGui)
+        private void ResolveGenerations(Action<int, Generation> updateGui, bool runMode = false)
         {
-            while (!_token.IsCancellationRequested)
+            do
             {
-                ExecuteLifeGeneration(updateGui, useDelay: true);
+                _generationNumber++;
+                var nextCells = GenerationResolver.ResolveNextGeneration(Grid, Rules, Cells);
+                updateGui(_generationNumber, nextCells);
+                Cells = nextCells;
+                if (runMode)
+                {
+                    Thread.Sleep(DelayMilliseconds);
+                }
             }
-        }
-
-        private void RunStep(Action<int, Generation> updateGui)
-        {
-            ExecuteLifeGeneration(updateGui);
-        }
-
-        private void ExecuteLifeGeneration(Action<int, Generation> updateGui, bool useDelay = false)
-        {
-            _generationNumber++;
-            var nextCells = GenerationResolver.ResolveNextGeneration(Grid, Rules, Cells);
-            updateGui(_generationNumber, nextCells);
-            Cells = nextCells;
-            if (useDelay)
-            {
-                Thread.Sleep(DelayMilliseconds);
-            }
+            while (runMode && !_token.IsCancellationRequested);
         }
     }
 }

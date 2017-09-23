@@ -28,15 +28,6 @@ namespace Tests
         }
 
         [Test]
-        public void ThrowsOnGridAndInitialCellsSizeMismatch()
-        {
-            var grid = new Grid(2, 2);
-            var generation = new Generation { { new RowCol(0, 0), false } };
-
-            Assert.Throws<ArgumentOutOfRangeException>(() => new Gaea(grid, new Rules(), generation));
-        }
-
-        [Test]
         public void DelayMillisecondsSettings()
         {
             Assert.AreEqual(25, Gaea.MinDelayMilliseconds);
@@ -63,5 +54,36 @@ namespace Tests
             Assert.Throws<ArgumentOutOfRangeException>(() => gaea.DelayMilliseconds = tooSmall);
             Assert.Throws<ArgumentOutOfRangeException>(() => gaea.DelayMilliseconds = tooBig);
         }
+
+        [Test]
+        public void StepThrowsOnNullCells()
+        {
+            var gaea = new Gaea(new Grid(), new Rules());
+            Assert.Throws<ArgumentNullException>(() => gaea.Step((i, cells) => { Assert.True(false, "Should not be here"); }));
+        }
+
+        [Test]
+        public void StepThrowsOnMissizedCells()
+        {
+            var gen = new Generation { { new RowCol(0, 0), false } };
+            var gaea = new Gaea(new Grid(2, 2), new Rules(), gen);
+            Assert.Throws<ArgumentException>(() => gaea.Step((i, cells) => { Assert.True(false, "Should not be here"); }));
+        }
+
+        [Test]
+        public void RunThrowsOnNullCells()
+        {
+            var gaea = new Gaea(new Grid(), new Rules());
+            Assert.Throws<ArgumentNullException>(() => gaea.Run((i, cells) => { Assert.True(false, "Should not be here"); }));
+        }
+
+        [Test]
+        public void RunThrowsOnMissizedCells()
+        {
+            var gen = new Generation { { new RowCol(0, 0), false } };
+            var gaea = new Gaea(new Grid(2, 2), new Rules(), gen);
+            Assert.Throws<ArgumentException>(() => gaea.Run((i, cells) => { Assert.True(false, "Should not be here"); }));
+        }
+
     }
 }
