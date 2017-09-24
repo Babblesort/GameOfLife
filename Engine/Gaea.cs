@@ -94,10 +94,8 @@ namespace Engine
         {
             do
             {
-                _generationNumber++;
-                var nextCells = GenerationResolver.ResolveNextGeneration(Grid, Rules, Cells);
-                UpdateVisualization(_generationNumber, nextCells);
-                Cells = nextCells;
+                Cells = GenerationResolver.ResolveNextGeneration(Grid, Rules, Cells);
+                UpdateVisualization(++_generationNumber, Cells);
                 if (runMode)
                 {
                     Thread.Sleep(DelayMilliseconds);
