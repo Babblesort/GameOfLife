@@ -224,6 +224,98 @@ namespace Tests
         }
 
         [Test]
+        public void GridSizeIncreaseEventFiresOnRowCountIncrease()
+        {
+            var grid = new Grid(3, 3);
+            var increaseCallBackCalled = false;
+            var decreaseCallBackCalled = false;
+
+            var increaseCallBackAction = new EventHandler((sender, args) =>
+            {
+                increaseCallBackCalled = true;
+            });
+            var decreaseCallBackAction = new EventHandler((sender, args) =>
+            {
+                decreaseCallBackCalled = true;
+            });
+
+            grid.GridSizeIncreased += increaseCallBackAction;
+            grid.GridSizeDecreased += decreaseCallBackAction;
+            grid.RowCount = 4;
+            Assert.IsTrue(increaseCallBackCalled);
+            Assert.IsFalse(decreaseCallBackCalled);
+        }
+
+        [Test]
+        public void GridSizeIncreaseEventFiresOnColCountIncrease()
+        {
+            var grid = new Grid(3, 3);
+            var increaseCallBackCalled = false;
+            var decreaseCallBackCalled = false;
+
+            var increaseCallBackAction = new EventHandler((sender, args) =>
+            {
+                increaseCallBackCalled = true;
+            });
+            var decreaseCallBackAction = new EventHandler((sender, args) =>
+            {
+                decreaseCallBackCalled = true;
+            });
+
+            grid.GridSizeIncreased += increaseCallBackAction;
+            grid.GridSizeDecreased += decreaseCallBackAction;
+            grid.ColCount = 4;
+            Assert.IsTrue(increaseCallBackCalled);
+            Assert.IsFalse(decreaseCallBackCalled);
+        }
+
+        [Test]
+        public void GridSizeDecreaseEventFiresOnRowCountDecrease()
+        {
+            var grid = new Grid(3, 3);
+            var increaseCallBackCalled = false;
+            var decreaseCallBackCalled = false;
+
+            var increaseCallBackAction = new EventHandler((sender, args) =>
+            {
+                increaseCallBackCalled = true;
+            });
+            var decreaseCallBackAction = new EventHandler((sender, args) =>
+            {
+                decreaseCallBackCalled = true;
+            });
+
+            grid.GridSizeIncreased += increaseCallBackAction;
+            grid.GridSizeDecreased += decreaseCallBackAction;
+            grid.RowCount = 2;
+            Assert.IsFalse(increaseCallBackCalled);
+            Assert.IsTrue(decreaseCallBackCalled);
+        }
+
+        [Test]
+        public void GridSizeDecreaseEventFiresOnColCountDecrease()
+        {
+            var grid = new Grid(3, 3);
+            var increaseCallBackCalled = false;
+            var decreaseCallBackCalled = false;
+
+            var increaseCallBackAction = new EventHandler((sender, args) =>
+            {
+                increaseCallBackCalled = true;
+            });
+            var decreaseCallBackAction = new EventHandler((sender, args) =>
+            {
+                decreaseCallBackCalled = true;
+            });
+
+            grid.GridSizeIncreased += increaseCallBackAction;
+            grid.GridSizeDecreased += decreaseCallBackAction;
+            grid.ColCount = 2;
+            Assert.IsFalse(increaseCallBackCalled);
+            Assert.IsTrue(decreaseCallBackCalled);
+        }
+
+        [Test]
         public void CanGenerateAnEmptyGeneration()
         {
             var grid = new Grid(2, 2);

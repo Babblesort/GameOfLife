@@ -22,6 +22,8 @@ namespace Engine
         public List<RowCol> Cells { get; private set; }
 
         public event PropertyChangedEventHandler PropertyChanged;
+        public event EventHandler GridSizeIncreased;
+        public event EventHandler GridSizeDecreased;
 
         public Grid() : this(DefaultRows, DefaultCols) { }
 
@@ -37,6 +39,16 @@ namespace Engine
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        private void OnGridSizeIncreased()
+        {
+            GridSizeIncreased?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void OnGridSizeDecreased()
+        {
+            GridSizeDecreased?.Invoke(this, EventArgs.Empty);
         }
 
         public int RowCount
@@ -114,7 +126,17 @@ namespace Engine
 
         private void UpdateGridCells()
         {
-            Cells = CreateGridCells();
+            var afterUpdateCells = CreateGridCells();
+            var isSizeIncrease = afterUpdateCells.Count > Cells?.Count;
+            Cells = afterUpdateCells;
+            if (isSizeIncrease)
+            {
+                OnGridSizeIncreased();
+            }
+            else
+            {
+                OnGridSizeDecreased();
+            }
         }
 
         private List<RowCol> CreateGridCells()
