@@ -177,6 +177,21 @@ namespace Tests
         }
 
         [Test]
+        public void RowCountPropertyChangeEventsOnlyFiresOnValueChange()
+        {
+            var grid = new Grid(3, 3);
+            var callBackCalled = false;
+            var callBackAction = new PropertyChangedEventHandler((sender, args) =>
+            {
+                callBackCalled = true;
+            });
+
+            grid.PropertyChanged += callBackAction;
+            grid.RowCount = 3;
+            Assert.IsFalse(callBackCalled);
+        }
+
+        [Test]
         public void ColCountPropertyChangeEventsCanBeSubscribedTo()
         {
             var grid = new Grid();
@@ -191,6 +206,21 @@ namespace Tests
             grid.PropertyChanged += callBackAction;
             grid.ColCount = 9;
             Assert.IsTrue(callBackCalled);
+        }
+
+        [Test]
+        public void ColCountPropertyChangeEventsOnlyFiresOnValueChange()
+        {
+            var grid = new Grid(3, 3);
+            var callBackCalled = false;
+            var callBackAction = new PropertyChangedEventHandler((sender, args) =>
+            {
+                callBackCalled = true;
+            });
+
+            grid.PropertyChanged += callBackAction;
+            grid.ColCount = 3;
+            Assert.IsFalse(callBackCalled);
         }
 
         [Test]

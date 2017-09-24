@@ -45,9 +45,12 @@ namespace Engine
             set
             {
                 if (value < MinRows || value > MaxRows) throw new ArgumentOutOfRangeException(nameof(RowCount), $"Must be between {MinRows} and {MaxRows} inclusive");
-                _rowCount = value;
-                OnPropertyChanged(nameof(RowCount));
-                UpdateGridCells();
+                if (_rowCount != value)
+                {
+                    _rowCount = value;
+                    OnPropertyChanged(nameof(RowCount));
+                    UpdateGridCells();
+                }
             }
         }
         public int ColCount
@@ -56,9 +59,12 @@ namespace Engine
             set
             {
                 if (value < MinCols || value > MaxCols) throw new ArgumentOutOfRangeException(nameof(ColCount), $"Must be between {MinCols} and {MaxCols} inclusive");
-                _colCount = value;
-                OnPropertyChanged(nameof(ColCount));
-                UpdateGridCells();
+                if (_colCount != value)
+                {
+                    _colCount = value;
+                    OnPropertyChanged(nameof(ColCount));
+                    UpdateGridCells();
+                }
             }
         }
 
