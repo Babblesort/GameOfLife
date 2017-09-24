@@ -19,6 +19,7 @@ namespace UI
         private static readonly Brush CellBrush = new SolidBrush(Color.FromArgb(alpha: 180, baseColor: Color.ForestGreen));
         private Grid _grid;
         private Generation _cells;
+        public event EventHandler<CellClickedEventArgs> GridCellClicked;
 
         public Grid Grid
         {
@@ -40,6 +41,11 @@ namespace UI
         private void GridPropertyChanged(object sender, PropertyChangedEventArgs e) 
         {
             Refresh();
+        }
+
+        private void OnGridCellClicked(CellClickedEventArgs e)
+        {
+            GridCellClicked?.Invoke(this, e);
         }
 
         public Generation Cells
@@ -103,6 +109,13 @@ namespace UI
                     e.Graphics.FillRectangles(CellBrush, paintCells);
                 }
             }
+        }
+
+        private void GamePanel_MouseClick(object sender, MouseEventArgs e)
+        {
+            var col = (int) (e.Location.X / CellWidth);
+            var row = (int) (e.Location.Y / CellHeight);
+            OnGridCellClicked(new CellClickedEventArgs { Cell = new RowCol(row, col) });
         }
     }
 }

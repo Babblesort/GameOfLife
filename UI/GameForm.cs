@@ -20,6 +20,7 @@ namespace UI
             Pause = 3
         }
 
+        public Generation PregameCells { get; private set; }
         public GameStates GameState { get; private set; } = GameStates.Idle;
 
         public GameForm()
@@ -37,6 +38,8 @@ namespace UI
             _scheduler = TaskScheduler.FromCurrentSynchronizationContext();
             _grid = new Grid();
             gamePanel.Grid = _grid;
+            PregameCells = _grid.CreateEmptyGeneration();
+            gamePanel.GridCellClicked += OnGridCellClicked;
 
             SpeedSlider.Minimum = Gaea.MinDelayMilliseconds;
             SpeedSlider.Maximum = Gaea.MaxDelayMilliseconds;
@@ -67,11 +70,21 @@ namespace UI
             UpDownCols.Value = Grid.DefaultCols;
         }
 
+        private void OnGridCellClicked(object sender, CellClickedEventArgs e)
+        {
+            if(GameState == GameStates.Idle)
+            {
+                PregameCells[e.Cell] = !PregameCells[e.Cell];
+                UpdateGameVisualization(0, PregameCells);
+            }
+        }
+
         private void RaiseGaeaOnDemand()
         {
             if(_gaea == null)
             {
-                _gaea = new Gaea(_grid, new Rules(), UpdateGameVisualization, _grid.CreateRandomGeneration());
+                var generationZero = PregameCells.HasLiveCells ? PregameCells : _grid.CreateRandomGeneration();
+                _gaea = new Gaea(_grid, new Rules(), UpdateGameVisualization, generationZero);
             }
             _gaea.DelayMilliseconds = SpeedSlider.Value;
         }
@@ -100,6 +113,7 @@ namespace UI
         private void btnClear_Click(object sender, EventArgs e)
         {
             SetUiForGameState(GameStates.Idle);
+            PregameCells = _grid.CreateEmptyGeneration();
             _gaea?.Clear();
             _gaea = null;
         }
