@@ -41,7 +41,8 @@ namespace UI
             _grid = new Grid();
             gamePanel.Grid = _grid;
             PregameCells = _grid.CreateEmptyGeneration();
-            _grid.PropertyChanged += OnGridPropertyChanged;
+            _grid.GridSizeIncreased += OnGridSizeIncreased;
+            _grid.GridSizeDecreased += OnGridSizeDecreased;
             gamePanel.GridCellClicked += OnGridCellClicked;
 
             SpeedSlider.Minimum = Gaea.MinDelayMilliseconds;
@@ -73,14 +74,19 @@ namespace UI
             UpDownCols.Value = Grid.DefaultCols;
         }
 
-        private void OnGridPropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void OnGridSizeIncreased(Object sender, EventArgs e)
         {
-            AddPregameCellsMissingFromGridCells();
-            RemovePregameCellsNotFoundInGridCells();
+            AddMissingPregameCells();
             UpdateGameVisualization(0, PregameCells);
         }
 
-        private void AddPregameCellsMissingFromGridCells()
+        private void OnGridSizeDecreased(Object sender, EventArgs e)
+        {
+            RemoveExtraPregameCells();
+            UpdateGameVisualization(0, PregameCells);
+        }
+
+        private void AddMissingPregameCells()
         {
             _grid.Cells
                 .Except(PregameCells.Keys)
@@ -88,7 +94,7 @@ namespace UI
                 .ForEach(k => PregameCells.Add(k, false));
         }
 
-        private void RemovePregameCellsNotFoundInGridCells()
+        private void RemoveExtraPregameCells()
         {
             PregameCells.Keys
                 .Except(_grid.Cells)
