@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Engine;
 using System.Threading;
+using System.ComponentModel;
+using System.Linq;
 
 namespace UI
 {
@@ -39,6 +41,7 @@ namespace UI
             _grid = new Grid();
             gamePanel.Grid = _grid;
             PregameCells = _grid.CreateEmptyGeneration();
+            _grid.PropertyChanged += OnGridPropertyChanged;
             gamePanel.GridCellClicked += OnGridCellClicked;
 
             SpeedSlider.Minimum = Gaea.MinDelayMilliseconds;
@@ -68,6 +71,21 @@ namespace UI
             TrackCols.Value = Grid.DefaultCols;
             UpDownRows.Value = Grid.DefaultRows;
             UpDownCols.Value = Grid.DefaultCols;
+        }
+
+        private void OnGridPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            _grid.Cells
+                .Except(PregameCells.Keys)
+                .ToList()
+                .ForEach(k => PregameCells.Add(k, false));
+
+            PregameCells.Keys
+                .Except(_grid.Cells)
+                .ToList()
+                .ForEach(k => PregameCells.Remove(k));
+
+            UpdateGameVisualization(0, PregameCells);
         }
 
         private void OnGridCellClicked(object sender, CellClickedEventArgs e)
