@@ -75,17 +75,25 @@ namespace UI
 
         private void OnGridPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
+            AddPregameCellsMissingFromGridCells();
+            RemovePregameCellsNotFoundInGridCells();
+            UpdateGameVisualization(0, PregameCells);
+        }
+
+        private void AddPregameCellsMissingFromGridCells()
+        {
             _grid.Cells
                 .Except(PregameCells.Keys)
                 .ToList()
                 .ForEach(k => PregameCells.Add(k, false));
+        }
 
+        private void RemovePregameCellsNotFoundInGridCells()
+        {
             PregameCells.Keys
                 .Except(_grid.Cells)
                 .ToList()
                 .ForEach(k => PregameCells.Remove(k));
-
-            UpdateGameVisualization(0, PregameCells);
         }
 
         private void OnGridCellClicked(object sender, CellClickedEventArgs e)
