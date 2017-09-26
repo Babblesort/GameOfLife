@@ -76,7 +76,7 @@
             this.btnRun.TabIndex = 0;
             this.btnRun.Text = "Run";
             this.btnRun.UseVisualStyleBackColor = true;
-            this.btnRun.Click += new System.EventHandler(this.btnRun_Click);
+            this.btnRun.Click += new System.EventHandler(this.RunGameHandler);
             // 
             // btnPause
             // 
@@ -88,7 +88,7 @@
             this.btnPause.TabIndex = 2;
             this.btnPause.Text = "Pause";
             this.btnPause.UseVisualStyleBackColor = true;
-            this.btnPause.Click += new System.EventHandler(this.btnPause_Click);
+            this.btnPause.Click += new System.EventHandler(this.PauseGameHandler);
             // 
             // btnNew
             // 
@@ -100,7 +100,7 @@
             this.btnNew.TabIndex = 7;
             this.btnNew.Text = "New Game";
             this.btnNew.UseVisualStyleBackColor = true;
-            this.btnNew.Click += new System.EventHandler(this.btnNew_Click);
+            this.btnNew.Click += new System.EventHandler(this.NewGameHandler);
             // 
             // btnStep
             // 
@@ -112,7 +112,7 @@
             this.btnStep.TabIndex = 1;
             this.btnStep.Text = "Step";
             this.btnStep.UseVisualStyleBackColor = true;
-            this.btnStep.Click += new System.EventHandler(this.btnStep_Click);
+            this.btnStep.Click += new System.EventHandler(this.StepGameHandler);
             // 
             // btnExit
             // 
@@ -124,7 +124,7 @@
             this.btnExit.TabIndex = 8;
             this.btnExit.Text = "Exit";
             this.btnExit.UseVisualStyleBackColor = true;
-            this.btnExit.Click += new System.EventHandler(this.btnExit_Click);
+            this.btnExit.Click += new System.EventHandler(this.ExitGameHandler);
             // 
             // lblGenerationLabel
             // 
@@ -297,35 +297,35 @@
             this.GameNewMenuItem.Name = "GameNewMenuItem";
             this.GameNewMenuItem.Size = new System.Drawing.Size(181, 26);
             this.GameNewMenuItem.Text = "New";
-            this.GameNewMenuItem.Click += new System.EventHandler(this.GameNewMenuItem_Click);
+            this.GameNewMenuItem.Click += new System.EventHandler(this.NewGameHandler);
             // 
             // GameRunMenuItem
             // 
             this.GameRunMenuItem.Name = "GameRunMenuItem";
             this.GameRunMenuItem.Size = new System.Drawing.Size(181, 26);
             this.GameRunMenuItem.Text = "Run";
-            this.GameRunMenuItem.Click += new System.EventHandler(this.GameRunMenuItem_Click);
+            this.GameRunMenuItem.Click += new System.EventHandler(this.RunGameHandler);
             // 
             // GameStepMenuItem
             // 
             this.GameStepMenuItem.Name = "GameStepMenuItem";
             this.GameStepMenuItem.Size = new System.Drawing.Size(181, 26);
             this.GameStepMenuItem.Text = "Step";
-            this.GameStepMenuItem.Click += new System.EventHandler(this.GameStepMenuItem_Click);
+            this.GameStepMenuItem.Click += new System.EventHandler(this.StepGameHandler);
             // 
             // GamePauseMenuItem
             // 
             this.GamePauseMenuItem.Name = "GamePauseMenuItem";
             this.GamePauseMenuItem.Size = new System.Drawing.Size(181, 26);
             this.GamePauseMenuItem.Text = "Pause";
-            this.GamePauseMenuItem.Click += new System.EventHandler(this.GamePauseMenuItem_Click);
+            this.GamePauseMenuItem.Click += new System.EventHandler(this.PauseGameHandler);
             // 
             // GameExitMenuItem
             // 
             this.GameExitMenuItem.Name = "GameExitMenuItem";
             this.GameExitMenuItem.Size = new System.Drawing.Size(181, 26);
             this.GameExitMenuItem.Text = "Exit";
-            this.GameExitMenuItem.Click += new System.EventHandler(this.GameExitMenuItem_Click);
+            this.GameExitMenuItem.Click += new System.EventHandler(this.ExitGameHandler);
             // 
             // divToolStripMenuItem
             // 

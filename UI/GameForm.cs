@@ -120,52 +120,27 @@ namespace UI
             _gaea.DelayMilliseconds = SpeedSlider.Value;
         }
 
-        private void GameNewMenuItem_Click(object sender, EventArgs e)
+        private void NewGameHandler(object sender, EventArgs e)
         {
             GameNew();
         }
 
-        private void btnNew_Click(object sender, EventArgs e)
-        {
-            GameNew();
-        }
-
-        private void GameRunMenuItem_Click(object sender, EventArgs e)
+        private void RunGameHandler(object sender, EventArgs e)
         {
             GameRun();
         }
 
-        private void btnRun_Click(object sender, EventArgs e)
-        {
-            GameRun();
-        }
-
-        private void GameStepMenuItem_Click(object sender, EventArgs e)
+        private void StepGameHandler(object sender, EventArgs e)
         {
             GameStep();
         }
 
-        private void btnStep_Click(object sender, EventArgs e)
-        {
-            GameStep();
-        }
-
-        private void GamePauseMenuItem_Click(object sender, EventArgs e)
+        private void PauseGameHandler(object sender, EventArgs e)
         {
             GamePause();
         }
 
-        private void btnPause_Click(object sender, EventArgs e)
-        {
-            GamePause();
-        }
-
-        private void GameExitMenuItem_Click(object sender, EventArgs e)
-        {
-            GameExit();
-        }
-
-        private void btnExit_Click(object sender, EventArgs e)
+        private void ExitGameHandler(object sender, EventArgs e)
         {
             GameExit();
         }
