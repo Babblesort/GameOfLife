@@ -30,11 +30,6 @@ namespace UI
             InitializeComponent();
         }
 
-        private void btnExit_Click(object sender, EventArgs e)
-        {
-            Environment.Exit(exitCode: 0);
-        }
-
         private void GameForm_Load(object sender, EventArgs e)
         {
             _scheduler = TaskScheduler.FromCurrentSynchronizationContext();
@@ -44,6 +39,8 @@ namespace UI
             _grid.GridSizeIncreased += OnGridSizeIncreased;
             _grid.GridSizeDecreased += OnGridSizeDecreased;
             gamePanel.GridCellClicked += OnGridCellClicked;
+
+            GameLoadMenuItem.Enabled = false;
 
             SpeedSlider.Minimum = Gaea.MinDelayMilliseconds;
             SpeedSlider.Maximum = Gaea.MaxDelayMilliseconds;
@@ -72,6 +69,8 @@ namespace UI
             TrackCols.Value = Grid.DefaultCols;
             UpDownRows.Value = Grid.DefaultRows;
             UpDownCols.Value = Grid.DefaultCols;
+
+            SetUiForGameState(GameStates.Idle);
         }
 
         private void OnGridSizeIncreased(Object sender, EventArgs e)
@@ -121,33 +120,88 @@ namespace UI
             _gaea.DelayMilliseconds = SpeedSlider.Value;
         }
 
+        private void GameNewMenuItem_Click(object sender, EventArgs e)
+        {
+            GameNew();
+        }
+
+        private void btnNew_Click(object sender, EventArgs e)
+        {
+            GameNew();
+        }
+
+        private void GameRunMenuItem_Click(object sender, EventArgs e)
+        {
+            GameRun();
+        }
+
         private void btnRun_Click(object sender, EventArgs e)
+        {
+            GameRun();
+        }
+
+        private void GameStepMenuItem_Click(object sender, EventArgs e)
+        {
+            GameStep();
+        }
+
+        private void btnStep_Click(object sender, EventArgs e)
+        {
+            GameStep();
+        }
+
+        private void GamePauseMenuItem_Click(object sender, EventArgs e)
+        {
+            GamePause();
+        }
+
+        private void btnPause_Click(object sender, EventArgs e)
+        {
+            GamePause();
+        }
+
+        private void GameExitMenuItem_Click(object sender, EventArgs e)
+        {
+            GameExit();
+        }
+
+        private void btnExit_Click(object sender, EventArgs e)
+        {
+            GameExit();
+        }
+
+        private void GameNew()
+        {
+            SetUiForGameState(GameStates.Idle);
+            PregameCells = _grid.CreateEmptyGeneration();
+            _gaea?.Clear();
+            _gaea = null;
+        }
+
+        private void GameRun()
         {
             SetUiForGameState(GameStates.Run);
             RaiseGaeaOnDemand();
             _gaea.Run();
         }
 
-        private void btnPause_Click(object sender, EventArgs e)
+        private void GamePause()
         {
             SetUiForGameState(GameStates.Pause);
             RaiseGaeaOnDemand();
             _gaea.Pause();
         }
 
-        private void btnStep_Click(object sender, EventArgs e)
+        private void GameStep()
         {
             SetUiForGameState(GameStates.Step);
             RaiseGaeaOnDemand();
             _gaea.Step();
         }
 
-        private void btnClear_Click(object sender, EventArgs e)
+        private static void GameExit()
         {
-            SetUiForGameState(GameStates.Idle);
-            PregameCells = _grid.CreateEmptyGeneration();
-            _gaea?.Clear();
-            _gaea = null;
+            Environment.Exit(exitCode: 0);
         }
 
         private void UpdateGameVisualization(int generationNumber, Generation cells)
@@ -231,10 +285,14 @@ namespace UI
             switch (GameState)
             {
                 case GameStates.Idle:
+                    GameNewMenuItem.Enabled = true;
+                    GameRunMenuItem.Enabled = true;
+                    GameStepMenuItem.Enabled = true;
+                    GamePauseMenuItem.Enabled = false;
                     btnRun.Enabled = true;
                     btnStep.Enabled = true;
                     btnPause.Enabled = false;
-                    btnClear.Enabled = true;
+                    btnNew.Enabled = true;
                     SpeedSlider.Enabled = true;
                     CheckboxLockRowAndCols.Enabled = true;
                     TrackRows.Enabled = true;
@@ -243,10 +301,14 @@ namespace UI
                     UpDownCols.Enabled = true;
                     break;
                 case GameStates.Run:
+                    GameNewMenuItem.Enabled = true;
+                    GameRunMenuItem.Enabled = false;
+                    GameStepMenuItem.Enabled = true;
+                    GamePauseMenuItem.Enabled = true;
                     btnRun.Enabled = false;
                     btnStep.Enabled = true;
                     btnPause.Enabled = true;
-                    btnClear.Enabled = true;
+                    btnNew.Enabled = true;
                     SpeedSlider.Enabled = true;
                     CheckboxLockRowAndCols.Enabled = false;
                     TrackRows.Enabled = false;
@@ -255,10 +317,14 @@ namespace UI
                     UpDownCols.Enabled = false;
                     break;
                 case GameStates.Step:
+                    GameNewMenuItem.Enabled = true;
+                    GameRunMenuItem.Enabled = true;
+                    GameStepMenuItem.Enabled = true;
+                    GamePauseMenuItem.Enabled = false;
                     btnRun.Enabled = true;
                     btnStep.Enabled = true;
                     btnPause.Enabled = false;
-                    btnClear.Enabled = true;
+                    btnNew.Enabled = true;
                     SpeedSlider.Enabled = true;
                     CheckboxLockRowAndCols.Enabled = false;
                     TrackRows.Enabled = false;
@@ -267,10 +333,14 @@ namespace UI
                     UpDownCols.Enabled = false;
                     break;
                 case GameStates.Pause:
+                    GameNewMenuItem.Enabled = true;
+                    GameRunMenuItem.Enabled = true;
+                    GameStepMenuItem.Enabled = true;
+                    GamePauseMenuItem.Enabled = false;
                     btnRun.Enabled = true;
                     btnStep.Enabled = true;
                     btnPause.Enabled = false;
-                    btnClear.Enabled = true;
+                    btnNew.Enabled = true;
                     SpeedSlider.Enabled = true;
                     CheckboxLockRowAndCols.Enabled = false;
                     TrackRows.Enabled = false;
