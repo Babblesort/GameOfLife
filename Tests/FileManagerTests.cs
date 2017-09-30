@@ -55,6 +55,8 @@ namespace Tests
             Assert.AreEqual(1, foundFiles.Count());
             var foundLines = File.ReadAllLines(foundFiles.First().FullName);
             Assert.AreEqual(fileLines.Length, foundLines.Length);
+            Assert.AreEqual(fileLines[0], foundLines[0]);
+            Assert.AreEqual(fileLines[1], foundLines[1]);
         }
 
         [Test]
@@ -87,5 +89,47 @@ namespace Tests
             Assert.AreEqual("0,1,False", foundLines[1]);
         }
 
+        [Test]
+        public void CanReadFileWithLinesFromGameDirectory()
+        {
+            const string testFileName = "test.txt";
+            var file = new FileManager();
+            var fileLines = new string[] { "one", "two" };
+            file.CreateFile(testFileName, fileLines);
+
+            var readLines = file.ReadFile(testFileName);
+            Assert.AreEqual(fileLines.Length, readLines.Length);
+            Assert.AreEqual(fileLines[0], readLines[0]);
+            Assert.AreEqual(fileLines[1], readLines[1]);
+        }
+
+        [Test]
+        public void ReadFileThrowsOnInvalidFile()
+        {
+            Assert.Throws<FileNotFoundException>(() => new FileManager().ReadFile("notFoundFileName.not"));
+        }
+
+        [Test]
+        public void CanReadAGenerationFromFile()
+        {
+            const string testFileName = "generationTest.txt";
+            var cell0 = new RowCol(0, 0);
+            var cell1 = new RowCol(0, 1);
+            var cells = new Generation
+            {
+                { cell0, true },
+                { cell1, false }
+            };
+
+            var file = new FileManager();
+            file.CreateGenerationFile(testFileName, cells);
+
+            var generation = file.ReadGenerationFile(testFileName);
+
+            Assert.That(generation, Is.InstanceOf(typeof(Generation)));
+            Assert.AreEqual(2, generation.Count);
+            Assert.IsTrue(generation[cell0]);
+            Assert.IsFalse(generation[cell1]);
+        }
     }
 }

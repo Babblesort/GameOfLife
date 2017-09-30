@@ -34,9 +34,29 @@ namespace Engine
             File.WriteAllLines(file.FullName, lines);
         }
 
+        public string[] ReadFile(string fileName)
+        {
+            var readFilePathName = Path.Combine(GameFilesPath, fileName);
+
+            var file = new FileInfo(readFilePathName);
+            return File.ReadAllLines(readFilePathName);
+        }
+
         public void CreateGenerationFile(string fileName, Generation cells)
         {
             CreateFile(fileName, cells.ToCsv().ToArray());
+        }
+
+        public Generation ReadGenerationFile(string fileName)
+        {
+            var lines = ReadFile(fileName);
+            var generation = new Generation();
+            foreach (var line in lines)
+            {
+                var tokens = line.Split(',');
+                generation.Add(new RowCol(int.Parse(tokens[0]), int.Parse(tokens[1])), bool.Parse(tokens[2]));
+            }
+            return generation;
         }
     }
 }
