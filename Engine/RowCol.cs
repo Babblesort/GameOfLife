@@ -8,5 +8,10 @@ namespace Engine
 
         public int Row => Item1;
         public int Col => Item2;
+
+        public string ToCsv()
+        {
+            return $"{Item1},{Item2}";
+        }
     }
 }

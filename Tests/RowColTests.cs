@@ -22,5 +22,12 @@ namespace Tests
             Assert.AreEqual(2, tuple.Col);
             Assert.AreEqual(2, tuple.Item2);
         }
+
+        [Test]
+        public void ToCsv()
+        {
+            var tuple = new RowCol(1, 2);
+            Assert.AreEqual("1,2", tuple.ToCsv());
+        }
     }
 }
