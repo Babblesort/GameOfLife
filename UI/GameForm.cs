@@ -40,7 +40,7 @@ namespace UI
             _grid.GridSizeDecreased += OnGridSizeDecreased;
             gamePanel.GridCellClicked += OnGridCellClicked;
 
-            GameLoadMenuItem.Enabled = false;
+            GameLoadMenuItem.Enabled = true;
 
             SpeedSlider.Minimum = Gaea.MinDelayMilliseconds;
             SpeedSlider.Maximum = Gaea.MaxDelayMilliseconds;
@@ -260,6 +260,7 @@ namespace UI
             switch (GameState)
             {
                 case GameStates.Idle:
+                    GameLoadMenuItem.Enabled = true;
                     GameNewMenuItem.Enabled = true;
                     GameRunMenuItem.Enabled = true;
                     GameStepMenuItem.Enabled = true;
@@ -276,6 +277,7 @@ namespace UI
                     UpDownCols.Enabled = true;
                     break;
                 case GameStates.Run:
+                    GameLoadMenuItem.Enabled = true;
                     GameNewMenuItem.Enabled = true;
                     GameRunMenuItem.Enabled = false;
                     GameStepMenuItem.Enabled = true;
@@ -292,6 +294,7 @@ namespace UI
                     UpDownCols.Enabled = false;
                     break;
                 case GameStates.Step:
+                    GameLoadMenuItem.Enabled = true;
                     GameNewMenuItem.Enabled = true;
                     GameRunMenuItem.Enabled = true;
                     GameStepMenuItem.Enabled = true;
@@ -308,6 +311,7 @@ namespace UI
                     UpDownCols.Enabled = false;
                     break;
                 case GameStates.Pause:
+                    GameLoadMenuItem.Enabled = true;
                     GameNewMenuItem.Enabled = true;
                     GameRunMenuItem.Enabled = true;
                     GameStepMenuItem.Enabled = true;

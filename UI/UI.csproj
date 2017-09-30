@@ -93,6 +93,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="babblesort.ico" />
+    <None Include="GameFiles\Pulsar.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Engine\Engine.csproj">

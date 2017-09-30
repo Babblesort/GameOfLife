@@ -45,7 +45,7 @@
             this.UpDownCols = new System.Windows.Forms.NumericUpDown();
             this.TrackCols = new System.Windows.Forms.TrackBar();
             this.CheckboxLockRowAndCols = new System.Windows.Forms.CheckBox();
-            this.Menu = new System.Windows.Forms.MenuStrip();
+            this.GameMenuStrip = new System.Windows.Forms.MenuStrip();
             this.GameMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.GameLoadMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.GameNewMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -63,7 +63,7 @@
             this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.UpDownCols)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.TrackCols)).BeginInit();
-            this.Menu.SuspendLayout();
+            this.GameMenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnRun
@@ -263,14 +263,14 @@
             // 
             // Menu
             // 
-            this.Menu.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.Menu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.GameMenuStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.GameMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.GameMenuItem});
-            this.Menu.Location = new System.Drawing.Point(0, 0);
-            this.Menu.Name = "Menu";
-            this.Menu.Size = new System.Drawing.Size(1299, 28);
-            this.Menu.TabIndex = 9;
-            this.Menu.Text = "menuStrip1";
+            this.GameMenuStrip.Location = new System.Drawing.Point(0, 0);
+            this.GameMenuStrip.Name = "Menu";
+            this.GameMenuStrip.Size = new System.Drawing.Size(1299, 28);
+            this.GameMenuStrip.TabIndex = 9;
+            this.GameMenuStrip.Text = "menuStrip1";
             // 
             // GameMenuItem
             // 
@@ -364,7 +364,7 @@
             this.Controls.Add(this.btnStep);
             this.Controls.Add(this.btnPause);
             this.Controls.Add(this.btnRun);
-            this.Controls.Add(this.Menu);
+            this.Controls.Add(this.GameMenuStrip);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.MinimumSize = new System.Drawing.Size(499, 598);
@@ -382,8 +382,8 @@
             this.groupBox3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.UpDownCols)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.TrackCols)).EndInit();
-            this.Menu.ResumeLayout(false);
-            this.Menu.PerformLayout();
+            this.GameMenuStrip.ResumeLayout(false);
+            this.GameMenuStrip.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -407,7 +407,7 @@
         private System.Windows.Forms.CheckBox CheckboxLockRowAndCols;
         private System.Windows.Forms.NumericUpDown UpDownRows;
         private System.Windows.Forms.NumericUpDown UpDownCols;
-        private System.Windows.Forms.MenuStrip Menu;
+        private System.Windows.Forms.MenuStrip GameMenuStrip;
         private System.Windows.Forms.ToolStripMenuItem GameMenuItem;
         private System.Windows.Forms.ToolStripMenuItem GameNewMenuItem;
         private System.Windows.Forms.ToolStripMenuItem GameRunMenuItem;
