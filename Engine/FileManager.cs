@@ -33,5 +33,10 @@ namespace Engine
             file.Directory.Create();
             File.WriteAllLines(file.FullName, lines);
         }
+
+        public void CreateGenerationFile(string fileName, Generation cells)
+        {
+            CreateFile(fileName, cells.ToCsv().ToArray());
+        }
     }
 }
