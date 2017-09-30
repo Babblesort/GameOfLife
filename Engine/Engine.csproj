@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CellClickedEventArgs.cs" />
+    <Compile Include="FileManager.cs" />
     <Compile Include="Gaea.cs" />
     <Compile Include="Generation.cs" />
     <Compile Include="Grid.cs" />
