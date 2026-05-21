@@ -9,10 +9,10 @@ namespace Tests
     public class GenerationTests
     {
         [Test]
-        public void HasExpectedDataStructure()
+        public void ImplementsKeyValueEnumerable()
         {
             var generation = new Generation();
-            Assert.IsInstanceOf<Dictionary<RowCol, bool>>(generation);
+            Assert.IsInstanceOf<IEnumerable<KeyValuePair<RowCol, bool>>>(generation);
         }
 
         [Test]
