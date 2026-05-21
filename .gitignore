@@ -270,6 +270,9 @@ paket-files/
 # CodeRush
 .cr/
 
+# Claude Code
+.claude/
+
 # Python Tools for Visual Studio (PTVS)
 __pycache__/
 *.pyc
@@ -286,6 +289,3 @@ __pycache__/
 *.btm.cs
 *.odx.cs
 *.xsd.cs
-
-# claude
-*/.claude
