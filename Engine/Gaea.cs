@@ -12,7 +12,6 @@ public class Gaea
     private int _generationNumber;
     private int _delay = DefaultDelayMilliseconds;
     private CancellationTokenSource? _tokenSource;
-    private CancellationToken _token;
     private Task? _task;
 
     public Gaea(Grid grid, Rules rules) : this(grid, rules, updateFn: (i, c) => { }, cells: null) { }
@@ -35,30 +34,18 @@ public class Gaea
 
     public int DelayMilliseconds
     {
-        get { return _delay; }
+        get => _delay;
         set
         {
             if (value < MinDelayMilliseconds || value > MaxDelayMilliseconds)
                 throw new ArgumentOutOfRangeException(nameof(value), $"Must be between {MinDelayMilliseconds} and {MaxDelayMilliseconds} inclusive.");
-
             _delay = value;
         }
     }
 
-    public void Run()
-    {
-        PerformGenerationTask(runMode: true);
-    }
-
-    public void Step()
-    {
-        PerformGenerationTask(runMode: false);
-    }
-
-    public void Pause()
-    {
-        CancelIfRunning();
-    }
+    public void Run() => PerformGenerationTask(runMode: true);
+    public void Step() => PerformGenerationTask(runMode: false);
+    public void Pause() => CancelIfRunning();
 
     public void Clear()
     {
@@ -67,40 +54,41 @@ public class Gaea
         UpdateVisualization(_generationNumber, Grid.CreateEmptyGeneration());
     }
 
-    private Task PerformGenerationTask(bool runMode)
+    private void PerformGenerationTask(bool runMode)
     {
         CancelIfRunning();
         _tokenSource = new CancellationTokenSource();
-        _token = _tokenSource.Token;
+        var token = _tokenSource.Token;
         ValidateExecuteGenerationConditions();
-        _task = Task.Factory.StartNew(() => ResolveGenerations(runMode), _token);
-        return _task;
+        _task = Task.Run(() => ResolveGenerationsAsync(runMode, token), token);
     }
 
     private void ValidateExecuteGenerationConditions()
     {
-        if (Cells == null) throw new ArgumentNullException(nameof(Cells), $"Cannot {nameof(ResolveGenerations)} with null Cells");
+        if (Cells == null) throw new ArgumentNullException(nameof(Cells), "Cells must not be null before running");
         if (Cells.Count != Grid.CellCount) throw new ArgumentException(nameof(Cells), $"{nameof(Cells)} count and {nameof(Grid)} cell count do not match");
     }
 
     private void CancelIfRunning()
     {
-        if (_task?.Status != TaskStatus.Running) return;
+        if (_task == null || _task.IsCompleted) return;
         _tokenSource!.Cancel();
-        _task!.Wait();
+        try { _task.Wait(); }
+        catch (AggregateException) { } // OperationCanceledException from WaitForNextTickAsync cancellation
     }
 
-    private void ResolveGenerations(bool runMode = false)
+    private async Task ResolveGenerationsAsync(bool runMode, CancellationToken token)
     {
-        do
+        Cells = GenerationResolver.ResolveNextGeneration(Grid, Rules, Cells!);
+        UpdateVisualization(++_generationNumber, Cells);
+
+        if (!runMode) return;
+
+        using var timer = new PeriodicTimer(TimeSpan.FromMilliseconds(DelayMilliseconds));
+        while (await timer.WaitForNextTickAsync(token))
         {
             Cells = GenerationResolver.ResolveNextGeneration(Grid, Rules, Cells!);
             UpdateVisualization(++_generationNumber, Cells);
-            if (runMode)
-            {
-                Thread.Sleep(DelayMilliseconds);
-            }
         }
-        while (runMode && !_token.IsCancellationRequested);
     }
 }
