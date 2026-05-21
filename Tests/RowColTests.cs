@@ -1,31 +1,30 @@
 ﻿using Engine;
 using NUnit.Framework;
 
-namespace Tests
+namespace Tests;
+
+[TestFixture]
+public class RowColTests
 {
-    [TestFixture]
-    public class RowColTests
+    [Test]
+    public void CanBeCreated()
     {
-        [Test]
-        public void CanBeCreated()
-        {
-            var tuple = new RowCol(1, 1);
-            Assert.NotNull(tuple);
-        }
+        var tuple = new RowCol(1, 1);
+        Assert.NotNull(tuple);
+    }
 
-        [Test]
-        public void ExposesRowAndColProperties()
-        {
-            var tuple = new RowCol(1, 2);
-            Assert.AreEqual(1, tuple.Row);
-            Assert.AreEqual(2, tuple.Col);
-        }
+    [Test]
+    public void ExposesRowAndColProperties()
+    {
+        var tuple = new RowCol(1, 2);
+        Assert.AreEqual(1, tuple.Row);
+        Assert.AreEqual(2, tuple.Col);
+    }
 
-        [Test]
-        public void ToCsv()
-        {
-            var tuple = new RowCol(1, 2);
-            Assert.AreEqual("1,2", tuple.ToCsv());
-        }
+    [Test]
+    public void ToCsv()
+    {
+        var tuple = new RowCol(1, 2);
+        Assert.AreEqual("1,2", tuple.ToCsv());
     }
 }
