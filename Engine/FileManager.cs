@@ -25,12 +25,19 @@ namespace Engine
             }
         }
 
+        // Union of Windows and Unix invalid filename chars for consistent cross-platform validation.
+        private static readonly char[] InvalidFileNameChars =
+            Path.GetInvalidFileNameChars().Union(new[] { '*', '?', ':', '<', '>', '|' }).ToArray();
+
         public void CreateFile(string fileName, string[] lines)
         {
+            if (fileName.IndexOfAny(InvalidFileNameChars) >= 0)
+                throw new ArgumentException($"File name contains invalid characters.", nameof(fileName));
+
             var createFilePathName = Path.Combine(GameFilesPath, fileName);
 
             var file = new FileInfo(createFilePathName);
-            file.Directory.Create();
+            file.Directory!.Create();
             File.WriteAllLines(file.FullName, lines);
         }
 
