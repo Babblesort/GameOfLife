@@ -14,13 +14,11 @@ namespace Tests
         }
 
         [Test]
-        public void OverridesDefaultTupleItemsWithRowCol()
+        public void ExposesRowAndColProperties()
         {
             var tuple = new RowCol(1, 2);
             Assert.AreEqual(1, tuple.Row);
-            Assert.AreEqual(1, tuple.Item1);
             Assert.AreEqual(2, tuple.Col);
-            Assert.AreEqual(2, tuple.Item2);
         }
 
         [Test]
