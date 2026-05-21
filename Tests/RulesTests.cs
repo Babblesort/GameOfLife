@@ -77,8 +77,8 @@ namespace Tests
         [Test]
         public void ThrowsOnNullCustomCounts()
         {
-            Assert.Throws<ArgumentNullException>(() => new Rules(null, new List<int> { 1 }));
-            Assert.Throws<ArgumentNullException>(() => new Rules(new List<int> { 1 }, null));
+            Assert.Throws<ArgumentNullException>(() => new Rules(null!, new List<int> { 1 }));
+            Assert.Throws<ArgumentNullException>(() => new Rules(new List<int> { 1 }, null!));
         }
 
         [Test]

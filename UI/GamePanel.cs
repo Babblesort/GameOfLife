@@ -17,9 +17,9 @@ namespace UI
         private float GridHeight => RowCount * CellHeight;
         private static readonly Pen GridLinePen = Pens.LightGray;
         private static readonly Brush CellBrush = new SolidBrush(Color.FromArgb(alpha: 180, baseColor: Color.ForestGreen));
-        private Grid _grid;
-        private Generation _cells;
-        public event EventHandler<CellClickedEventArgs> GridCellClicked;
+        private Grid _grid = null!; // assigned via Grid property before use; OnPaint guards against null
+        private Generation? _cells;
+        public event EventHandler<CellClickedEventArgs>? GridCellClicked;
 
         public Grid Grid
         {
@@ -38,7 +38,7 @@ namespace UI
             }
         }
 
-        private void GridPropertyChanged(object sender, PropertyChangedEventArgs e) 
+        private void GridPropertyChanged(object? sender, PropertyChangedEventArgs e) 
         {
             Refresh();
         }
@@ -48,17 +48,10 @@ namespace UI
             GridCellClicked?.Invoke(this, e);
         }
 
-        public Generation Cells
+        public Generation? Cells
         {
-            get
-            {
-                return _cells;
-            }
-            set
-            {
-                _cells = value;
-                Refresh();
-            }
+            get => _cells;
+            set { _cells = value; Refresh(); }
         }
 
         public GamePanel()

@@ -7,7 +7,7 @@ namespace Tests
     [TestFixture]
     public class GenerationResolverTests
     {
-        private Grid grid;
+        private Grid grid = null!;
         private RowCol cell0;
         private RowCol cell1;
         private RowCol cell2;
@@ -17,8 +17,8 @@ namespace Tests
         private RowCol cell6;
         private RowCol cell7;
         private RowCol cell8;
-        private Generation generation;
-        private Generation expectedNextGen;
+        private Generation generation = null!;
+        private Generation expectedNextGen = null!;
 
         public void SetupBasicResolver()
         {

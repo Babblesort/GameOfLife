@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -18,11 +18,11 @@ namespace Engine
         private int _rowCount = DefaultRows;
         private int _colCount = DefaultCols;
 
-        public List<RowCol> Cells { get; private set; }
+        public List<RowCol> Cells { get; private set; } = null!; // assigned in UpdateGridCells called from ctor
 
-        public event PropertyChangedEventHandler PropertyChanged;
-        public event EventHandler GridSizeIncreased;
-        public event EventHandler GridSizeDecreased;
+        public event PropertyChangedEventHandler? PropertyChanged;
+        public event EventHandler? GridSizeIncreased;
+        public event EventHandler? GridSizeDecreased;
 
         public Grid() : this(DefaultRows, DefaultCols) { }
 
@@ -34,7 +34,7 @@ namespace Engine
             UpdateGridCells();
         }
 
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }

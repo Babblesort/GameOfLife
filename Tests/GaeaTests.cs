@@ -23,8 +23,8 @@ namespace Tests
             var grid = new Grid();
             var rules = new Rules();
 
-            Assert.Throws<ArgumentNullException>(() => new Gaea(null, rules));
-            Assert.Throws<ArgumentNullException>(() => new Gaea(grid, null));
+            Assert.Throws<ArgumentNullException>(() => new Gaea(null!, rules));
+            Assert.Throws<ArgumentNullException>(() => new Gaea(grid, null!));
         }
 
         [Test]

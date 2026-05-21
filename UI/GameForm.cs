@@ -10,9 +10,9 @@ namespace UI
 {
     public partial class GameForm : Form
     {
-        private TaskScheduler _scheduler;
-        private Grid _grid;
-        private Gaea _gaea;
+        private TaskScheduler _scheduler = null!; // assigned in GameForm_Load
+        private Grid _grid = null!;               // assigned in GameForm_Load
+        private Gaea? _gaea;
 
         public enum GameStates
         {
@@ -22,7 +22,7 @@ namespace UI
             Pause = 3
         }
 
-        public Generation PregameCells { get; private set; }
+        public Generation PregameCells { get; private set; } = null!; // assigned in GameForm_Load
         public GameStates GameState { get; private set; } = GameStates.Idle;
 
         public GameForm()
@@ -73,13 +73,13 @@ namespace UI
             SetUiForGameState(GameStates.Idle);
         }
 
-        private void OnGridSizeIncreased(Object sender, EventArgs e)
+        private void OnGridSizeIncreased(object? sender, EventArgs e)
         {
             AddMissingPregameCells();
             UpdateGameVisualization(0, PregameCells);
         }
 
-        private void OnGridSizeDecreased(Object sender, EventArgs e)
+        private void OnGridSizeDecreased(object? sender, EventArgs e)
         {
             RemoveExtraPregameCells();
             UpdateGameVisualization(0, PregameCells);
@@ -101,7 +101,7 @@ namespace UI
                 .ForEach(k => PregameCells.Remove(k));
         }
 
-        private void OnGridCellClicked(object sender, CellClickedEventArgs e)
+        private void OnGridCellClicked(object? sender, CellClickedEventArgs e)
         {
             if(GameState == GameStates.Idle)
             {
@@ -157,21 +157,21 @@ namespace UI
         {
             SetUiForGameState(GameStates.Run);
             RaiseGaeaOnDemand();
-            _gaea.Run();
+            _gaea!.Run();
         }
 
         private void GamePause()
         {
             SetUiForGameState(GameStates.Pause);
             RaiseGaeaOnDemand();
-            _gaea.Pause();
+            _gaea!.Pause();
         }
 
         private void GameStep()
         {
             SetUiForGameState(GameStates.Step);
             RaiseGaeaOnDemand();
-            _gaea.Step();
+            _gaea!.Step();
         }
 
         private static void GameExit()

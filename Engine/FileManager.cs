@@ -20,7 +20,7 @@ namespace Engine
         {
             get
             {
-                var currentAssembly = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
+                var currentAssembly = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? string.Empty;
                 return Path.Combine(currentAssembly, GameFilesFolderName);
             }
         }
