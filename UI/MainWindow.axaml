@@ -8,7 +8,7 @@
 
     <DockPanel>
 
-        <Menu DockPanel.Dock="Top">
+        <Menu DockPanel.Dock="Top" KeyboardNavigation.TabNavigation="Continue">
             <MenuItem Header="Game">
                 <MenuItem x:Name="GameLoadMenuItem"  Header="Load" />
                 <MenuItem x:Name="GameNewMenuItem"   Header="New"   Click="NewGameHandler" />
@@ -19,7 +19,7 @@
                 <MenuItem x:Name="GameExitMenuItem"  Header="Exit"  Click="ExitGameHandler" />
             </MenuItem>
             <MenuItem Header="Settings">
-                <MenuItem Header="Visualization..." Click="VisualizationSettingsHandler" />
+                <MenuItem x:Name="VisualizationMenuItem" Header="Visualization..." Click="VisualizationSettingsHandler" />
             </MenuItem>
         </Menu>
 

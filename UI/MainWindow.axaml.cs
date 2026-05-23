@@ -1,5 +1,6 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.Threading;
@@ -100,6 +101,7 @@ public partial class MainWindow : Window
         };
 
         ApplyVisualSettings();
+        SetupKeyboardShortcuts();
         SetUiForGameState(GameStates.Idle);
         UpdateGameVisualization(0, PregameCells);
     }
@@ -218,6 +220,24 @@ public partial class MainWindow : Window
         UpDownCols.Value = value;
         TrackCols.Value = value;
         _grid.ColCount = value;
+    }
+
+    private void SetupKeyboardShortcuts()
+    {
+        var mod = OperatingSystem.IsMacOS() ? KeyModifiers.Meta : KeyModifiers.Control;
+        ApplyShortcut(GameNewMenuItem,       Key.N,        mod);
+        ApplyShortcut(GameRunMenuItem,       Key.R,        mod);
+        ApplyShortcut(GameStepMenuItem,      Key.T,        mod);
+        ApplyShortcut(GamePauseMenuItem,     Key.P,        mod);
+        ApplyShortcut(GameExitMenuItem,      Key.Q,        mod);
+        ApplyShortcut(VisualizationMenuItem, Key.OemComma, mod);
+    }
+
+    private static void ApplyShortcut(MenuItem item, Key key, KeyModifiers modifiers)
+    {
+        var gesture = new KeyGesture(key, modifiers);
+        item.HotKey = gesture;
+        item.InputGesture = gesture;
     }
 
     private void ToggleControlsHandler(object? sender, RoutedEventArgs e)
