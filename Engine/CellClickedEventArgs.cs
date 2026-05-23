@@ -1,9 +1,6 @@
-﻿using System;
+namespace Engine;
 
-namespace Engine
+public class CellClickedEventArgs : EventArgs
 {
-    public class CellClickedEventArgs : EventArgs
-    {
-        public RowCol Cell { get; set; }
-    }
+    public RowCol Cell { get; init; }
 }
