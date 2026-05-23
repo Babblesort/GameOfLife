@@ -52,7 +52,7 @@
                 <Button x:Name="btnPause" Content="Pause" HorizontalAlignment="Stretch" Click="PauseGameHandler" />
 
                 <HeaderedContentControl Header="Speed">
-                    <Slider x:Name="SpeedSlider" IsDirectionReversed="True" />
+                    <Slider x:Name="SpeedSlider" />
                 </HeaderedContentControl>
 
                 <StackPanel Spacing="2">

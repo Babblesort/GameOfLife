@@ -40,7 +40,7 @@ public partial class MainWindow : Window
         SpeedSlider.Maximum = Gaea.MaxDelayMilliseconds;
         SpeedSlider.TickFrequency = 100;
         SpeedSlider.SmallChange = 50;
-        SpeedSlider.Value = Gaea.DefaultDelayMilliseconds;
+        SpeedSlider.Value = Gaea.MaxDelayMilliseconds + Gaea.MinDelayMilliseconds - Gaea.DefaultDelayMilliseconds;
 
         TrackRows.Minimum = EngineGrid.MinRows;
         TrackRows.Maximum = EngineGrid.MaxRows;
@@ -64,7 +64,7 @@ public partial class MainWindow : Window
         SpeedSlider.PropertyChanged += (_, args) =>
         {
             if (args.Property == Slider.ValueProperty && _gaea != null)
-                _gaea.DelayMilliseconds = (int)SpeedSlider.Value;
+                _gaea.DelayMilliseconds = (int)(SpeedSlider.Maximum + SpeedSlider.Minimum - SpeedSlider.Value);
         };
 
         TrackRows.PropertyChanged += (_, args) =>
@@ -130,7 +130,7 @@ public partial class MainWindow : Window
             var generationZero = PregameCells.HasLiveCells ? PregameCells : _grid.CreateRandomGeneration();
             _gaea = new Gaea(_grid, new Rules(), UpdateGameVisualization, generationZero);
         }
-        _gaea.DelayMilliseconds = (int)SpeedSlider.Value;
+        _gaea.DelayMilliseconds = (int)(SpeedSlider.Maximum + SpeedSlider.Minimum - SpeedSlider.Value);
     }
 
     private void VisualizationSettingsHandler(object? sender, RoutedEventArgs e)
