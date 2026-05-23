@@ -52,24 +52,17 @@
                     <Slider x:Name="SpeedSlider" />
                 </HeaderedContentControl>
 
-                <Grid ColumnDefinitions="*,*">
-                    <HeaderedContentControl Grid.Column="0" Header="Rows" Margin="0,0,2,0">
-                        <StackPanel HorizontalAlignment="Center" Spacing="4">
-                            <Slider x:Name="TrackRows" Orientation="Vertical" Height="110"
-                                    HorizontalAlignment="Center" IsDirectionReversed="True" />
-                            <NumericUpDown x:Name="UpDownRows" Width="76" FormatString="0"
-                                          ParsingNumberStyle="Integer" />
-                        </StackPanel>
-                    </HeaderedContentControl>
-                    <HeaderedContentControl Grid.Column="1" Header="Cols" Margin="2,0,0,0">
-                        <StackPanel HorizontalAlignment="Center" Spacing="4">
-                            <Slider x:Name="TrackCols" Orientation="Vertical" Height="110"
-                                    HorizontalAlignment="Center" IsDirectionReversed="True" />
-                            <NumericUpDown x:Name="UpDownCols" Width="76" FormatString="0"
-                                          ParsingNumberStyle="Integer" />
-                        </StackPanel>
-                    </HeaderedContentControl>
-                </Grid>
+                <StackPanel Spacing="2">
+                    <TextBlock Text="Rows" />
+                    <Slider x:Name="TrackRows" />
+                    <NumericUpDown x:Name="UpDownRows" HorizontalAlignment="Stretch"
+                                   Increment="1" FormatString="F0" />
+
+                    <TextBlock Text="Cols" Margin="0,4,0,0" />
+                    <Slider x:Name="TrackCols" />
+                    <NumericUpDown x:Name="UpDownCols" HorizontalAlignment="Stretch"
+                                   Increment="1" FormatString="F0" />
+                </StackPanel>
 
                 <CheckBox x:Name="CheckboxLockRowAndCols" Content="Match Rows and Cols" IsChecked="True" />
 
