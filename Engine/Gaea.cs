@@ -1,14 +1,10 @@
-using System;
-using System.Threading;
-using System.Threading.Tasks;
-
 namespace Engine;
 
 public class Gaea
 {
-    public static int MinDelayMilliseconds = 25;
-    public static int MaxDelayMilliseconds = 500;
-    public static int DefaultDelayMilliseconds = 225;
+    public const int MinDelayMilliseconds = 25;
+    public const int MaxDelayMilliseconds = 500;
+    public const int DefaultDelayMilliseconds = 225;
     private int _generationNumber;
     private int _delay = DefaultDelayMilliseconds;
     private CancellationTokenSource? _tokenSource;

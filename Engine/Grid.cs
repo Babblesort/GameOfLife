@@ -1,19 +1,16 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
 
 namespace Engine;
 
 public class Grid : INotifyPropertyChanged
 {
-    public static readonly int MinRows = 1;
-    public static readonly int MaxRows = 200;
-    public static readonly int MinCols = 1;
-    public static readonly int MaxCols = 200;
-    public static readonly int DefaultRows = 45;
-    public static readonly int DefaultCols = 45;
+    public const int MinRows = 1;
+    public const int MaxRows = 200;
+    public const int MinCols = 1;
+    public const int MaxCols = 200;
+    public const int DefaultRows = 45;
+    public const int DefaultCols = 45;
 
     private int _rowCount = DefaultRows;
     private int _colCount = DefaultCols;

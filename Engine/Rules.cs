@@ -1,20 +1,16 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
 namespace Engine;
 
 public class Rules
 {
-    public static int MinNeighbors = 0;
-    public static int MaxNeighbors = 8;
-    public static int MinCount = 1;
-    public static int MaxCount = 8;
+    public const int MinNeighbors = 0;
+    public const int MaxNeighbors = 8;
+    public const int MinCount = 1;
+    public const int MaxCount = 8;
     public IList<int> SurviveNeighborCounts { get; }
     public IList<int> BirthNeighborCounts { get; }
 
-    private static readonly List<int> DefaultSurviveNeighborCounts = new List<int> { 2, 3 };
-    private static readonly List<int> DefaultBirthNeighborCounts = new List<int> { 3 };
+    private static readonly List<int> DefaultSurviveNeighborCounts = new() { 2, 3 };
+    private static readonly List<int> DefaultBirthNeighborCounts = new() { 3 };
 
     public Rules() : this(DefaultSurviveNeighborCounts, DefaultBirthNeighborCounts) { }
 
