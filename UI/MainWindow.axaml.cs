@@ -191,7 +191,7 @@ public partial class MainWindow : Window
     {
         Dispatcher.UIThread.Post(() =>
         {
-            lblGeneration.Text = generationNumber.ToString();
+            lblGeneration.Text = generationNumber.ToString("N0");
             gamePanel.Cells = cells;
         });
     }
@@ -218,6 +218,12 @@ public partial class MainWindow : Window
         UpDownCols.Value = value;
         TrackCols.Value = value;
         _grid.ColCount = value;
+    }
+
+    private void ToggleControlsHandler(object? sender, RoutedEventArgs e)
+    {
+        controlsPanel.IsVisible = !controlsPanel.IsVisible;
+        btnToggleControls.Content = controlsPanel.IsVisible ? "◀" : "▶";
     }
 
     private void SetUiForGameState(GameStates state)
