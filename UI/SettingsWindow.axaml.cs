@@ -9,6 +9,8 @@ public partial class SettingsWindow : Window
     private readonly Action _onChanged;
     private bool _loading = true;
 
+    public SettingsWindow() : this(new VisualSettings(), () => { }) { }
+
     public SettingsWindow(VisualSettings settings, Action onChanged)
     {
         _settings = settings;
