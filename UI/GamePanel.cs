@@ -10,11 +10,9 @@ namespace UI;
 
 public class GamePanel : Control
 {
-    private static readonly IPen GridLinePen = new Pen(Brushes.LightGray);
-    private static readonly IBrush CellBrush = new SolidColorBrush(new Color(180, 34, 139, 34));
-
     private EngineGrid? _grid;
     private Generation? _cells;
+    private VisualSettings _settings = new();
 
     public event EventHandler<CellClickedEventArgs>? GridCellClicked;
 
@@ -43,6 +41,12 @@ public class GamePanel : Control
         set { _cells = value; InvalidateVisual(); }
     }
 
+    public VisualSettings Settings
+    {
+        get => _settings;
+        set { _settings = value; InvalidateVisual(); }
+    }
+
     private void OnGridPropertyChanged(object? sender, PropertyChangedEventArgs e) =>
         InvalidateVisual();
 
@@ -50,21 +54,24 @@ public class GamePanel : Control
     {
         if (_grid == null) return;
 
-        var gridWidth = ColCount * CellWidth;
+        var gridLinePen = new Pen(new SolidColorBrush(_settings.GridLineColor), _settings.GridLineThickness);
+        var cellBrush   = new SolidColorBrush(_settings.CellColor);
+
+        var gridWidth  = ColCount * CellWidth;
         var gridHeight = RowCount * CellHeight;
 
         for (int r = 0; r <= RowCount; r++)
-            context.DrawLine(GridLinePen, new Point(0, r * CellHeight), new Point(gridWidth, r * CellHeight));
+            context.DrawLine(gridLinePen, new Point(0, r * CellHeight), new Point(gridWidth, r * CellHeight));
 
         for (int c = 0; c <= ColCount; c++)
-            context.DrawLine(GridLinePen, new Point(c * CellWidth, 0), new Point(c * CellWidth, gridHeight));
+            context.DrawLine(gridLinePen, new Point(c * CellWidth, 0), new Point(c * CellWidth, gridHeight));
 
         if (_cells != null)
         {
             foreach (var cell in _cells)
             {
                 if (!cell.Value) continue;
-                context.DrawRectangle(CellBrush, null,
+                context.DrawRectangle(cellBrush, null,
                     new Rect(cell.Key.Col * CellWidth, cell.Key.Row * CellHeight, CellWidth, CellHeight));
             }
         }

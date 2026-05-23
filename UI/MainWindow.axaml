@@ -18,6 +18,9 @@
                 <Separator />
                 <MenuItem x:Name="GameExitMenuItem"  Header="Exit"  Click="ExitGameHandler" />
             </MenuItem>
+            <MenuItem Header="Settings">
+                <MenuItem Header="Visualization..." Click="VisualizationSettingsHandler" />
+            </MenuItem>
         </Menu>
 
         <Grid>
@@ -34,7 +37,7 @@
                         <TextBlock x:Name="lblGeneration" VerticalAlignment="Center" />
                     </Border>
                 </StackPanel>
-                <Border BorderBrush="Gray" BorderThickness="1">
+                <Border x:Name="gamePanelBorder" BorderBrush="Gray" BorderThickness="1">
                     <local:GamePanel x:Name="gamePanel" />
                 </Border>
             </DockPanel>

@@ -1,0 +1,85 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="UI.SettingsWindow"
+        Title="Visualization Settings"
+        Width="480" Height="680"
+        CanResize="True"
+        WindowStartupLocation="CenterOwner">
+
+    <ScrollViewer>
+        <StackPanel Margin="16" Spacing="10">
+
+            <!-- Grid Border -->
+            <TextBlock Text="Grid Border" FontSize="14" FontWeight="SemiBold" />
+            <StackPanel Margin="8,0,0,4" Spacing="6">
+                <TextBlock Text="Thickness" />
+                <ComboBox x:Name="BorderThicknessCombo" HorizontalAlignment="Left" MinWidth="180">
+                    <ComboBoxItem>
+                        <StackPanel Orientation="Horizontal" Spacing="12">
+                            <Rectangle Width="60" Height="1"  Fill="Black" VerticalAlignment="Center" />
+                            <TextBlock Text="Thin"   VerticalAlignment="Center" />
+                        </StackPanel>
+                    </ComboBoxItem>
+                    <ComboBoxItem>
+                        <StackPanel Orientation="Horizontal" Spacing="12">
+                            <Rectangle Width="60" Height="2"  Fill="Black" VerticalAlignment="Center" />
+                            <TextBlock Text="Medium" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </ComboBoxItem>
+                    <ComboBoxItem>
+                        <StackPanel Orientation="Horizontal" Spacing="12">
+                            <Rectangle Width="60" Height="4"  Fill="Black" VerticalAlignment="Center" />
+                            <TextBlock Text="Thick"  VerticalAlignment="Center" />
+                        </StackPanel>
+                    </ComboBoxItem>
+                </ComboBox>
+                <TextBlock Text="Color" />
+                <ColorView x:Name="BorderColorView" HorizontalAlignment="Left" />
+            </StackPanel>
+
+            <Separator />
+
+            <!-- Inner Grid Lines -->
+            <TextBlock Text="Inner Grid Lines" FontSize="14" FontWeight="SemiBold" />
+            <StackPanel Margin="8,0,0,4" Spacing="6">
+                <TextBlock Text="Thickness" />
+                <ComboBox x:Name="GridLineThicknessCombo" HorizontalAlignment="Left" MinWidth="180">
+                    <ComboBoxItem>
+                        <StackPanel Orientation="Horizontal" Spacing="12">
+                            <Rectangle Width="60" Height="1"  Fill="Black" VerticalAlignment="Center" />
+                            <TextBlock Text="Thin"   VerticalAlignment="Center" />
+                        </StackPanel>
+                    </ComboBoxItem>
+                    <ComboBoxItem>
+                        <StackPanel Orientation="Horizontal" Spacing="12">
+                            <Rectangle Width="60" Height="2"  Fill="Black" VerticalAlignment="Center" />
+                            <TextBlock Text="Medium" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </ComboBoxItem>
+                    <ComboBoxItem>
+                        <StackPanel Orientation="Horizontal" Spacing="12">
+                            <Rectangle Width="60" Height="4"  Fill="Black" VerticalAlignment="Center" />
+                            <TextBlock Text="Thick"  VerticalAlignment="Center" />
+                        </StackPanel>
+                    </ComboBoxItem>
+                </ComboBox>
+                <TextBlock Text="Color" />
+                <ColorView x:Name="GridLineColorView" HorizontalAlignment="Left" />
+            </StackPanel>
+
+            <Separator />
+
+            <!-- Living Cells -->
+            <TextBlock Text="Living Cells" FontSize="14" FontWeight="SemiBold" />
+            <StackPanel Margin="8,0,0,4" Spacing="6">
+                <TextBlock Text="Color" />
+                <ColorView x:Name="CellColorView" HorizontalAlignment="Left" />
+            </StackPanel>
+
+            <Button Content="Close" Click="CloseHandler"
+                    HorizontalAlignment="Right" Width="80" Margin="0,8,0,0" />
+
+        </StackPanel>
+    </ScrollViewer>
+
+</Window>

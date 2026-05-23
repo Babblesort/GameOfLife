@@ -1,5 +1,7 @@
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using Avalonia.Media;
 using Avalonia.Threading;
 using Engine;
 using EngineGrid = Engine.Grid;
@@ -10,6 +12,8 @@ public partial class MainWindow : Window
 {
     private EngineGrid _grid = null!;
     private Gaea? _gaea;
+    private readonly VisualSettings _visualSettings = new();
+    private SettingsWindow? _settingsWindow;
 
     public enum GameStates { Idle, Run, Step, Pause }
 
@@ -95,6 +99,7 @@ public partial class MainWindow : Window
             TrackCols.Value = lower;
         };
 
+        ApplyVisualSettings();
         SetUiForGameState(GameStates.Idle);
         UpdateGameVisualization(0, PregameCells);
     }
@@ -126,6 +131,24 @@ public partial class MainWindow : Window
             _gaea = new Gaea(_grid, new Rules(), UpdateGameVisualization, generationZero);
         }
         _gaea.DelayMilliseconds = (int)SpeedSlider.Value;
+    }
+
+    private void VisualizationSettingsHandler(object? sender, RoutedEventArgs e)
+    {
+        if (_settingsWindow is { IsVisible: true })
+        {
+            _settingsWindow.Activate();
+            return;
+        }
+        _settingsWindow = new SettingsWindow(_visualSettings, ApplyVisualSettings);
+        _settingsWindow.Show(this);
+    }
+
+    private void ApplyVisualSettings()
+    {
+        gamePanelBorder.BorderBrush     = new SolidColorBrush(_visualSettings.BorderColor);
+        gamePanelBorder.BorderThickness = new Thickness(_visualSettings.BorderThickness);
+        gamePanel.Settings = _visualSettings;
     }
 
     private void RunGameHandler(object? sender, RoutedEventArgs e) => GameRun();
