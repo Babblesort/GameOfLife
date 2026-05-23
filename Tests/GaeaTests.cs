@@ -84,4 +84,28 @@ public class GaeaTests
         Assert.Throws<ArgumentException>(() => gaea.Run());
     }
 
+    [Test]
+    public async Task DelayMillisecondsChangeTakesEffectDuringRun()
+    {
+        var grid = new Grid();
+        var cells = grid.CreateRandomGeneration();
+        int latestGeneration = 0;
+        var gaea = new Gaea(grid, new Rules(),
+            (i, _) => Interlocked.Exchange(ref latestGeneration, i), cells);
+
+        gaea.DelayMilliseconds = Gaea.MinDelayMilliseconds; // 25ms — fast
+        gaea.Run();
+        await Task.Delay(300);                               // 300ms / 25ms ≈ 12 generations
+        int genAfterFast = latestGeneration;
+
+        gaea.DelayMilliseconds = Gaea.MaxDelayMilliseconds; // 500ms — slow
+        await Task.Delay(300);                               // 300ms < 500ms, so 0–1 new generations
+        int genAfterSlow = latestGeneration;
+
+        gaea.Pause();
+
+        Assert.Greater(genAfterFast, 5);
+        Assert.Less(genAfterSlow - genAfterFast, 2);
+    }
+
 }

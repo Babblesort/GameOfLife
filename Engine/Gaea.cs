@@ -80,9 +80,10 @@ public class Gaea
 
         if (!runMode) return;
 
-        using var timer = new PeriodicTimer(TimeSpan.FromMilliseconds(DelayMilliseconds));
-        while (await timer.WaitForNextTickAsync(token))
+        while (true)
         {
+            try { await Task.Delay(_delay, token); }
+            catch (OperationCanceledException) { return; }
             Cells = GenerationResolver.ResolveNextGeneration(Grid, Rules, Cells!);
             UpdateVisualization(++_generationNumber, Cells);
         }
