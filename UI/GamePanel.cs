@@ -1,111 +1,81 @@
 using System.ComponentModel;
-using System.Drawing;
-using System.Windows.Forms;
+using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Input;
+using Avalonia.Media;
 using Engine;
+using EngineGrid = Engine.Grid;
 
 namespace UI;
 
-public partial class GamePanel : Panel
+public class GamePanel : Control
 {
-    private int RowCount => _grid.RowCount;
-    private int ColCount => _grid.ColCount;
-    private float CellHeight => (float)(Height - 5) / _grid.RowCount;
-    private float CellWidth => (float)(Width - 5) / _grid.ColCount;
-    private float GridWidth => ColCount * CellWidth;
-    private float GridHeight => RowCount * CellHeight;
-    private static readonly Pen GridLinePen = Pens.LightGray;
-    private static readonly Brush CellBrush = new SolidBrush(Color.FromArgb(alpha: 180, baseColor: Color.ForestGreen));
-    private Grid _grid = null!; // assigned via Grid property before use; OnPaint guards against null
+    private static readonly IPen GridLinePen = new Pen(Brushes.LightGray);
+    private static readonly IBrush CellBrush = new SolidColorBrush(new Color(180, 34, 139, 34));
+
+    private EngineGrid? _grid;
     private Generation? _cells;
+
     public event EventHandler<CellClickedEventArgs>? GridCellClicked;
 
-    public Grid Grid
+    private int RowCount => _grid?.RowCount ?? 1;
+    private int ColCount => _grid?.ColCount ?? 1;
+    private double CellHeight => (Bounds.Height - 5) / RowCount;
+    private double CellWidth => (Bounds.Width - 5) / ColCount;
+
+    public EngineGrid? Grid
     {
-        get
-        {
-            return _grid;
-        }
+        get => _grid;
         set
         {
+            if (_grid != null)
+                _grid.PropertyChanged -= OnGridPropertyChanged;
             _grid = value;
             if (_grid != null)
-            {
-                _grid.PropertyChanged += GridPropertyChanged;
-            }
-            Refresh();
+                _grid.PropertyChanged += OnGridPropertyChanged;
+            InvalidateVisual();
         }
-    }
-
-    private void GridPropertyChanged(object? sender, PropertyChangedEventArgs e)
-    {
-        Refresh();
-    }
-
-    private void OnGridCellClicked(CellClickedEventArgs e)
-    {
-        GridCellClicked?.Invoke(this, e);
     }
 
     public Generation? Cells
     {
         get => _cells;
-        set { _cells = value; Refresh(); }
+        set { _cells = value; InvalidateVisual(); }
     }
 
-    public GamePanel()
-    {
-        InitializeComponent();
-        DoubleBuffered = true;
-        ResizeRedraw = true;
-    }
+    private void OnGridPropertyChanged(object? sender, PropertyChangedEventArgs e) =>
+        InvalidateVisual();
 
-    protected override void OnPaint(PaintEventArgs e)
+    public override void Render(DrawingContext context)
     {
         if (_grid == null) return;
 
-        var rowBoxes = new RectangleF[(int)Math.Ceiling((float)RowCount / 2)];
-        var counter = 0;
-        for (var r = 0; r < RowCount; r += 2)
-        {
-            rowBoxes[counter++] = new RectangleF(0, r * CellHeight, GridWidth, CellHeight);
-        }
-        if (RowCount % 2 == 0)
-        {
-            e.Graphics.DrawLine(GridLinePen, 0, GridHeight, GridWidth, GridHeight);
-        }
+        var gridWidth = ColCount * CellWidth;
+        var gridHeight = RowCount * CellHeight;
 
-        var colBoxes = new RectangleF[(int)Math.Ceiling((float)ColCount / 2)];
-        counter = 0;
-        for (var c = 0; c < ColCount; c += 2)
-        {
-            colBoxes[counter++] = new RectangleF(c * CellWidth, 0, CellWidth, RowCount * CellHeight);
-        }
-        if (ColCount % 2 == 0)
-        {
-            e.Graphics.DrawLine(GridLinePen, GridWidth, 0, GridWidth, RowCount * CellHeight);
-        }
+        for (int r = 0; r <= RowCount; r++)
+            context.DrawLine(GridLinePen, new Point(0, r * CellHeight), new Point(gridWidth, r * CellHeight));
 
-        e.Graphics.DrawRectangles(GridLinePen, rowBoxes);
-        e.Graphics.DrawRectangles(GridLinePen, colBoxes);
+        for (int c = 0; c <= ColCount; c++)
+            context.DrawLine(GridLinePen, new Point(c * CellWidth, 0), new Point(c * CellWidth, gridHeight));
 
-        if (_cells?.Count > 0)
+        if (_cells != null)
         {
-            var paintCells = _cells
-                .Where(c => c.Value)
-                .Select(c => new RectangleF(c.Key.Col * CellWidth, c.Key.Row * CellHeight, CellWidth, CellHeight))
-                .ToArray();
-
-            if (paintCells.Length > 0)
+            foreach (var cell in _cells)
             {
-                e.Graphics.FillRectangles(CellBrush, paintCells);
+                if (!cell.Value) continue;
+                context.DrawRectangle(CellBrush, null,
+                    new Rect(cell.Key.Col * CellWidth, cell.Key.Row * CellHeight, CellWidth, CellHeight));
             }
         }
     }
 
-    private void GamePanel_MouseClick(object sender, MouseEventArgs e)
+    protected override void OnPointerPressed(PointerPressedEventArgs e)
     {
-        var col = (int)(e.Location.X / CellWidth);
-        var row = (int)(e.Location.Y / CellHeight);
-        OnGridCellClicked(new CellClickedEventArgs { Cell = new RowCol(row, col) });
+        base.OnPointerPressed(e);
+        var pos = e.GetPosition(this);
+        var col = (int)(pos.X / CellWidth);
+        var row = (int)(pos.Y / CellHeight);
+        GridCellClicked?.Invoke(this, new CellClickedEventArgs { Cell = new RowCol(row, col) });
     }
 }
