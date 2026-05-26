@@ -128,6 +128,7 @@ public partial class MainWindow : Window
         {
             var generationZero = PregameCells.HasLiveCells ? PregameCells : _grid.CreateRandomGeneration();
             _gaea = new Gaea(_grid, new Rules(), UpdateGameVisualization, generationZero);
+            _gaea.Stopped = () => Dispatcher.UIThread.Post(() => SetUiForGameState(GameStates.Pause));
         }
         _gaea.DelayMilliseconds = (int)(SpeedSlider.Maximum + SpeedSlider.Minimum - SpeedSlider.Value);
     }

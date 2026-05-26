@@ -32,6 +32,7 @@ public class Gaea
     public Rules Rules { get; }
     public Generation? Cells { get; private set; }
     public Action<int, Generation, double> UpdateVisualization { get; set; }
+    public Action? Stopped { get; set; }
 
     public int DelayMilliseconds
     {
@@ -89,6 +90,12 @@ public class Gaea
         (Cells, _spare) = (_spare, Cells);
         UpdateVisualization(++_generationNumber, Cells!, RecordMs(Stopwatch.GetElapsedTime(t0).TotalMilliseconds));
 
+        if (!Cells!.HasLiveCells)
+        {
+            Stopped?.Invoke();
+            return;
+        }
+
         if (!runMode) return;
 
         while (true)
@@ -99,6 +106,12 @@ public class Gaea
             GenerationResolver.ResolveNextGeneration(Grid, Rules, Cells!, _spare!);
             (Cells, _spare) = (_spare, Cells);
             UpdateVisualization(++_generationNumber, Cells!, RecordMs(Stopwatch.GetElapsedTime(t0).TotalMilliseconds));
+
+            if (!Cells!.HasLiveCells)
+            {
+                Stopped?.Invoke();
+                return;
+            }
         }
     }
 
