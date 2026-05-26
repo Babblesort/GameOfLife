@@ -9,6 +9,15 @@
     <ScrollViewer>
         <StackPanel Margin="16" Spacing="10">
 
+            <!-- Living Cells -->
+            <TextBlock Text="Living Cells" FontSize="14" FontWeight="SemiBold" />
+            <StackPanel Margin="8,0,0,4" Spacing="6">
+                <TextBlock Text="Color" />
+                <ColorView x:Name="CellColorView" HorizontalAlignment="Left" />
+            </StackPanel>
+
+            <Separator />
+
             <!-- Grid Border -->
             <TextBlock Text="Grid Border" FontSize="14" FontWeight="SemiBold" />
             <StackPanel Margin="8,0,0,4" Spacing="6">
@@ -68,13 +77,6 @@
             </StackPanel>
 
             <Separator />
-
-            <!-- Living Cells -->
-            <TextBlock Text="Living Cells" FontSize="14" FontWeight="SemiBold" />
-            <StackPanel Margin="8,0,0,4" Spacing="6">
-                <TextBlock Text="Color" />
-                <ColorView x:Name="CellColorView" HorizontalAlignment="Left" />
-            </StackPanel>
 
             <Button Content="Close" Click="CloseHandler"
                     HorizontalAlignment="Right" Width="80" Margin="0,8,0,0" />
