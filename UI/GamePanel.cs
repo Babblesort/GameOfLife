@@ -71,6 +71,8 @@ public class GamePanel : Control
     {
         if (_grid == null) return;
 
+        context.FillRectangle(Brushes.Transparent, new Rect(Bounds.Size));
+
         var gridLinePen = new Pen(new SolidColorBrush(_settings.GridLineColor), _settings.GridLineThickness);
         var cellBrush   = new SolidColorBrush(_settings.CellColor);
 
@@ -105,6 +107,10 @@ public class GamePanel : Control
         var pos = e.GetPosition(this);
         var col = (int)(pos.X / CellWidth);
         var row = (int)(pos.Y / CellHeight);
+        if (row < 0 || row >= RowCount || col < 0 || col >= ColCount)
+        {
+            return;
+        }
         GridCellClicked?.Invoke(this, new CellClickedEventArgs { Cell = new RowCol(row, col) });
     }
 }
