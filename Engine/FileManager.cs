@@ -4,12 +4,12 @@ namespace Engine;
 
 public class FileManager
 {
-    public static string GameFilesFolderName = "GameFiles";
-    public DirectoryInfo _directoryInfo = new DirectoryInfo(GameFilesFolderName);
+    public const string GameFilesFolderName = "GameFiles";
+    public DirectoryInfo _directoryInfo = new(GameFilesFolderName);
 
     public FileManager() { }
 
-    public string GameFilesPath
+    public static string GameFilesPath
     {
         get
         {
@@ -20,9 +20,9 @@ public class FileManager
 
     // Union of Windows and Unix invalid filename chars for consistent cross-platform validation.
     private static readonly char[] InvalidFileNameChars =
-        Path.GetInvalidFileNameChars().Union(new[] { '*', '?', ':', '<', '>', '|' }).ToArray();
+        [.. Path.GetInvalidFileNameChars().Union(['*', '?', ':', '<', '>', '|'])];
 
-    public void CreateFile(string fileName, string[] lines)
+    public static void CreateFile(string fileName, string[] lines)
     {
         if (fileName.IndexOfAny(InvalidFileNameChars) >= 0)
             throw new ArgumentException($"File name contains invalid characters.", nameof(fileName));
@@ -34,7 +34,7 @@ public class FileManager
         File.WriteAllLines(file.FullName, lines);
     }
 
-    public string[] ReadFile(string fileName)
+    public static string[] ReadFile(string fileName)
     {
         var readFilePathName = Path.Combine(GameFilesPath, fileName);
 
@@ -42,12 +42,12 @@ public class FileManager
         return File.ReadAllLines(readFilePathName);
     }
 
-    public void CreateGenerationFile(string fileName, Generation cells)
+    public static void CreateGenerationFile(string fileName, Generation cells)
     {
-        CreateFile(fileName, cells.ToCsv().ToArray());
+        CreateFile(fileName, [.. cells.ToCsv()]);
     }
 
-    public Generation ReadGenerationFile(string fileName)
+    public static Generation ReadGenerationFile(string fileName)
     {
         var lines = ReadFile(fileName);
         int maxRow = 0, maxCol = 0;

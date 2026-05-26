@@ -9,7 +9,7 @@ public class FileManagerTests
     [OneTimeTearDown]
     public void CleanupTestGameFilesFolder()
     {
-        var directory = new DirectoryInfo(new FileManager().GameFilesPath);
+        var directory = new DirectoryInfo(FileManager.GameFilesPath);
         foreach (var testFile in directory.GetFiles())
         {
             testFile.Delete();
@@ -32,7 +32,7 @@ public class FileManagerTests
     [Test]
     public void GameFilesPathProperty()
     {
-        var dir = new FileManager().GameFilesPath;
+        var dir = FileManager.GameFilesPath;
         Assert.NotNull(dir);
         Assert.IsTrue(dir.EndsWith(FileManager.GameFilesFolderName));
     }
@@ -43,8 +43,8 @@ public class FileManagerTests
         const string testFileName = "test.txt";
         var file = new FileManager();
         var fileLines = new string[] { "one", "two" };
-        file.CreateFile(testFileName, fileLines);
-        var directory = new DirectoryInfo(file.GameFilesPath);
+        FileManager.CreateFile(testFileName, fileLines);
+        var directory = new DirectoryInfo(FileManager.GameFilesPath);
         var foundFiles = directory.EnumerateFiles(testFileName, SearchOption.TopDirectoryOnly);
         Assert.AreEqual(1, foundFiles.Count());
         var foundLines = File.ReadAllLines(foundFiles.First().FullName);
@@ -58,7 +58,7 @@ public class FileManagerTests
     {
         const string testFileName = "te*st.txt";
         var file = new FileManager();
-        Assert.Throws<ArgumentException>(() => file.CreateFile(testFileName, new string[0]));
+        Assert.Throws<ArgumentException>(() => FileManager.CreateFile(testFileName, []));
     }
 
     [Test]
@@ -72,9 +72,9 @@ public class FileManagerTests
         };
 
         var file = new FileManager();
-        file.CreateGenerationFile(testFileName, cells);
+        FileManager.CreateGenerationFile(testFileName, cells);
 
-        var directory = new DirectoryInfo(file.GameFilesPath);
+        var directory = new DirectoryInfo(FileManager.GameFilesPath);
         var foundFiles = directory.EnumerateFiles(testFileName, SearchOption.TopDirectoryOnly);
         var foundLines = File.ReadAllLines(foundFiles.First().FullName);
         Assert.AreEqual(cells.Count, foundLines.Length);
@@ -89,9 +89,9 @@ public class FileManagerTests
         const string testFileName = "test.txt";
         var file = new FileManager();
         var fileLines = new string[] { "one", "two" };
-        file.CreateFile(testFileName, fileLines);
+        FileManager.CreateFile(testFileName, fileLines);
 
-        var readLines = file.ReadFile(testFileName);
+        var readLines = FileManager.ReadFile(testFileName);
         Assert.AreEqual(fileLines.Length, readLines.Length);
         Assert.AreEqual(fileLines[0], readLines[0]);
         Assert.AreEqual(fileLines[1], readLines[1]);
@@ -100,7 +100,7 @@ public class FileManagerTests
     [Test]
     public void ReadFileThrowsOnInvalidFile()
     {
-        Assert.Throws<FileNotFoundException>(() => new FileManager().ReadFile("notFoundFileName.not"));
+        Assert.Throws<FileNotFoundException>(static () => FileManager.ReadFile("notFoundFileName.not"));
     }
 
     [Test]
@@ -116,9 +116,9 @@ public class FileManagerTests
         };
 
         var file = new FileManager();
-        file.CreateGenerationFile(testFileName, cells);
+        FileManager.CreateGenerationFile(testFileName, cells);
 
-        var generation = file.ReadGenerationFile(testFileName);
+        var generation = FileManager.ReadGenerationFile(testFileName);
 
         Assert.That(generation, Is.InstanceOf(typeof(Generation)));
         Assert.AreEqual(2, generation.Count);

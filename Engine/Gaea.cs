@@ -19,11 +19,8 @@ public class Gaea
 
     public Gaea(Grid grid, Rules rules, Action<int, Generation, double> updateFn, Generation? cells = null)
     {
-        if (grid == null) throw new ArgumentNullException(nameof(grid), "Cannot be null");
-        if (rules == null) throw new ArgumentNullException(nameof(rules), "Cannot be null");
-
-        Grid = grid;
-        Rules = rules;
+        Grid = grid ?? throw new ArgumentNullException(nameof(grid), "Cannot be null");
+        Rules = rules ?? throw new ArgumentNullException(nameof(rules), "Cannot be null");
         Cells = cells;
         UpdateVisualization = updateFn;
     }
