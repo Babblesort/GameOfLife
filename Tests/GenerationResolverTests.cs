@@ -34,7 +34,7 @@ public class GenerationResolverTests
         cell6 = new RowCol(2, 0);
         cell7 = new RowCol(2, 1);
         cell8 = new RowCol(2, 2);
-        generation = new Generation
+        generation = new Generation(3, 3)
         {
             { cell0, true },
             { cell1, false },
@@ -47,7 +47,7 @@ public class GenerationResolverTests
             { cell8, true }
         };
 
-        expectedNextGen = new Generation
+        expectedNextGen = new Generation(3, 3)
         {
             { cell0, true },
             { cell1, true },
@@ -76,7 +76,7 @@ public class GenerationResolverTests
         cell6 = new RowCol(2, 0);
         cell7 = new RowCol(2, 1);
         cell8 = new RowCol(2, 2);
-        generation = new Generation
+        generation = new Generation(3, 3)
         {
             { cell0, false },
             { cell1, false },
@@ -89,7 +89,7 @@ public class GenerationResolverTests
             { cell8, false }
         };
 
-        expectedNextGen = new Generation
+        expectedNextGen = new Generation(3, 3)
         {
             { cell0, false },
             { cell1, false },

@@ -64,8 +64,8 @@ public class GaeaTests
     [Test]
     public void StepThrowsOnMissizedCells()
     {
-        var gen = new Generation { { new RowCol(0, 0), false } };
-        var gaea = new Gaea(new Grid(2, 2), new Rules(), (i, c) => { }, gen);
+        var gen = new Generation(1, 1) { { new RowCol(0, 0), false } };
+        var gaea = new Gaea(new Grid(2, 2), new Rules(), (i, c, _) => { }, gen);
         Assert.Throws<ArgumentException>(() => gaea.Step());
     }
 
@@ -79,8 +79,8 @@ public class GaeaTests
     [Test]
     public void RunThrowsOnMissizedCells()
     {
-        var gen = new Generation { { new RowCol(0, 0), false } };
-        var gaea = new Gaea(new Grid(2, 2), new Rules(), (i, c) => { }, gen);
+        var gen = new Generation(1, 1) { { new RowCol(0, 0), false } };
+        var gaea = new Gaea(new Grid(2, 2), new Rules(), (i, c, _) => { }, gen);
         Assert.Throws<ArgumentException>(() => gaea.Run());
     }
 
@@ -91,7 +91,7 @@ public class GaeaTests
         var cells = grid.CreateRandomGeneration();
         int latestGeneration = 0;
         var gaea = new Gaea(grid, new Rules(),
-            (i, _) => Interlocked.Exchange(ref latestGeneration, i), cells);
+            (i, _, _) => Interlocked.Exchange(ref latestGeneration, i), cells);
 
         gaea.DelayMilliseconds = Gaea.MinDelayMilliseconds; // 25ms — fast
         gaea.Run();

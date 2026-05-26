@@ -65,7 +65,7 @@ public class FileManagerTests
     public void CanWriteAGenerationToFile()
     {
         const string testFileName = "generationTest.txt";
-        var cells = new Generation
+        var cells = new Generation(1, 2)
         {
             { new RowCol(0, 0), true },
             { new RowCol(0, 1), false }
@@ -109,7 +109,7 @@ public class FileManagerTests
         const string testFileName = "generationTest.txt";
         var cell0 = new RowCol(0, 0);
         var cell1 = new RowCol(0, 1);
-        var cells = new Generation
+        var cells = new Generation(1, 2)
         {
             { cell0, true },
             { cell1, false }

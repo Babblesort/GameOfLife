@@ -1,3 +1,5 @@
+using System.Diagnostics;
+
 namespace Engine;
 
 public class Gaea
@@ -9,10 +11,13 @@ public class Gaea
     private int _delay = DefaultDelayMilliseconds;
     private CancellationTokenSource? _tokenSource;
     private Task? _task;
+    private readonly double[] _msRing = new double[60];
+    private int _msIdx;
+    private Generation? _spare;
 
-    public Gaea(Grid grid, Rules rules) : this(grid, rules, updateFn: (i, c) => { }, cells: null) { }
+    public Gaea(Grid grid, Rules rules) : this(grid, rules, updateFn: (i, c, _) => { }, cells: null) { }
 
-    public Gaea(Grid grid, Rules rules, Action<int, Generation> updateFn, Generation? cells = null)
+    public Gaea(Grid grid, Rules rules, Action<int, Generation, double> updateFn, Generation? cells = null)
     {
         if (grid == null) throw new ArgumentNullException(nameof(grid), "Cannot be null");
         if (rules == null) throw new ArgumentNullException(nameof(rules), "Cannot be null");
@@ -26,7 +31,7 @@ public class Gaea
     public Grid Grid { get; }
     public Rules Rules { get; }
     public Generation? Cells { get; private set; }
-    public Action<int, Generation> UpdateVisualization { get; set; }
+    public Action<int, Generation, double> UpdateVisualization { get; set; }
 
     public int DelayMilliseconds
     {
@@ -47,7 +52,7 @@ public class Gaea
     {
         CancelIfRunning();
         _generationNumber = 0;
-        UpdateVisualization(_generationNumber, Grid.CreateEmptyGeneration());
+        UpdateVisualization(_generationNumber, Grid.CreateEmptyGeneration(), 0.0);
     }
 
     private void PerformGenerationTask(bool runMode)
@@ -56,6 +61,10 @@ public class Gaea
         _tokenSource = new CancellationTokenSource();
         var token = _tokenSource.Token;
         ValidateExecuteGenerationConditions();
+        if (_spare == null || _spare.Rows != Grid.RowCount || _spare.Cols != Grid.ColCount)
+        {
+            _spare = new Generation(Grid.RowCount, Grid.ColCount);
+        }
         _task = Task.Run(() => ResolveGenerationsAsync(runMode, token), token);
     }
 
@@ -75,8 +84,10 @@ public class Gaea
 
     private async Task ResolveGenerationsAsync(bool runMode, CancellationToken token)
     {
-        Cells = GenerationResolver.ResolveNextGeneration(Grid, Rules, Cells!);
-        UpdateVisualization(++_generationNumber, Cells);
+        var t0 = Stopwatch.GetTimestamp();
+        GenerationResolver.ResolveNextGeneration(Grid, Rules, Cells!, _spare!);
+        (Cells, _spare) = (_spare, Cells);
+        UpdateVisualization(++_generationNumber, Cells!, RecordMs(Stopwatch.GetElapsedTime(t0).TotalMilliseconds));
 
         if (!runMode) return;
 
@@ -84,8 +95,23 @@ public class Gaea
         {
             try { await Task.Delay(_delay, token); }
             catch (OperationCanceledException) { return; }
-            Cells = GenerationResolver.ResolveNextGeneration(Grid, Rules, Cells!);
-            UpdateVisualization(++_generationNumber, Cells);
+            t0 = Stopwatch.GetTimestamp();
+            GenerationResolver.ResolveNextGeneration(Grid, Rules, Cells!, _spare!);
+            (Cells, _spare) = (_spare, Cells);
+            UpdateVisualization(++_generationNumber, Cells!, RecordMs(Stopwatch.GetElapsedTime(t0).TotalMilliseconds));
         }
+    }
+
+    private double RecordMs(double ms)
+    {
+        _msRing[_msIdx % 60] = ms;
+        _msIdx++;
+        int count = Math.Min(_msIdx, 60);
+        double sum = 0;
+        for (int i = 0; i < count; i++)
+        {
+            sum += _msRing[i];
+        }
+        return sum / count;
     }
 }

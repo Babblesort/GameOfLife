@@ -328,7 +328,7 @@ public class GridTests
         Assert.IsFalse(generation[new RowCol(1, 1)]);
 
         bool unused;
-        Assert.Throws<KeyNotFoundException>(() => unused = generation[new RowCol(1, 2)]);
+        Assert.Throws<IndexOutOfRangeException>(() => unused = generation[new RowCol(1, 2)]);
     }
 
     [Test]

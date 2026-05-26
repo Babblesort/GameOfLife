@@ -50,11 +50,18 @@ public class FileManager
     public Generation ReadGenerationFile(string fileName)
     {
         var lines = ReadFile(fileName);
-        var generation = new Generation();
+        int maxRow = 0, maxCol = 0;
         foreach (var line in lines)
         {
             var tokens = line.Split(',');
-            generation.Add(new RowCol(int.Parse(tokens[0]), int.Parse(tokens[1])), bool.Parse(tokens[2]));
+            maxRow = Math.Max(maxRow, int.Parse(tokens[0]) + 1);
+            maxCol = Math.Max(maxCol, int.Parse(tokens[1]) + 1);
+        }
+        var generation = new Generation(maxRow, maxCol);
+        foreach (var line in lines)
+        {
+            var tokens = line.Split(',');
+            generation[new RowCol(int.Parse(tokens[0]), int.Parse(tokens[1]))] = bool.Parse(tokens[2]);
         }
         return generation;
     }

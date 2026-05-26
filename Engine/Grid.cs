@@ -77,18 +77,31 @@ public class Grid : INotifyPropertyChanged
 
     public int CellCount => RowCount * ColCount;
 
-    public Generation CreateEmptyGeneration()
-    {
-        var generation = new Generation();
-        Cells.ForEach(cell => generation.Add(cell, false));
-        return generation;
-    }
+    public Generation CreateEmptyGeneration() => new(RowCount, ColCount);
 
     public Generation CreateRandomGeneration()
     {
         var rnd = new Random();
-        var generation = new Generation();
-        Cells.ForEach(cell => generation.Add(cell, rnd.Next(0, 100) > 60));
+        var generation = new Generation(RowCount, ColCount);
+        foreach (var cell in Cells)
+        {
+            generation[cell] = rnd.Next(0, 100) > 60;
+        }
+        return generation;
+    }
+
+    public Generation CreateGenerationFrom(Generation old)
+    {
+        var generation = new Generation(RowCount, ColCount);
+        int maxRow = Math.Min(old.Rows, RowCount);
+        int maxCol = Math.Min(old.Cols, ColCount);
+        for (int r = 0; r < maxRow; r++)
+        {
+            for (int c = 0; c < maxCol; c++)
+            {
+                generation[new RowCol(r, c)] = old[new RowCol(r, c)];
+            }
+        }
         return generation;
     }
 

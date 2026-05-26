@@ -106,15 +106,12 @@ public partial class MainWindow : Window
         UpdateGameVisualization(0, PregameCells);
     }
 
-    private void OnGridSizeIncreased(object? sender, EventArgs e)
-    {
-        _grid.Cells.Except(PregameCells.Keys).ToList().ForEach(k => PregameCells.Add(k, false));
-        UpdateGameVisualization(0, PregameCells);
-    }
+    private void OnGridSizeIncreased(object? sender, EventArgs e) => OnGridSizeChanged();
+    private void OnGridSizeDecreased(object? sender, EventArgs e) => OnGridSizeChanged();
 
-    private void OnGridSizeDecreased(object? sender, EventArgs e)
+    private void OnGridSizeChanged()
     {
-        PregameCells.Keys.Except(_grid.Cells).ToList().ForEach(k => PregameCells.Remove(k));
+        PregameCells = _grid.CreateGenerationFrom(PregameCells);
         UpdateGameVisualization(0, PregameCells);
     }
 
@@ -189,11 +186,12 @@ public partial class MainWindow : Window
         _gaea!.Pause();
     }
 
-    private void UpdateGameVisualization(int generationNumber, Generation cells)
+    private void UpdateGameVisualization(int generationNumber, Generation cells, double avgMs = 0.0)
     {
         Dispatcher.UIThread.Post(() =>
         {
             lblGeneration.Text = generationNumber.ToString("N0");
+            lblMsPerGen.Text = avgMs > 0 ? $"{avgMs:F2}" : "";
             gamePanel.Cells = cells;
         });
     }

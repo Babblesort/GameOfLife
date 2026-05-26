@@ -14,11 +14,26 @@ public class Rules
 
     public Rules() : this(DefaultSurviveNeighborCounts, DefaultBirthNeighborCounts) { }
 
+    internal int SurviveMask { get; }
+    internal int BirthMask { get; }
+
     public Rules(IList<int> surviveCounts, IList<int> birthCounts)
     {
         ValidateCounts(surviveCounts, birthCounts);
         SurviveNeighborCounts = surviveCounts;
         BirthNeighborCounts = birthCounts;
+        SurviveMask = BuildMask(surviveCounts);
+        BirthMask = BuildMask(birthCounts);
+    }
+
+    private static int BuildMask(IList<int> counts)
+    {
+        int mask = 0;
+        foreach (var n in counts)
+        {
+            mask |= 1 << n;
+        }
+        return mask;
     }
 
     private static void ValidateCounts(IList<int> surviveCounts, IList<int> birthCounts)

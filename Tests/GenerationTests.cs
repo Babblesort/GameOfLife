@@ -9,14 +9,14 @@ public class GenerationTests
     [Test]
     public void ImplementsKeyValueEnumerable()
     {
-        var generation = new Generation();
+        var generation = new Generation(1, 1);
         Assert.IsInstanceOf<IEnumerable<KeyValuePair<RowCol, bool>>>(generation);
     }
 
     [Test]
     public void HasLiveCellsProperty()
     {
-        var generation = new Generation();
+        var generation = new Generation(1, 1);
         Assert.IsFalse(generation.HasLiveCells);
 
         var cell = new RowCol(0, 0);
@@ -31,7 +31,7 @@ public class GenerationTests
     [Test]
     public void ToCsv()
     {
-        var generation = new Generation
+        var generation = new Generation(1, 2)
         {
             { new RowCol(0, 0), true },
             { new RowCol(0, 1), false }
@@ -46,7 +46,7 @@ public class GenerationTests
     [Test]
     public void ToCsvHandlesEmptyGeneration()
     {
-        var generation = new Generation();
+        var generation = new Generation(0, 0);
 
         var csv = generation.ToCsv().ToList();
         Assert.AreEqual(0, csv.Count);

@@ -8,4 +8,4 @@ if [ -d "/opt/homebrew/opt/dotnet@8/libexec" ]; then
 fi
 
 cd "$(dirname "$0")"
-dotnet run --project UI
+dotnet run --project UI --configuration Release

@@ -12,6 +12,9 @@ public class GamePanel : Control
 {
     private EngineGrid? _grid;
     private Generation? _cells;
+    private bool[] _snapshot = Array.Empty<bool>();
+    private int _snapshotRows;
+    private int _snapshotCols;
     private VisualSettings _settings = new();
 
     public event EventHandler<CellClickedEventArgs>? GridCellClicked;
@@ -38,7 +41,21 @@ public class GamePanel : Control
     public Generation? Cells
     {
         get => _cells;
-        set { _cells = value; InvalidateVisual(); }
+        set
+        {
+            _cells = value;
+            if (value != null)
+            {
+                if (_snapshot.Length != value.Count)
+                {
+                    _snapshot = new bool[value.Count];
+                }
+                _snapshotRows = value.Rows;
+                _snapshotCols = value.Cols;
+                value.CopyTo(_snapshot);
+            }
+            InvalidateVisual();
+        }
     }
 
     public VisualSettings Settings
@@ -66,13 +83,18 @@ public class GamePanel : Control
         for (int c = 0; c <= ColCount; c++)
             context.DrawLine(gridLinePen, new Point(c * CellWidth, 0), new Point(c * CellWidth, gridHeight));
 
-        if (_cells != null)
+        if (_snapshotRows > 0 && _snapshotCols > 0)
         {
-            foreach (var cell in _cells)
+            for (int r = 0; r < _snapshotRows; r++)
             {
-                if (!cell.Value) continue;
-                context.DrawRectangle(cellBrush, null,
-                    new Rect(cell.Key.Col * CellWidth, cell.Key.Row * CellHeight, CellWidth, CellHeight));
+                for (int c = 0; c < _snapshotCols; c++)
+                {
+                    if (_snapshot[r * _snapshotCols + c])
+                    {
+                        context.DrawRectangle(cellBrush, null,
+                            new Rect(c * CellWidth, r * CellHeight, CellWidth, CellHeight));
+                    }
+                }
             }
         }
     }
