@@ -83,7 +83,7 @@ public class Gaea
     private async Task ResolveGenerationsAsync(bool runMode, CancellationToken token)
     {
         var t0 = Stopwatch.GetTimestamp();
-        GenerationResolver.ResolveNextGeneration(Grid, Rules, Cells!, _spare!);
+        GenerationResolver.ResolveNextGenerationInto(Grid, Rules, Cells!, _spare!);
         (Cells, _spare) = (_spare, Cells);
         UpdateVisualization(++_generationNumber, Cells!, RecordMs(Stopwatch.GetElapsedTime(t0).TotalMilliseconds));
 
@@ -100,7 +100,7 @@ public class Gaea
             try { await Task.Delay(_delay, token); }
             catch (OperationCanceledException) { return; }
             t0 = Stopwatch.GetTimestamp();
-            GenerationResolver.ResolveNextGeneration(Grid, Rules, Cells!, _spare!);
+            GenerationResolver.ResolveNextGenerationInto(Grid, Rules, Cells!, _spare!);
             (Cells, _spare) = (_spare, Cells);
             UpdateVisualization(++_generationNumber, Cells!, RecordMs(Stopwatch.GetElapsedTime(t0).TotalMilliseconds));
 

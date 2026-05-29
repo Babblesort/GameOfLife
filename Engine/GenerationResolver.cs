@@ -2,12 +2,17 @@ namespace Engine;
 
 public static class GenerationResolver
 {
-    public static void ResolveNextGeneration(Grid grid, Rules rules, Generation current, Generation next)
+    /// <summary>
+    /// Computes the next generation from <paramref name="current"/> and writes the result
+    /// into <paramref name="destination"/>, overwriting it in place. Callers should reuse
+    /// buffer instances across generations to avoid per-generation allocation.
+    /// </summary>
+    public static void ResolveNextGenerationInto(Grid grid, Rules rules, Generation current, Generation destination)
     {
         int rows = grid.RowCount;
         int cols = grid.ColCount;
         bool[] src = current.Raw;
-        bool[] dst = next.Raw;
+        bool[] dst = destination.Raw;
         int surviveMask = rules.SurviveMask;
         int birthMask = rules.BirthMask;
 
