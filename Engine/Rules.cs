@@ -19,7 +19,7 @@ public class Rules
 
     public Rules(IList<int> surviveCounts, IList<int> birthCounts)
     {
-        ValidateCounts(surviveCounts, birthCounts);
+        ThrowOnInvalidCounts(surviveCounts, birthCounts);
         SurviveNeighborCounts = surviveCounts;
         BirthNeighborCounts = birthCounts;
         SurviveMask = BuildMask(surviveCounts);
@@ -36,7 +36,7 @@ public class Rules
         return mask;
     }
 
-    private static void ValidateCounts(IList<int> surviveCounts, IList<int> birthCounts)
+    private static void ThrowOnInvalidCounts(IList<int> surviveCounts, IList<int> birthCounts)
     {
         if (surviveCounts == null) throw new ArgumentNullException(nameof(surviveCounts), "Must not be null");
         if (birthCounts == null) throw new ArgumentNullException(nameof(birthCounts), "Must not be null");
