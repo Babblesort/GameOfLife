@@ -2,16 +2,6 @@ namespace Engine;
 
 public static class GenerationResolver
 {
-    public static Generation ResolveNextGeneration(Grid grid, Rules rules, Generation cells)
-    {
-        var nextGen = new Generation(grid.RowCount, grid.ColCount);
-        foreach (var cell in cells)
-        {
-            nextGen[cell.Key] = CellAliveNextGen(cell.Value, NeighborsCount(cell.Key, grid, cells), rules);
-        }
-        return nextGen;
-    }
-
     public static void ResolveNextGeneration(Grid grid, Rules rules, Generation current, Generation next)
     {
         int rows = grid.RowCount;

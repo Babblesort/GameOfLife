@@ -107,11 +107,13 @@ public class GenerationResolverTests
     public void NextGenResolutionCanBeRequested()
     {
         SetupBasicResolver();
-        var nextGen = GenerationResolver.ResolveNextGeneration(grid, new Rules(), generation);
+        var nextGen = new Generation(grid.RowCount, grid.ColCount);
+        GenerationResolver.ResolveNextGeneration(grid, new Rules(), generation, nextGen);
         Assert.AreEqual(expectedNextGen, nextGen);
 
         SetupExpiringResolver();
-        nextGen = GenerationResolver.ResolveNextGeneration(grid, new Rules(), generation);
+        nextGen = new Generation(grid.RowCount, grid.ColCount);
+        GenerationResolver.ResolveNextGeneration(grid, new Rules(), generation, nextGen);
         Assert.AreEqual(expectedNextGen, nextGen);
     }
 
