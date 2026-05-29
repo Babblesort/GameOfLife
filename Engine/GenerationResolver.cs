@@ -18,10 +18,13 @@ public static class GenerationResolver
 
         for (int r = 0; r < rows; r++)
         {
+            //account for grid wrap by treating the first row as a neighbor of the last and vice versa
             int up = r == 0 ? rows - 1 : r - 1;
             int down = r == rows - 1 ? 0 : r + 1;
+
             for (int c = 0; c < cols; c++)
             {
+                //account for grid wrap for cols as well
                 int left = c == 0 ? cols - 1 : c - 1;
                 int right = c == cols - 1 ? 0 : c + 1;
 
@@ -37,9 +40,12 @@ public static class GenerationResolver
 
                 bool alive = src[r * cols + c];
                 dst[r * cols + c] = alive
-                    ? ((surviveMask >> n) & 1) != 0
-                    : ((birthMask >> n) & 1) != 0;
+                    ? Survives(surviveMask, n)
+                    : IsBorn(birthMask, n);
             }
         }
     }
+
+    private static bool Survives(int mask, int neighborCount) => ((mask >> neighborCount) & 1) != 0;
+    private static bool IsBorn(int mask, int neighborCount) => ((mask >> neighborCount) & 1) != 0;
 }
