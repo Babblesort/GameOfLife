@@ -11,7 +11,7 @@ public class Gaea
     private int _delay = DefaultDelayMilliseconds;
     private CancellationTokenSource? _tokenSource;
     private Task? _task;
-    private readonly double[] _msRing = new double[60];
+    private readonly double[] _msRingBuffer = new double[60];
     private int _msIdx;
     private Generation? _spare;
 
@@ -114,13 +114,13 @@ public class Gaea
 
     private double RecordMs(double ms)
     {
-        _msRing[_msIdx % 60] = ms;
+        _msRingBuffer[_msIdx % 60] = ms;
         _msIdx++;
         int count = Math.Min(_msIdx, 60);
         double sum = 0;
         for (int i = 0; i < count; i++)
         {
-            sum += _msRing[i];
+            sum += _msRingBuffer[i];
         }
         return sum / count;
     }
