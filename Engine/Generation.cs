@@ -33,8 +33,6 @@ public class Generation(int rows, int cols)
         int cols = Cols;
         bool[] src = _cells;
         bool[] dst = destination._cells;
-        int surviveMask = rules.SurviveMask;
-        int birthMask = rules.BirthMask;
 
         for (int r = 0; r < rows; r++)
         {
@@ -60,8 +58,8 @@ public class Generation(int rows, int cols)
 
                 bool alive = src[r * cols + c];
                 dst[r * cols + c] = alive
-                    ? Survives(surviveMask, n)
-                    : IsBorn(birthMask, n);
+                    ? Survives(rules.SurviveMask, n)
+                    : IsBorn(rules.BirthMask, n);
             }
         }
     }
