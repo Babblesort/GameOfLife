@@ -7,10 +7,10 @@ public static class GenerationResolver
     /// into <paramref name="destination"/>, overwriting it in place. Callers should reuse
     /// buffer instances across generations to avoid per-generation allocation.
     /// </summary>
-    public static void ResolveNextGenerationInto(Grid grid, Rules rules, Generation current, Generation destination)
+    public static void ResolveNextGenerationInto(Rules rules, Generation current, Generation destination)
     {
-        int rows = grid.RowCount;
-        int cols = grid.ColCount;
+        int rows = current.Rows;
+        int cols = current.Cols;
         bool[] src = current.Raw;
         bool[] dst = destination.Raw;
         int surviveMask = rules.SurviveMask;

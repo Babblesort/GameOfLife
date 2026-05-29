@@ -103,12 +103,12 @@ public class GenerationResolverTests
     {
         SetupBasicResolver();
         var nextGen = new Generation(grid.RowCount, grid.ColCount);
-        GenerationResolver.ResolveNextGenerationInto(grid, new Rules(), generation, nextGen);
+        GenerationResolver.ResolveNextGenerationInto(new Rules(), generation, nextGen);
         Assert.AreEqual(expectedNextGen, nextGen);
 
         SetupExpiringResolver();
         nextGen = new Generation(grid.RowCount, grid.ColCount);
-        GenerationResolver.ResolveNextGenerationInto(grid, new Rules(), generation, nextGen);
+        GenerationResolver.ResolveNextGenerationInto(new Rules(), generation, nextGen);
         Assert.AreEqual(expectedNextGen, nextGen);
     }
 
@@ -121,7 +121,7 @@ public class GenerationResolverTests
         SetupBasicResolver();
         var rules = new Rules([2], [4]);
         var nextGen = new Generation(grid.RowCount, grid.ColCount);
-        GenerationResolver.ResolveNextGenerationInto(grid, rules, generation, nextGen);
+        GenerationResolver.ResolveNextGenerationInto(rules, generation, nextGen);
         var expectedNextGen = new Generation(3, 3);
         expectedNextGen[cell0] = true;
         expectedNextGen[cell1] = false;
