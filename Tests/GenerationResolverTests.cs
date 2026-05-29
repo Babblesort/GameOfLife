@@ -118,6 +118,31 @@ public class GenerationResolverTests
     }
 
     [Test]
+    public void ResolveNextGenerationRespectsCustomRules()
+    {
+        // Diagonal live cells each have 2 neighbors; dead cells each have 3.
+        // Default rules would birth all dead cells (birth={3}); custom rules here require 4 for birth.
+        // Verifies that the bitmask path uses the supplied rules rather than hardcoded defaults.
+        SetupBasicResolver();
+        var rules = new Rules(new List<int> { 2 }, new List<int> { 4 });
+        var nextGen = new Generation(grid.RowCount, grid.ColCount);
+        GenerationResolver.ResolveNextGeneration(grid, rules, generation, nextGen);
+        var expected = new Generation(3, 3)
+        {
+            { cell0, true },
+            { cell1, false },
+            { cell2, false },
+            { cell3, false },
+            { cell4, true },
+            { cell5, false },
+            { cell6, false },
+            { cell7, false },
+            { cell8, true }
+        };
+        Assert.AreEqual(expected, nextGen);
+    }
+
+    [Test]
     public void CellNeighborCount()
     {
         SetupBasicResolver();
@@ -132,34 +157,4 @@ public class GenerationResolverTests
         Assert.AreEqual(2, GenerationResolver.NeighborsCount(cell8, grid, generation));
     }
 
-    [Test]
-    public void CellAliveNextGen()
-    {
-        var rules = new Rules();
-
-        Assert.IsFalse(GenerationResolver.CellAliveNextGen(true, 1, rules));
-        Assert.IsTrue(GenerationResolver.CellAliveNextGen (true, 2, rules));
-        Assert.IsTrue(GenerationResolver.CellAliveNextGen (true, 3, rules));
-        Assert.IsFalse(GenerationResolver.CellAliveNextGen(true, 4, rules));
-
-        Assert.IsFalse(GenerationResolver.CellAliveNextGen(false, 2, rules));
-        Assert.IsTrue(GenerationResolver.CellAliveNextGen (false, 3, rules));
-        Assert.IsFalse(GenerationResolver.CellAliveNextGen(false, 4, rules));
-    }
-
-    [Test]
-    public void CellAliveNextGenRespectsCustomRules()
-    {
-        var surviveCounts = new List<int> { 2 };
-        var birthCounts = new List<int> { 4 };
-        var rules = new Rules(surviveCounts, birthCounts);
-
-        Assert.IsFalse(GenerationResolver.CellAliveNextGen(true, 1, rules));
-        Assert.IsTrue(GenerationResolver. CellAliveNextGen(true, 2, rules));
-        Assert.IsFalse(GenerationResolver.CellAliveNextGen(true, 3, rules));
-
-        Assert.IsFalse(GenerationResolver.CellAliveNextGen(false, 3, rules));
-        Assert.IsTrue(GenerationResolver. CellAliveNextGen(false, 4, rules));
-        Assert.IsFalse(GenerationResolver.CellAliveNextGen(false, 5, rules));
-    }
 }

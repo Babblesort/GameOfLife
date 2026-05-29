@@ -52,12 +52,5 @@ public static class GenerationResolver
         return count;
     }
 
-    public static int LiveCellAtLocation(RowCol location, Generation cells) => cells[location] ? 1 : 0;
-
-    public static bool CellAliveNextGen(bool alive, int neighborCount, Rules rules)
-    {
-        var survives = alive && rules.SurviveNeighborCounts.Contains(neighborCount);
-        var born = !alive && rules.BirthNeighborCounts.Contains(neighborCount);
-        return survives || born;
-    }
+    private static int LiveCellAtLocation(RowCol location, Generation cells) => cells[location] ? 1 : 0;
 }
