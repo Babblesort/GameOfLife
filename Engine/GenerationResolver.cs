@@ -33,24 +33,8 @@ public static class GenerationResolver
                 bool alive = src[r * cols + c];
                 dst[r * cols + c] = alive
                     ? ((surviveMask >> n) & 1) != 0
-                    : ((birthMask   >> n) & 1) != 0;
+                    : ((birthMask >> n) & 1) != 0;
             }
         }
     }
-
-    public static int NeighborsCount(RowCol cell, Grid grid, Generation cells)
-    {
-        var count = 0;
-        count += LiveCellAtLocation(grid.NeighborTL(cell), cells);
-        count += LiveCellAtLocation(grid.NeighborTT(cell), cells);
-        count += LiveCellAtLocation(grid.NeighborTR(cell), cells);
-        count += LiveCellAtLocation(grid.NeighborLL(cell), cells);
-        count += LiveCellAtLocation(grid.NeighborRR(cell), cells);
-        count += LiveCellAtLocation(grid.NeighborBL(cell), cells);
-        count += LiveCellAtLocation(grid.NeighborBB(cell), cells);
-        count += LiveCellAtLocation(grid.NeighborBR(cell), cells);
-        return count;
-    }
-
-    private static int LiveCellAtLocation(RowCol location, Generation cells) => cells[location] ? 1 : 0;
 }

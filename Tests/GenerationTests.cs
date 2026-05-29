@@ -7,35 +7,11 @@ namespace Tests;
 public class GenerationTests
 {
     [Test]
-    public void ImplementsKeyValueEnumerable()
-    {
-        var generation = new Generation(1, 1);
-        Assert.IsInstanceOf<IEnumerable<KeyValuePair<RowCol, bool>>>(generation);
-    }
-
-    [Test]
-    public void HasLiveCellsProperty()
-    {
-        var generation = new Generation(1, 1);
-        Assert.IsFalse(generation.HasLiveCells);
-
-        var cell = new RowCol(0, 0);
-
-        generation.Add(cell, false);
-        Assert.IsFalse(generation.HasLiveCells);
-
-        generation[cell] = true;
-        Assert.IsTrue(generation.HasLiveCells);
-    }
-
-    [Test]
     public void ToCsv()
     {
-        var generation = new Generation(1, 2)
-        {
-            { new RowCol(0, 0), true },
-            { new RowCol(0, 1), false }
-        };
+        var generation = new Generation(1, 2);
+        generation[new RowCol(0, 0)] = true;
+        generation[new RowCol(0, 1)] = false;
 
         var csv = generation.ToCsv().ToList();
         Assert.AreEqual(2, csv.Count);
@@ -51,4 +27,20 @@ public class GenerationTests
         var csv = generation.ToCsv().ToList();
         Assert.AreEqual(0, csv.Count);
     }
+
+    [Test]
+    public void HasLiveCellsProperty()
+    {
+        var generation = new Generation(1, 1);
+        Assert.IsFalse(generation.HasLiveCells);
+
+        var cell = new RowCol(0, 0);
+
+        generation[cell] = false;
+        Assert.IsFalse(generation.HasLiveCells);
+
+        generation[cell] = true;
+        Assert.IsTrue(generation.HasLiveCells);
+    }
+
 }

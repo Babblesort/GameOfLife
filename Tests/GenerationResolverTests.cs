@@ -1,4 +1,5 @@
 ﻿using Engine;
+using Microsoft.VisualStudio.TestPlatform.ObjectModel.Client;
 using NUnit.Framework;
 
 namespace Tests;
@@ -34,31 +35,28 @@ public class GenerationResolverTests
         cell6 = new RowCol(2, 0);
         cell7 = new RowCol(2, 1);
         cell8 = new RowCol(2, 2);
-        generation = new Generation(3, 3)
-        {
-            { cell0, true },
-            { cell1, false },
-            { cell2, false },
-            { cell3, false },
-            { cell4, true },
-            { cell5, false },
-            { cell6, false },
-            { cell7, false },
-            { cell8, true }
-        };
 
-        expectedNextGen = new Generation(3, 3)
-        {
-            { cell0, true },
-            { cell1, true },
-            { cell2, true },
-            { cell3, true },
-            { cell4, true },
-            { cell5, true },
-            { cell6, true },
-            { cell7, true },
-            { cell8, true }
-        };
+        generation = new Generation(3, 3);
+        generation[cell0] = true;
+        generation[cell1] = false;
+        generation[cell2] = false;
+        generation[cell3] = false;
+        generation[cell4] = true;
+        generation[cell5] = false;
+        generation[cell6] = false;
+        generation[cell7] = false;
+        generation[cell8] = true;
+
+        expectedNextGen = new Generation(3, 3);
+        expectedNextGen[cell0] = true;
+        expectedNextGen[cell1] = true;
+        expectedNextGen[cell2] = true;
+        expectedNextGen[cell3] = true;
+        expectedNextGen[cell4] = true;
+        expectedNextGen[cell5] = true;
+        expectedNextGen[cell6] = true;
+        expectedNextGen[cell7] = true;
+        expectedNextGen[cell8] = true;
     }
 
     public void SetupExpiringResolver()
@@ -76,31 +74,28 @@ public class GenerationResolverTests
         cell6 = new RowCol(2, 0);
         cell7 = new RowCol(2, 1);
         cell8 = new RowCol(2, 2);
-        generation = new Generation(3, 3)
-        {
-            { cell0, false },
-            { cell1, false },
-            { cell2, false },
-            { cell3, false },
-            { cell4, true },
-            { cell5, false },
-            { cell6, false },
-            { cell7, false },
-            { cell8, false }
-        };
 
-        expectedNextGen = new Generation(3, 3)
-        {
-            { cell0, false },
-            { cell1, false },
-            { cell2, false },
-            { cell3, false },
-            { cell4, false },
-            { cell5, false },
-            { cell6, false },
-            { cell7, false },
-            { cell8, false }
-        };
+        generation = new Generation(3, 3);
+        generation[cell0] = false;
+        generation[cell1] = false;
+        generation[cell2] = false;
+        generation[cell3] = false;
+        generation[cell4] = true;
+        generation[cell5] = false;
+        generation[cell6] = false;
+        generation[cell7] = false;
+        generation[cell8] = false;
+
+        expectedNextGen = new Generation(3, 3);
+        expectedNextGen[cell0] = false;
+        expectedNextGen[cell1] = false;
+        expectedNextGen[cell2] = false;
+        expectedNextGen[cell3] = false;
+        expectedNextGen[cell4] = false;
+        expectedNextGen[cell5] = false;
+        expectedNextGen[cell6] = false;
+        expectedNextGen[cell7] = false;
+        expectedNextGen[cell8] = false;
     }
 
     [Test]
@@ -124,37 +119,20 @@ public class GenerationResolverTests
         // Default rules would birth all dead cells (birth={3}); custom rules here require 4 for birth.
         // Verifies that the bitmask path uses the supplied rules rather than hardcoded defaults.
         SetupBasicResolver();
-        var rules = new Rules(new List<int> { 2 }, new List<int> { 4 });
+        var rules = new Rules([2], [4]);
         var nextGen = new Generation(grid.RowCount, grid.ColCount);
         GenerationResolver.ResolveNextGeneration(grid, rules, generation, nextGen);
-        var expected = new Generation(3, 3)
-        {
-            { cell0, true },
-            { cell1, false },
-            { cell2, false },
-            { cell3, false },
-            { cell4, true },
-            { cell5, false },
-            { cell6, false },
-            { cell7, false },
-            { cell8, true }
-        };
-        Assert.AreEqual(expected, nextGen);
-    }
+        var expectedNextGen = new Generation(3, 3);
+        expectedNextGen[cell0] = true;
+        expectedNextGen[cell1] = false;
+        expectedNextGen[cell2] = false;
+        expectedNextGen[cell3] = false;
+        expectedNextGen[cell4] = true;
+        expectedNextGen[cell5] = false;
+        expectedNextGen[cell6] = false;
+        expectedNextGen[cell7] = false;
+        expectedNextGen[cell8] = true;
 
-    [Test]
-    public void CellNeighborCount()
-    {
-        SetupBasicResolver();
-        Assert.AreEqual(2, GenerationResolver.NeighborsCount(cell0, grid, generation));
-        Assert.AreEqual(3, GenerationResolver.NeighborsCount(cell1, grid, generation));
-        Assert.AreEqual(3, GenerationResolver.NeighborsCount(cell2, grid, generation));
-        Assert.AreEqual(3, GenerationResolver.NeighborsCount(cell3, grid, generation));
-        Assert.AreEqual(2, GenerationResolver.NeighborsCount(cell4, grid, generation));
-        Assert.AreEqual(3, GenerationResolver.NeighborsCount(cell5, grid, generation));
-        Assert.AreEqual(3, GenerationResolver.NeighborsCount(cell6, grid, generation));
-        Assert.AreEqual(3, GenerationResolver.NeighborsCount(cell7, grid, generation));
-        Assert.AreEqual(2, GenerationResolver.NeighborsCount(cell8, grid, generation));
+        Assert.AreEqual(expectedNextGen, nextGen);
     }
-
 }

@@ -1,8 +1,6 @@
-using System.Collections;
-
 namespace Engine;
 
-public class Generation(int rows, int cols) : IEnumerable<KeyValuePair<RowCol, bool>>
+public class Generation(int rows, int cols)
 {
     private readonly bool[] _cells = new bool[rows * cols];
     private readonly int _rows = rows;
@@ -12,38 +10,11 @@ public class Generation(int rows, int cols) : IEnumerable<KeyValuePair<RowCol, b
     public int Rows => _rows;
     public int Cols => _cols;
 
-    public IEnumerable<RowCol> Keys
-    {
-        get
-        {
-            for (int r = 0; r < _rows; r++)
-            {
-                for (int c = 0; c < _cols; c++)
-                {
-                    yield return new RowCol(r, c);
-                }
-            }
-        }
-    }
-
-    public IEnumerable<bool> Values
-    {
-        get
-        {
-            for (int i = 0; i < _cells.Length; i++)
-            {
-                yield return _cells[i];
-            }
-        }
-    }
-
     public bool this[RowCol key]
     {
         get => _cells[key.Row * _cols + key.Col];
         set => _cells[key.Row * _cols + key.Col] = value;
     }
-
-    public void Add(RowCol key, bool value) => this[key] = value;
 
     public IEnumerable<string> ToCsv()
     {
@@ -57,18 +28,26 @@ public class Generation(int rows, int cols) : IEnumerable<KeyValuePair<RowCol, b
     }
 
     public void CopyTo(bool[] dest) => Array.Copy(_cells, dest, _cells.Length);
+
     internal bool[] Raw => _cells;
 
-    public IEnumerator<KeyValuePair<RowCol, bool>> GetEnumerator()
+    public override bool Equals(object? obj)
     {
-        for (int r = 0; r < _rows; r++)
-        {
-            for (int c = 0; c < _cols; c++)
-            {
-                yield return new KeyValuePair<RowCol, bool>(new RowCol(r, c), _cells[r * _cols + c]);
-            }
-        }
+        if (obj is not Generation other) { return false; }
+        if (_rows != other._rows || _cols != other._cols) { return false; }
+
+        return _cells.SequenceEqual(other._cells);
     }
 
-    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+    public override int GetHashCode()
+    {
+        var hash = new HashCode();
+        hash.Add(_rows);
+        hash.Add(_cols);
+        foreach (bool cell in _cells)
+        {
+            hash.Add(cell);
+        }
+        return hash.ToHashCode();
+    }
 }

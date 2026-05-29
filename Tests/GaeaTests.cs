@@ -64,7 +64,8 @@ public class GaeaTests
     [Test]
     public void StepThrowsOnMissizedCells()
     {
-        var gen = new Generation(1, 1) { { new RowCol(0, 0), false } };
+        var gen = new Generation(1, 1);
+        gen[new RowCol(0, 0)] = false;
         var gaea = new Gaea(new Grid(2, 2), new Rules(), (i, c, _) => { }, gen);
         Assert.Throws<ArgumentException>(() => gaea.Step());
     }
@@ -79,7 +80,8 @@ public class GaeaTests
     [Test]
     public void RunThrowsOnMissizedCells()
     {
-        var gen = new Generation(1, 1) { { new RowCol(0, 0), false } };
+        var gen = new Generation(1, 1);
+        gen[new RowCol(0, 0)] = false;
         var gaea = new Gaea(new Grid(2, 2), new Rules(), (i, c, _) => { }, gen);
         Assert.Throws<ArgumentException>(() => gaea.Run());
     }
