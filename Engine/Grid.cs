@@ -105,14 +105,14 @@ public class Grid : INotifyPropertyChanged
         return generation;
     }
 
-    public RowCol NeighborTL(RowCol cell) => new RowCol(Up(cell.Row), Left(cell.Col));
-    public RowCol NeighborTT(RowCol cell) => new RowCol(Up(cell.Row), cell.Col);
-    public RowCol NeighborTR(RowCol cell) => new RowCol(Up(cell.Row), Right(cell.Col));
-    public RowCol NeighborLL(RowCol cell) => new RowCol(cell.Row, Left(cell.Col));
-    public RowCol NeighborRR(RowCol cell) => new RowCol(cell.Row, Right(cell.Col));
-    public RowCol NeighborBL(RowCol cell) => new RowCol(Down(cell.Row), Left(cell.Col));
-    public RowCol NeighborBB(RowCol cell) => new RowCol(Down(cell.Row), cell.Col);
-    public RowCol NeighborBR(RowCol cell) => new RowCol(Down(cell.Row), Right(cell.Col));
+    public RowCol NeighborTL(RowCol cell) => new(Up(cell.Row), Left(cell.Col));
+    public RowCol NeighborTT(RowCol cell) => new(Up(cell.Row), cell.Col);
+    public RowCol NeighborTR(RowCol cell) => new(Up(cell.Row), Right(cell.Col));
+    public RowCol NeighborLL(RowCol cell) => new(cell.Row, Left(cell.Col));
+    public RowCol NeighborRR(RowCol cell) => new(cell.Row, Right(cell.Col));
+    public RowCol NeighborBL(RowCol cell) => new(Down(cell.Row), Left(cell.Col));
+    public RowCol NeighborBB(RowCol cell) => new(Down(cell.Row), cell.Col);
+    public RowCol NeighborBR(RowCol cell) => new(Down(cell.Row), Right(cell.Col));
 
     private int Left(int col) => col - 1 < 0 ? ColCount - 1 : col - 1;
     private int Right(int col) => col + 1 == ColCount ? 0 : col + 1;

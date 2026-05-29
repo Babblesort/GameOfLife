@@ -9,8 +9,8 @@ public class Rules
     public IList<int> SurviveNeighborCounts { get; }
     public IList<int> BirthNeighborCounts { get; }
 
-    private static readonly List<int> DefaultSurviveNeighborCounts = new() { 2, 3 };
-    private static readonly List<int> DefaultBirthNeighborCounts = new() { 3 };
+    private static readonly List<int> DefaultSurviveNeighborCounts = [2, 3];
+    private static readonly List<int> DefaultBirthNeighborCounts = [3];
 
     public Rules() : this(DefaultSurviveNeighborCounts, DefaultBirthNeighborCounts) { }
 
