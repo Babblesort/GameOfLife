@@ -5,7 +5,7 @@ public class Generation(int rows, int cols)
     private readonly bool[] _cells = new bool[rows * cols];
     private readonly int _rows = rows;
     private readonly int _cols = cols;
-    public bool HasLiveCells => Array.IndexOf(_cells, true) >= 0;
+    public bool HasLiveCells => _cells.AsSpan().Contains(true);
     public int Count => _cells.Length;
     public int Rows => _rows;
     public int Cols => _cols;
