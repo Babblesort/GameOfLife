@@ -15,6 +15,19 @@ if (condition)
     DoSomething();
 ```
 
+## Alignment
+Do not use extra spaces to vertically align tokens across adjacent lines.
+
+```csharp
+// correct
+int up = r == 0 ? rows - 1 : r - 1;
+int down = r == rows - 1 ? 0 : r + 1;
+
+// incorrect
+int up   = r == 0        ? rows - 1 : r - 1;
+int down = r == rows - 1 ? 0        : r + 1;
+```
+
 ## Declarations
 One declaration per line. Do not combine multiple variable declarations or assignments on a single line.
 

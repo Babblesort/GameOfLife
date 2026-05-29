@@ -13,21 +13,21 @@ public static class GenerationResolver
 
         for (int r = 0; r < rows; r++)
         {
-            int up   = r == 0        ? rows - 1 : r - 1;
-            int down = r == rows - 1 ? 0        : r + 1;
+            int up = r == 0 ? rows - 1 : r - 1;
+            int down = r == rows - 1 ? 0 : r + 1;
             for (int c = 0; c < cols; c++)
             {
-                int left  = c == 0        ? cols - 1 : c - 1;
-                int right = c == cols - 1 ? 0        : c + 1;
+                int left = c == 0 ? cols - 1 : c - 1;
+                int right = c == cols - 1 ? 0 : c + 1;
 
                 int n = 0;
-                if (src[up   * cols + left ]) { n++; }
-                if (src[up   * cols + c    ]) { n++; }
-                if (src[up   * cols + right]) { n++; }
-                if (src[r    * cols + left ]) { n++; }
-                if (src[r    * cols + right]) { n++; }
-                if (src[down * cols + left ]) { n++; }
-                if (src[down * cols + c    ]) { n++; }
+                if (src[up * cols + left]) { n++; }
+                if (src[up * cols + c]) { n++; }
+                if (src[up * cols + right]) { n++; }
+                if (src[r * cols + left]) { n++; }
+                if (src[r * cols + right]) { n++; }
+                if (src[down * cols + left]) { n++; }
+                if (src[down * cols + c]) { n++; }
                 if (src[down * cols + right]) { n++; }
 
                 bool alive = src[r * cols + c];
