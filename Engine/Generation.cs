@@ -3,26 +3,24 @@ namespace Engine;
 public class Generation(int rows, int cols)
 {
     private readonly bool[] _cells = new bool[rows * cols];
-    private readonly int _rows = rows;
-    private readonly int _cols = cols;
     public bool HasLiveCells => _cells.AsSpan().Contains(true);
     public int Count => _cells.Length;
-    public int Rows => _rows;
-    public int Cols => _cols;
+    public int Rows { get; } = rows;
+    public int Cols { get; } = cols;
 
     public bool this[RowCol key]
     {
-        get => _cells[key.Row * _cols + key.Col];
-        set => _cells[key.Row * _cols + key.Col] = value;
+        get => _cells[key.Row * Cols + key.Col];
+        set => _cells[key.Row * Cols + key.Col] = value;
     }
 
     public IEnumerable<string> ToCsv()
     {
-        for (int r = 0; r < _rows; r++)
+        for (int r = 0; r < Rows; r++)
         {
-            for (int c = 0; c < _cols; c++)
+            for (int c = 0; c < Cols; c++)
             {
-                yield return $"{r},{c},{_cells[r * _cols + c]}";
+                yield return $"{r},{c},{_cells[r * Cols + c]}";
             }
         }
     }
@@ -34,16 +32,16 @@ public class Generation(int rows, int cols)
     public override bool Equals(object? obj)
     {
         if (obj is not Generation other) { return false; }
-        if (_rows != other._rows || _cols != other._cols) { return false; }
+        if (Rows != other.Rows || Cols != other.Cols) { return false; }
 
-        return _cells.SequenceEqual(other._cells);
+        return _cells.AsSpan().SequenceEqual(other._cells);
     }
 
     public override int GetHashCode()
     {
         var hash = new HashCode();
-        hash.Add(_rows);
-        hash.Add(_cols);
+        hash.Add(Rows);
+        hash.Add(Cols);
         foreach (bool cell in _cells)
         {
             hash.Add(cell);
