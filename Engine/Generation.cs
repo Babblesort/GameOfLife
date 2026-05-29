@@ -14,6 +14,8 @@ public class Generation(int rows, int cols)
         set => _cells[key.Row * Cols + key.Col] = value;
     }
 
+    internal bool[] Raw => _cells;
+
     public IEnumerable<string> ToCsv()
     {
         for (int r = 0; r < Rows; r++)
@@ -26,8 +28,6 @@ public class Generation(int rows, int cols)
     }
 
     public void CopyTo(bool[] dest) => Array.Copy(_cells, dest, _cells.Length);
-
-    internal bool[] Raw => _cells;
 
     public override bool Equals(object? obj)
     {
