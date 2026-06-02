@@ -26,8 +26,8 @@ public class Gaea
     public Grid Grid { get; }
     public Rules Rules { get; }
     public Generation? Cells { get; private set; }
-    public Action<int, Generation, double> UpdateVisualization { get; set; }
-    public Action? Stopped { get; set; }
+    public Action<int, Generation, double> UpdateVisualization { get; }
+    public event Action? Stopped;
 
     public int DelayMilliseconds
     {

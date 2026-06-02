@@ -6,8 +6,8 @@ public class Rules
     public const int MaxNeighbors = 8;
     public const int MinCount = 1;
     public const int MaxCount = 8;
-    public IList<int> SurviveNeighborCounts { get; }
-    public IList<int> BirthNeighborCounts { get; }
+    public IReadOnlyList<int> SurviveNeighborCounts { get; }
+    public IReadOnlyList<int> BirthNeighborCounts { get; }
 
     private static readonly List<int> DefaultSurviveNeighborCounts = [2, 3];
     private static readonly List<int> DefaultBirthNeighborCounts = [3];
@@ -20,8 +20,8 @@ public class Rules
     public Rules(IList<int> surviveCounts, IList<int> birthCounts)
     {
         ThrowOnInvalidCounts(surviveCounts, birthCounts);
-        SurviveNeighborCounts = surviveCounts;
-        BirthNeighborCounts = birthCounts;
+        SurviveNeighborCounts = new List<int>(surviveCounts);
+        BirthNeighborCounts = new List<int>(birthCounts);
         SurviveMask = BuildMask(surviveCounts);
         BirthMask = BuildMask(birthCounts);
     }
