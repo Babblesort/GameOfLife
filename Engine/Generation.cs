@@ -4,6 +4,7 @@ public class Generation(int rows, int cols)
 {
     private readonly bool[] _cells = new bool[rows * cols];
     public bool HasLiveCells => _cells.AsSpan().Contains(true);
+    public bool IsExtinct => !HasLiveCells;
     public int Count => _cells.Length;
     public int Rows { get; } = rows;
     public int Cols { get; } = cols;

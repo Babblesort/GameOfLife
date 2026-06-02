@@ -87,7 +87,7 @@ public class Gaea
         (Cells, _spare) = (_spare, Cells);
         UpdateVisualization(++_generationNumber, Cells!, RecordMilliseconds(Stopwatch.GetElapsedTime(startTimestamp).TotalMilliseconds));
 
-        if (!Cells!.HasLiveCells)
+        if (Cells!.IsExtinct)
         {
             Stopped?.Invoke();
             return;
@@ -104,7 +104,7 @@ public class Gaea
             (Cells, _spare) = (_spare, Cells);
             UpdateVisualization(++_generationNumber, Cells!, RecordMilliseconds(Stopwatch.GetElapsedTime(startTimestamp).TotalMilliseconds));
 
-            if (!Cells!.HasLiveCells)
+            if (Cells!.IsExtinct)
             {
                 Stopped?.Invoke();
                 return;

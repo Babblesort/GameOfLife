@@ -43,6 +43,21 @@ public class GenerationTests
         Assert.IsTrue(generation.HasLiveCells);
     }
 
+    [Test]
+    public void IsExtinctProperty()
+    {
+        var generation = new Generation(1, 1);
+        Assert.IsTrue(generation.IsExtinct);
+
+        var cell = new RowCol(0, 0);
+
+        generation[cell] = false;
+        Assert.IsTrue(generation.IsExtinct);
+
+        generation[cell] = true;
+        Assert.IsFalse(generation.IsExtinct);
+    }
+
     private Grid grid = null!;
     private RowCol cell0;
     private RowCol cell1;
