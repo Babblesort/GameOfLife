@@ -29,35 +29,33 @@ public class Generation(int rows, int cols)
 
     public void ResolveNextGeneration(Rules rules, Generation destination)
     {
-        int rows = Rows;
-        int cols = Cols;
         bool[] src = _cells;
         bool[] dst = destination._cells;
 
-        for (int r = 0; r < rows; r++)
+        for (int r = 0; r < Rows; r++)
         {
             //account for grid wrap by treating the first row as a neighbor of the last and vice versa
-            int up = r == 0 ? rows - 1 : r - 1;
-            int down = r == rows - 1 ? 0 : r + 1;
+            int up = r == 0 ? Rows - 1 : r - 1;
+            int down = r == Rows - 1 ? 0 : r + 1;
 
-            for (int c = 0; c < cols; c++)
+            for (int c = 0; c < Cols; c++)
             {
                 //account for grid wrap for cols as well
-                int left = c == 0 ? cols - 1 : c - 1;
-                int right = c == cols - 1 ? 0 : c + 1;
+                int left = c == 0 ? Cols - 1 : c - 1;
+                int right = c == Cols - 1 ? 0 : c + 1;
 
                 int n = 0;
-                if (src[up * cols + left]) { n++; }
-                if (src[up * cols + c]) { n++; }
-                if (src[up * cols + right]) { n++; }
-                if (src[r * cols + left]) { n++; }
-                if (src[r * cols + right]) { n++; }
-                if (src[down * cols + left]) { n++; }
-                if (src[down * cols + c]) { n++; }
-                if (src[down * cols + right]) { n++; }
+                if (src[up * Cols + left]) { n++; }
+                if (src[up * Cols + c]) { n++; }
+                if (src[up * Cols + right]) { n++; }
+                if (src[r * Cols + left]) { n++; }
+                if (src[r * Cols + right]) { n++; }
+                if (src[down * Cols + left]) { n++; }
+                if (src[down * Cols + c]) { n++; }
+                if (src[down * Cols + right]) { n++; }
 
-                bool alive = src[r * cols + c];
-                dst[r * cols + c] = alive
+                bool alive = src[r * Cols + c];
+                dst[r * Cols + c] = alive
                     ? IsBitSet(rules.SurviveMask, n)
                     : IsBitSet(rules.BirthMask, n);
             }
