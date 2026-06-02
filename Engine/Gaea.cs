@@ -15,8 +15,6 @@ public class Gaea
     private int _msIdx;
     private Generation? _spare;
 
-    public Gaea(Grid grid, Rules rules) : this(grid, rules, updateFn: (i, c, _) => { }, cells: null) { }
-
     public Gaea(Grid grid, Rules rules, Action<int, Generation, double> updateFn, Generation? cells = null)
     {
         Grid = grid ?? throw new ArgumentNullException(nameof(grid), "Cannot be null");

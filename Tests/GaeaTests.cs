@@ -6,13 +6,15 @@ namespace Tests;
 [TestFixture]
 public class GaeaTests
 {
+    private static readonly Action<int, Generation, double> NoOp = (_, _, _) => { };
+
     [Test]
     public void CanBeCreated()
     {
         var grid = new Grid();
         var rules = new Rules();
 
-        var gaea = new Gaea(grid, rules);
+        var gaea = new Gaea(grid, rules, NoOp);
         Assert.NotNull(gaea);
     }
 
@@ -22,8 +24,8 @@ public class GaeaTests
         var grid = new Grid();
         var rules = new Rules();
 
-        Assert.Throws<ArgumentNullException>(() => new Gaea(null!, rules));
-        Assert.Throws<ArgumentNullException>(() => new Gaea(grid, null!));
+        Assert.Throws<ArgumentNullException>(() => new Gaea(null!, rules, NoOp));
+        Assert.Throws<ArgumentNullException>(() => new Gaea(grid, null!, NoOp));
     }
 
     [Test]
@@ -37,7 +39,7 @@ public class GaeaTests
     [Test]
     public void DelayMillisecondsPropertyDefaultsAndSets()
     {
-        var gaea = new Gaea(new Grid(), new Rules());
+        var gaea = new Gaea(new Grid(), new Rules(), NoOp);
         Assert.AreEqual(Gaea.DefaultDelayMilliseconds, gaea.DelayMilliseconds);
 
         gaea.DelayMilliseconds = 100;
@@ -49,7 +51,7 @@ public class GaeaTests
     {
         var tooSmall = Gaea.MinDelayMilliseconds - 1;
         var tooBig = Gaea.MaxDelayMilliseconds + 1;
-        var gaea = new Gaea(new Grid(), new Rules());
+        var gaea = new Gaea(new Grid(), new Rules(), NoOp);
         Assert.Throws<ArgumentOutOfRangeException>(() => gaea.DelayMilliseconds = tooSmall);
         Assert.Throws<ArgumentOutOfRangeException>(() => gaea.DelayMilliseconds = tooBig);
     }
@@ -57,7 +59,7 @@ public class GaeaTests
     [Test]
     public void StepThrowsOnNullCells()
     {
-        var gaea = new Gaea(new Grid(), new Rules());
+        var gaea = new Gaea(new Grid(), new Rules(), NoOp);
         Assert.Throws<ArgumentNullException>(() => gaea.Step());
     }
 
@@ -66,14 +68,14 @@ public class GaeaTests
     {
         var gen = new Generation(1, 1);
         gen[new RowCol(0, 0)] = false;
-        var gaea = new Gaea(new Grid(2, 2), new Rules(), (i, c, _) => { }, gen);
+        var gaea = new Gaea(new Grid(2, 2), new Rules(), NoOp, gen);
         Assert.Throws<ArgumentException>(() => gaea.Step());
     }
 
     [Test]
     public void RunThrowsOnNullCells()
     {
-        var gaea = new Gaea(new Grid(), new Rules());
+        var gaea = new Gaea(new Grid(), new Rules(), NoOp);
         Assert.Throws<ArgumentNullException>(() => gaea.Run());
     }
 
@@ -82,7 +84,7 @@ public class GaeaTests
     {
         var gen = new Generation(1, 1);
         gen[new RowCol(0, 0)] = false;
-        var gaea = new Gaea(new Grid(2, 2), new Rules(), (i, c, _) => { }, gen);
+        var gaea = new Gaea(new Grid(2, 2), new Rules(), NoOp, gen);
         Assert.Throws<ArgumentException>(() => gaea.Run());
     }
 
