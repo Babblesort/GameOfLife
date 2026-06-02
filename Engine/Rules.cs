@@ -8,14 +8,12 @@ public class Rules
     public const int MaxCount = 8;
     public IReadOnlyList<int> SurviveNeighborCounts { get; }
     public IReadOnlyList<int> BirthNeighborCounts { get; }
-
     private static readonly List<int> DefaultSurviveNeighborCounts = [2, 3];
     private static readonly List<int> DefaultBirthNeighborCounts = [3];
-
-    public Rules() : this(DefaultSurviveNeighborCounts, DefaultBirthNeighborCounts) { }
-
     internal int SurviveMask { get; }
     internal int BirthMask { get; }
+
+    public Rules() : this(DefaultSurviveNeighborCounts, DefaultBirthNeighborCounts) { }
 
     public Rules(IList<int> surviveCounts, IList<int> birthCounts)
     {
