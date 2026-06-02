@@ -31,7 +31,7 @@ public class RulesTests
     public void ProvidesSurviveNeighborCounts()
     {
         var rules = new Rules();
-        Assert.IsInstanceOf<List<int>>(rules.SurviveNeighborCounts);
+        Assert.IsInstanceOf<IReadOnlyList<int>>(rules.SurviveNeighborCounts);
     }
 
     [Test]
@@ -48,7 +48,7 @@ public class RulesTests
     public void ProvidesBirthNeighborCounts()
     {
         var rules = new Rules();
-        Assert.IsInstanceOf<List<int>>(rules.BirthNeighborCounts);
+        Assert.IsInstanceOf<IReadOnlyList<int>>(rules.BirthNeighborCounts);
     }
 
     [Test]
