@@ -67,7 +67,7 @@ public class Gaea
     private void ValidateExecuteGenerationConditions()
     {
         if (Cells == null) throw new ArgumentNullException(nameof(Cells), "Cells must not be null before running");
-        if (Cells.Count != Grid.CellCount) throw new ArgumentException(nameof(Cells), $"{nameof(Cells)} count and {nameof(Grid)} cell count do not match");
+        if (Cells.Count != Grid.CellCount) throw new ArgumentException($"{nameof(Cells)} count and {nameof(Grid)} cell count do not match", nameof(Cells));
     }
 
     private void CancelIfRunning()
