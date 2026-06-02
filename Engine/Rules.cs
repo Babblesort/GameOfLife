@@ -38,8 +38,8 @@ public class Rules
 
     private static void ThrowOnInvalidCounts(IList<int> surviveCounts, IList<int> birthCounts)
     {
-        if (surviveCounts == null) throw new ArgumentNullException(nameof(surviveCounts), "Must not be null");
-        if (birthCounts == null) throw new ArgumentNullException(nameof(birthCounts), "Must not be null");
+        ArgumentNullException.ThrowIfNull(surviveCounts);
+        ArgumentNullException.ThrowIfNull(birthCounts);
 
         if (InvalidNeighborCountItems(surviveCounts)) throw new ArgumentOutOfRangeException(nameof(surviveCounts), $"Must have {MinCount} to {MaxCount} items");
         if (InvalidNeighborCountItems(birthCounts)) throw new ArgumentOutOfRangeException(nameof(birthCounts), $"Must have {MinCount} to {MaxCount} items");

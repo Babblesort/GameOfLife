@@ -17,8 +17,10 @@ public class Gaea
 
     public Gaea(Grid grid, Rules rules, Action<int, Generation, double> updateFn, Generation? cells = null)
     {
-        Grid = grid ?? throw new ArgumentNullException(nameof(grid), "Cannot be null");
-        Rules = rules ?? throw new ArgumentNullException(nameof(rules), "Cannot be null");
+        ArgumentNullException.ThrowIfNull(grid);
+        ArgumentNullException.ThrowIfNull(rules);
+        Grid = grid;
+        Rules = rules;
         Cells = cells;
         UpdateVisualization = updateFn;
     }
@@ -34,8 +36,8 @@ public class Gaea
         get => _delay;
         set
         {
-            if (value < MinDelayMilliseconds || value > MaxDelayMilliseconds)
-                throw new ArgumentOutOfRangeException(nameof(value), $"Must be between {MinDelayMilliseconds} and {MaxDelayMilliseconds} inclusive.");
+            ArgumentOutOfRangeException.ThrowIfLessThan(value, MinDelayMilliseconds);
+            ArgumentOutOfRangeException.ThrowIfGreaterThan(value, MaxDelayMilliseconds);
             _delay = value;
         }
     }

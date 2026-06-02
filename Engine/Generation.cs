@@ -58,15 +58,13 @@ public class Generation(int rows, int cols)
 
                 bool alive = src[r * cols + c];
                 dst[r * cols + c] = alive
-                    ? Survives(rules.SurviveMask, n)
-                    : IsBorn(rules.BirthMask, n);
+                    ? IsBitSet(rules.SurviveMask, n)
+                    : IsBitSet(rules.BirthMask, n);
             }
         }
     }
 
-    private static bool Survives(int mask, int neighborCount) => ((mask >> neighborCount) & 1) != 0;
-
-    private static bool IsBorn(int mask, int neighborCount) => ((mask >> neighborCount) & 1) != 0;
+    private static bool IsBitSet(int mask, int neighborCount) => ((mask >> neighborCount) & 1) != 0;
 
     public override bool Equals(object? obj)
     {
