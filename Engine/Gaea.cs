@@ -11,18 +11,18 @@ public class Gaea
     private int _delay = DefaultDelayMilliseconds;
     private CancellationTokenSource? _tokenSource;
     private Task? _task;
-    private readonly double[] _msRingBuffer = new double[60];
-    private int _msIdx;
+    private readonly double[] _millisecondRingBuffer = new double[60];
+    private int _msIndex;
     private Generation? _spare;
 
-    public Gaea(Grid grid, Rules rules, Action<int, Generation, double> updateFn, Generation? cells = null)
+    public Gaea(Grid grid, Rules rules, Action<int, Generation, double> update, Generation? cells = null)
     {
         ArgumentNullException.ThrowIfNull(grid);
         ArgumentNullException.ThrowIfNull(rules);
         Grid = grid;
         Rules = rules;
         Cells = cells;
-        UpdateVisualization = updateFn;
+        UpdateVisualization = update;
     }
 
     public Grid Grid { get; }
@@ -58,7 +58,7 @@ public class Gaea
         CancelIfRunning();
         _tokenSource = new CancellationTokenSource();
         var token = _tokenSource.Token;
-        ValidateExecuteGenerationConditions();
+        ValidateGenerationPreconditions();
         if (_spare == null || _spare.Rows != Grid.RowCount || _spare.Cols != Grid.ColCount)
         {
             _spare = new Generation(Grid.RowCount, Grid.ColCount);
@@ -66,7 +66,7 @@ public class Gaea
         _task = Task.Run(() => ResolveGenerationsAsync(runMode, token), token);
     }
 
-    private void ValidateExecuteGenerationConditions()
+    private void ValidateGenerationPreconditions()
     {
         if (Cells == null) throw new ArgumentNullException(nameof(Cells), "Cells must not be null before running");
         if (Cells.Count != Grid.CellCount) throw new ArgumentException($"{nameof(Cells)} count and {nameof(Grid)} cell count do not match", nameof(Cells));
@@ -82,10 +82,10 @@ public class Gaea
 
     private async Task ResolveGenerationsAsync(bool runMode, CancellationToken token)
     {
-        var t0 = Stopwatch.GetTimestamp();
+        var startTimestamp = Stopwatch.GetTimestamp();
         Cells!.ResolveNextGeneration(Rules, _spare!);
         (Cells, _spare) = (_spare, Cells);
-        UpdateVisualization(++_generationNumber, Cells!, RecordMs(Stopwatch.GetElapsedTime(t0).TotalMilliseconds));
+        UpdateVisualization(++_generationNumber, Cells!, RecordMilliseconds(Stopwatch.GetElapsedTime(startTimestamp).TotalMilliseconds));
 
         if (!Cells!.HasLiveCells)
         {
@@ -99,10 +99,10 @@ public class Gaea
         {
             try { await Task.Delay(_delay, token); }
             catch (OperationCanceledException) { return; }
-            t0 = Stopwatch.GetTimestamp();
+            startTimestamp = Stopwatch.GetTimestamp();
             Cells!.ResolveNextGeneration(Rules, _spare!);
             (Cells, _spare) = (_spare, Cells);
-            UpdateVisualization(++_generationNumber, Cells!, RecordMs(Stopwatch.GetElapsedTime(t0).TotalMilliseconds));
+            UpdateVisualization(++_generationNumber, Cells!, RecordMilliseconds(Stopwatch.GetElapsedTime(startTimestamp).TotalMilliseconds));
 
             if (!Cells!.HasLiveCells)
             {
@@ -112,15 +112,15 @@ public class Gaea
         }
     }
 
-    private double RecordMs(double ms)
+    private double RecordMilliseconds(double ms)
     {
-        _msRingBuffer[_msIdx % 60] = ms;
-        _msIdx++;
-        int count = Math.Min(_msIdx, 60);
+        _millisecondRingBuffer[_msIndex % 60] = ms;
+        _msIndex++;
+        int count = Math.Min(_msIndex, 60);
         double sum = 0;
         for (int i = 0; i < count; i++)
         {
-            sum += _msRingBuffer[i];
+            sum += _millisecondRingBuffer[i];
         }
         return sum / count;
     }

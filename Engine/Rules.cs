@@ -41,13 +41,13 @@ public class Rules
         ArgumentNullException.ThrowIfNull(surviveCounts);
         ArgumentNullException.ThrowIfNull(birthCounts);
 
-        if (InvalidNeighborCountItems(surviveCounts)) throw new ArgumentOutOfRangeException(nameof(surviveCounts), $"Must have {MinCount} to {MaxCount} items");
-        if (InvalidNeighborCountItems(birthCounts)) throw new ArgumentOutOfRangeException(nameof(birthCounts), $"Must have {MinCount} to {MaxCount} items");
+        if (HasInvalidItemCount(surviveCounts)) throw new ArgumentOutOfRangeException(nameof(surviveCounts), $"Must have {MinCount} to {MaxCount} items");
+        if (HasInvalidItemCount(birthCounts)) throw new ArgumentOutOfRangeException(nameof(birthCounts), $"Must have {MinCount} to {MaxCount} items");
 
-        if (InvalidNeighborCount(surviveCounts)) throw new ArgumentOutOfRangeException(nameof(surviveCounts), $"Must have only items from {MinNeighbors} to {MaxNeighbors} inclusive");
-        if (InvalidNeighborCount(birthCounts)) throw new ArgumentOutOfRangeException(nameof(birthCounts), $"Must have only items from {MinNeighbors} to {MaxNeighbors} inclusive");
+        if (HasOutOfRangeValues(surviveCounts)) throw new ArgumentOutOfRangeException(nameof(surviveCounts), $"Must have only items from {MinNeighbors} to {MaxNeighbors} inclusive");
+        if (HasOutOfRangeValues(birthCounts)) throw new ArgumentOutOfRangeException(nameof(birthCounts), $"Must have only items from {MinNeighbors} to {MaxNeighbors} inclusive");
     }
 
-    private static bool InvalidNeighborCountItems(IList<int> list) => list.Count < MinCount || list.Count > MaxCount;
-    private static bool InvalidNeighborCount(IList<int> list) => list.Any(i => i > MaxNeighbors || i < MinNeighbors);
+    private static bool HasInvalidItemCount(IList<int> list) => list.Count < MinCount || list.Count > MaxCount;
+    private static bool HasOutOfRangeValues(IList<int> list) => list.Any(i => i > MaxNeighbors || i < MinNeighbors);
 }
