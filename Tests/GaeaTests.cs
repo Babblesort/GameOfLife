@@ -14,7 +14,7 @@ public class GaeaTests
         var grid = new Grid();
         var rules = new Rules();
 
-        var gaea = new Gaea(grid, rules, NoOp, grid.CreateEmptyGeneration());
+        var gaea = new Gaea(grid, rules, grid.CreateEmptyGeneration(), NoOp);
         Assert.That(gaea, Is.Not.Null);
     }
 
@@ -30,7 +30,7 @@ public class GaeaTests
     public void DelayMillisecondsPropertyDefaultsAndSets()
     {
         var grid = new Grid();
-        var gaea = new Gaea(grid, new Rules(), NoOp, grid.CreateEmptyGeneration());
+        var gaea = new Gaea(grid, new Rules(), grid.CreateEmptyGeneration(), NoOp);
         Assert.That(gaea.DelayMilliseconds, Is.EqualTo(Gaea.DefaultDelayMilliseconds));
 
         gaea.DelayMilliseconds = 100;
@@ -43,7 +43,7 @@ public class GaeaTests
         var tooSmall = Gaea.MinDelayMilliseconds - 1;
         var tooBig = Gaea.MaxDelayMilliseconds + 1;
         var grid = new Grid();
-        var gaea = new Gaea(grid, new Rules(), NoOp, grid.CreateEmptyGeneration());
+        var gaea = new Gaea(grid, new Rules(), grid.CreateEmptyGeneration(), NoOp);
         Assert.That((Action)(() => gaea.DelayMilliseconds = tooSmall), Throws.TypeOf<ArgumentOutOfRangeException>());
         Assert.That((Action)(() => gaea.DelayMilliseconds = tooBig), Throws.TypeOf<ArgumentOutOfRangeException>());
     }
@@ -53,7 +53,7 @@ public class GaeaTests
     {
         var gen = new Generation(1, 1);
         gen[new RowCol(0, 0)] = false;
-        var gaea = new Gaea(new Grid(2, 2), new Rules(), NoOp, gen);
+        var gaea = new Gaea(new Grid(2, 2), new Rules(), gen, NoOp);
         Assert.That((Action)(() => gaea.Step()), Throws.TypeOf<InvalidOperationException>());
     }
 
@@ -62,7 +62,7 @@ public class GaeaTests
     {
         var gen = new Generation(1, 1);
         gen[new RowCol(0, 0)] = false;
-        var gaea = new Gaea(new Grid(2, 2), new Rules(), NoOp, gen);
+        var gaea = new Gaea(new Grid(2, 2), new Rules(), gen, NoOp);
         Assert.That((Action)(() => gaea.Run()), Throws.TypeOf<InvalidOperationException>());
     }
 
@@ -73,7 +73,7 @@ public class GaeaTests
         var cells = grid.CreateRandomGeneration();
         int latestGeneration = 0;
         var gaea = new Gaea(grid, new Rules(),
-            (i, _, _) => Interlocked.Exchange(ref latestGeneration, i), cells);
+            cells, (i, _, _) => Interlocked.Exchange(ref latestGeneration, i));
 
         gaea.DelayMilliseconds = Gaea.MinDelayMilliseconds; // 25ms — fast
         gaea.Run();
