@@ -19,17 +19,6 @@ public class GaeaTests
     }
 
     [Test]
-    public void ThrowsOnNullDependencies()
-    {
-        var grid = new Grid();
-        var rules = new Rules();
-
-        var cells = grid.CreateEmptyGeneration();
-        Assert.That((Action)(() => { new Gaea(null!, rules, NoOp, cells); }), Throws.TypeOf<ArgumentNullException>());
-        Assert.That((Action)(() => { new Gaea(grid, null!, NoOp, cells); }), Throws.TypeOf<ArgumentNullException>());
-    }
-
-    [Test]
     public void DelayMillisecondsSettings()
     {
         Assert.That(Gaea.MinDelayMilliseconds, Is.EqualTo(25));

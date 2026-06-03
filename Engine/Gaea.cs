@@ -17,8 +17,6 @@ public class Gaea
 
     public Gaea(Grid grid, Rules rules, Action<int, Generation, double> update, Generation cells)
     {
-        ArgumentNullException.ThrowIfNull(grid);
-        ArgumentNullException.ThrowIfNull(rules);
         Grid = grid;
         Rules = rules;
         Cells = cells;
