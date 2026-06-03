@@ -13,7 +13,7 @@ public class Gaea
     private Task? _task;
     private readonly double[] _millisecondRingBuffer = new double[60];
     private int _msIndex;
-    private Generation? _spare;
+    private Generation _spare;
 
     public Gaea(Grid grid, Rules rules, Action<int, Generation, double> update, Generation cells)
     {
@@ -22,6 +22,7 @@ public class Gaea
         Grid = grid;
         Rules = rules;
         Cells = cells;
+        _spare = new Generation(cells.Rows, cells.Cols);
         UpdateVisualization = update;
     }
 
@@ -59,10 +60,6 @@ public class Gaea
         _tokenSource = new CancellationTokenSource();
         var token = _tokenSource.Token;
         ValidateGenerationPreconditions();
-        if (_spare == null || _spare.Rows != Grid.RowCount || _spare.Cols != Grid.ColCount)
-        {
-            _spare = new Generation(Grid.RowCount, Grid.ColCount);
-        }
         _task = Task.Run(() => ResolveGenerationsAsync(runMode, token), token);
     }
 
@@ -82,8 +79,8 @@ public class Gaea
     private async Task ResolveGenerationsAsync(bool runMode, CancellationToken token)
     {
         var startTimestamp = Stopwatch.GetTimestamp();
-        Cells.ResolveNextGeneration(Rules, _spare!);
-        (Cells, _spare) = (_spare!, Cells);
+        Cells.ResolveNextGeneration(Rules, _spare);
+        (Cells, _spare) = (_spare, Cells);
         UpdateVisualization(++_generationNumber, Cells, RecordMilliseconds(Stopwatch.GetElapsedTime(startTimestamp).TotalMilliseconds));
 
         if (Cells.IsExtinct)
@@ -99,8 +96,8 @@ public class Gaea
             try { await Task.Delay(_delay, token); }
             catch (OperationCanceledException) { return; }
             startTimestamp = Stopwatch.GetTimestamp();
-            Cells.ResolveNextGeneration(Rules, _spare!);
-            (Cells, _spare) = (_spare!, Cells);
+            Cells.ResolveNextGeneration(Rules, _spare);
+            (Cells, _spare) = (_spare, Cells);
             UpdateVisualization(++_generationNumber, Cells, RecordMilliseconds(Stopwatch.GetElapsedTime(startTimestamp).TotalMilliseconds));
 
             if (Cells.IsExtinct)
