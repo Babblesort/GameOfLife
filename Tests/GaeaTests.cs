@@ -47,20 +47,12 @@ public class GaeaTests
     }
 
     [Test]
-    public void StepThrowsOnMissizedCells()
+    public void RunOrStepThrowsOnMissizedCells()
     {
-        var gen = new Generation(1, 1);
-        gen[new RowCol(0, 0)] = false;
-        var gaea = new Gaea(new Grid(2, 2), stubRules, gen, stubHandler);
+        var genOneByOne = new Generation(1, 1);
+        var gridTwoByTwo = new Grid(2, 2);
+        var gaea = new Gaea(gridTwoByTwo, stubRules, genOneByOne, stubHandler);
         Assert.That((Action)(() => gaea.Step()), Throws.TypeOf<InvalidOperationException>());
-    }
-
-    [Test]
-    public void RunThrowsOnMissizedCells()
-    {
-        var gen = new Generation(1, 1);
-        gen[new RowCol(0, 0)] = false;
-        var gaea = new Gaea(new Grid(2, 2), stubRules, gen, stubHandler);
         Assert.That((Action)(() => gaea.Run()), Throws.TypeOf<InvalidOperationException>());
     }
 
