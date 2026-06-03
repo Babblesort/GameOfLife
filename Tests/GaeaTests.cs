@@ -65,7 +65,7 @@ public class GaeaTests
         var gen = new Generation(1, 1);
         gen[new RowCol(0, 0)] = false;
         var gaea = new Gaea(new Grid(2, 2), new Rules(), NoOp, gen);
-        Assert.That((Action)(() => gaea.Step()), Throws.TypeOf<ArgumentException>());
+        Assert.That((Action)(() => gaea.Step()), Throws.TypeOf<InvalidOperationException>());
     }
 
     [Test]
@@ -74,7 +74,7 @@ public class GaeaTests
         var gen = new Generation(1, 1);
         gen[new RowCol(0, 0)] = false;
         var gaea = new Gaea(new Grid(2, 2), new Rules(), NoOp, gen);
-        Assert.That((Action)(() => gaea.Run()), Throws.TypeOf<ArgumentException>());
+        Assert.That((Action)(() => gaea.Run()), Throws.TypeOf<InvalidOperationException>());
     }
 
     [Test]

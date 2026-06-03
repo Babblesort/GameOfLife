@@ -61,7 +61,7 @@ public class Gaea
         var token = _tokenSource.Token;
         if (Cells.Count != Grid.CellCount)
         {
-            throw new ArgumentException($"{nameof(Cells)} count and {nameof(Grid)} cell count do not match", nameof(Cells));
+            throw new InvalidOperationException($"{nameof(Cells)} count and {nameof(Grid)} cell count do not match");
         }
 
         _task = Task.Run(() => ResolveGenerationsAsync(runMode, token), token);
