@@ -1,4 +1,4 @@
-﻿using Engine;
+using Engine;
 using NUnit.Framework;
 
 namespace Tests;
@@ -20,21 +20,21 @@ public class FileManagerTests
     [Test]
     public void CanBeCreated()
     {
-        Assert.NotNull(new FileManager());
+        Assert.That(new FileManager(), Is.Not.Null);
     }
 
     [Test]
     public void ExposesGameFileDirectoryProperty()
     {
-        Assert.AreEqual(FileManager.GameFilesFolderName, "GameFiles");
+        Assert.That(FileManager.GameFilesFolderName, Is.EqualTo("GameFiles"));
     }
 
     [Test]
     public void GameFilesPathProperty()
     {
         var dir = FileManager.GameFilesPath;
-        Assert.NotNull(dir);
-        Assert.IsTrue(dir.EndsWith(FileManager.GameFilesFolderName));
+        Assert.That(dir, Is.Not.Null);
+        Assert.That(dir, Does.EndWith(FileManager.GameFilesFolderName));
     }
 
     [Test]
@@ -46,11 +46,11 @@ public class FileManagerTests
         FileManager.CreateFile(testFileName, fileLines);
         var directory = new DirectoryInfo(FileManager.GameFilesPath);
         var foundFiles = directory.EnumerateFiles(testFileName, SearchOption.TopDirectoryOnly);
-        Assert.AreEqual(1, foundFiles.Count());
+        Assert.That(foundFiles.Count(), Is.EqualTo(1));
         var foundLines = File.ReadAllLines(foundFiles.First().FullName);
-        Assert.AreEqual(fileLines.Length, foundLines.Length);
-        Assert.AreEqual(fileLines[0], foundLines[0]);
-        Assert.AreEqual(fileLines[1], foundLines[1]);
+        Assert.That(foundLines.Length, Is.EqualTo(fileLines.Length));
+        Assert.That(foundLines[0], Is.EqualTo(fileLines[0]));
+        Assert.That(foundLines[1], Is.EqualTo(fileLines[1]));
     }
 
     [Test]
@@ -58,7 +58,7 @@ public class FileManagerTests
     {
         const string testFileName = "te*st.txt";
         var file = new FileManager();
-        Assert.Throws<ArgumentException>(() => FileManager.CreateFile(testFileName, []));
+        Assert.That((Action)(() => FileManager.CreateFile(testFileName, [])), Throws.TypeOf<ArgumentException>());
     }
 
     [Test]
@@ -75,10 +75,10 @@ public class FileManagerTests
         var directory = new DirectoryInfo(FileManager.GameFilesPath);
         var foundFiles = directory.EnumerateFiles(testFileName, SearchOption.TopDirectoryOnly);
         var foundLines = File.ReadAllLines(foundFiles.First().FullName);
-        Assert.AreEqual(cells.Count, foundLines.Length);
+        Assert.That(foundLines.Length, Is.EqualTo(cells.Count));
 
-        Assert.AreEqual("0,0,True", foundLines[0]);
-        Assert.AreEqual("0,1,False", foundLines[1]);
+        Assert.That(foundLines[0], Is.EqualTo("0,0,True"));
+        Assert.That(foundLines[1], Is.EqualTo("0,1,False"));
     }
 
     [Test]
@@ -90,15 +90,15 @@ public class FileManagerTests
         FileManager.CreateFile(testFileName, fileLines);
 
         var readLines = FileManager.ReadFile(testFileName);
-        Assert.AreEqual(fileLines.Length, readLines.Length);
-        Assert.AreEqual(fileLines[0], readLines[0]);
-        Assert.AreEqual(fileLines[1], readLines[1]);
+        Assert.That(readLines.Length, Is.EqualTo(fileLines.Length));
+        Assert.That(readLines[0], Is.EqualTo(fileLines[0]));
+        Assert.That(readLines[1], Is.EqualTo(fileLines[1]));
     }
 
     [Test]
     public void ReadFileThrowsOnInvalidFile()
     {
-        Assert.Throws<FileNotFoundException>(static () => FileManager.ReadFile("notFoundFileName.not"));
+        Assert.That((Action)(static () => FileManager.ReadFile("notFoundFileName.not")), Throws.TypeOf<FileNotFoundException>());
     }
 
     [Test]
@@ -117,8 +117,8 @@ public class FileManagerTests
         var generation = FileManager.ReadGenerationFile(testFileName);
 
         Assert.That(generation, Is.InstanceOf(typeof(Generation)));
-        Assert.AreEqual(2, generation.Count);
-        Assert.IsTrue(generation[cell0]);
-        Assert.IsFalse(generation[cell1]);
+        Assert.That(generation.Count, Is.EqualTo(2));
+        Assert.That(generation[cell0], Is.True);
+        Assert.That(generation[cell1], Is.False);
     }
 }

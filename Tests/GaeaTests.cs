@@ -1,4 +1,4 @@
-﻿using Engine;
+using Engine;
 using NUnit.Framework;
 
 namespace Tests;
@@ -15,7 +15,7 @@ public class GaeaTests
         var rules = new Rules();
 
         var gaea = new Gaea(grid, rules, NoOp);
-        Assert.NotNull(gaea);
+        Assert.That(gaea, Is.Not.Null);
     }
 
     [Test]
@@ -24,26 +24,26 @@ public class GaeaTests
         var grid = new Grid();
         var rules = new Rules();
 
-        Assert.Throws<ArgumentNullException>(() => new Gaea(null!, rules, NoOp));
-        Assert.Throws<ArgumentNullException>(() => new Gaea(grid, null!, NoOp));
+        Assert.That((Action)(() => { new Gaea(null!, rules, NoOp); }), Throws.TypeOf<ArgumentNullException>());
+        Assert.That((Action)(() => { new Gaea(grid, null!, NoOp); }), Throws.TypeOf<ArgumentNullException>());
     }
 
     [Test]
     public void DelayMillisecondsSettings()
     {
-        Assert.AreEqual(25, Gaea.MinDelayMilliseconds);
-        Assert.AreEqual(500, Gaea.MaxDelayMilliseconds);
-        Assert.AreEqual(225, Gaea.DefaultDelayMilliseconds);
+        Assert.That(Gaea.MinDelayMilliseconds, Is.EqualTo(25));
+        Assert.That(Gaea.MaxDelayMilliseconds, Is.EqualTo(500));
+        Assert.That(Gaea.DefaultDelayMilliseconds, Is.EqualTo(225));
     }
 
     [Test]
     public void DelayMillisecondsPropertyDefaultsAndSets()
     {
         var gaea = new Gaea(new Grid(), new Rules(), NoOp);
-        Assert.AreEqual(Gaea.DefaultDelayMilliseconds, gaea.DelayMilliseconds);
+        Assert.That(gaea.DelayMilliseconds, Is.EqualTo(Gaea.DefaultDelayMilliseconds));
 
         gaea.DelayMilliseconds = 100;
-        Assert.AreEqual(100, gaea.DelayMilliseconds);
+        Assert.That(gaea.DelayMilliseconds, Is.EqualTo(100));
     }
 
     [Test]
@@ -52,15 +52,15 @@ public class GaeaTests
         var tooSmall = Gaea.MinDelayMilliseconds - 1;
         var tooBig = Gaea.MaxDelayMilliseconds + 1;
         var gaea = new Gaea(new Grid(), new Rules(), NoOp);
-        Assert.Throws<ArgumentOutOfRangeException>(() => gaea.DelayMilliseconds = tooSmall);
-        Assert.Throws<ArgumentOutOfRangeException>(() => gaea.DelayMilliseconds = tooBig);
+        Assert.That((Action)(() => gaea.DelayMilliseconds = tooSmall), Throws.TypeOf<ArgumentOutOfRangeException>());
+        Assert.That((Action)(() => gaea.DelayMilliseconds = tooBig), Throws.TypeOf<ArgumentOutOfRangeException>());
     }
 
     [Test]
     public void StepThrowsOnNullCells()
     {
         var gaea = new Gaea(new Grid(), new Rules(), NoOp);
-        Assert.Throws<ArgumentNullException>(() => gaea.Step());
+        Assert.That((Action)(() => gaea.Step()), Throws.TypeOf<ArgumentNullException>());
     }
 
     [Test]
@@ -69,14 +69,14 @@ public class GaeaTests
         var gen = new Generation(1, 1);
         gen[new RowCol(0, 0)] = false;
         var gaea = new Gaea(new Grid(2, 2), new Rules(), NoOp, gen);
-        Assert.Throws<ArgumentException>(() => gaea.Step());
+        Assert.That((Action)(() => gaea.Step()), Throws.TypeOf<ArgumentException>());
     }
 
     [Test]
     public void RunThrowsOnNullCells()
     {
         var gaea = new Gaea(new Grid(), new Rules(), NoOp);
-        Assert.Throws<ArgumentNullException>(() => gaea.Run());
+        Assert.That((Action)(() => gaea.Run()), Throws.TypeOf<ArgumentNullException>());
     }
 
     [Test]
@@ -85,7 +85,7 @@ public class GaeaTests
         var gen = new Generation(1, 1);
         gen[new RowCol(0, 0)] = false;
         var gaea = new Gaea(new Grid(2, 2), new Rules(), NoOp, gen);
-        Assert.Throws<ArgumentException>(() => gaea.Run());
+        Assert.That((Action)(() => gaea.Run()), Throws.TypeOf<ArgumentException>());
     }
 
     [Test]
@@ -108,8 +108,8 @@ public class GaeaTests
 
         gaea.Pause();
 
-        Assert.Greater(genAfterFast, 5);
-        Assert.Less(genAfterSlow - genAfterFast, 2);
+        Assert.That(genAfterFast, Is.GreaterThan(5));
+        Assert.That(genAfterSlow - genAfterFast, Is.LessThan(2));
     }
 
 }

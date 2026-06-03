@@ -14,9 +14,9 @@ public class GenerationTests
         generation[new RowCol(0, 1)] = false;
 
         var csv = generation.ToCsv().ToList();
-        Assert.AreEqual(2, csv.Count);
-        Assert.AreEqual("0,0,True", csv[0]);
-        Assert.AreEqual("0,1,False", csv[1]);
+        Assert.That(csv.Count, Is.EqualTo(2));
+        Assert.That(csv[0], Is.EqualTo("0,0,True"));
+        Assert.That(csv[1], Is.EqualTo("0,1,False"));
     }
 
     [Test]
@@ -25,37 +25,37 @@ public class GenerationTests
         var generation = new Generation(0, 0);
 
         var csv = generation.ToCsv().ToList();
-        Assert.AreEqual(0, csv.Count);
+        Assert.That(csv.Count, Is.EqualTo(0));
     }
 
     [Test]
     public void HasLiveCellsProperty()
     {
         var generation = new Generation(1, 1);
-        Assert.IsFalse(generation.HasLiveCells);
+        Assert.That(generation.HasLiveCells, Is.False);
 
         var cell = new RowCol(0, 0);
 
         generation[cell] = false;
-        Assert.IsFalse(generation.HasLiveCells);
+        Assert.That(generation.HasLiveCells, Is.False);
 
         generation[cell] = true;
-        Assert.IsTrue(generation.HasLiveCells);
+        Assert.That(generation.HasLiveCells, Is.True);
     }
 
     [Test]
     public void IsExtinctProperty()
     {
         var generation = new Generation(1, 1);
-        Assert.IsTrue(generation.IsExtinct);
+        Assert.That(generation.IsExtinct, Is.True);
 
         var cell = new RowCol(0, 0);
 
         generation[cell] = false;
-        Assert.IsTrue(generation.IsExtinct);
+        Assert.That(generation.IsExtinct, Is.True);
 
         generation[cell] = true;
-        Assert.IsFalse(generation.IsExtinct);
+        Assert.That(generation.IsExtinct, Is.False);
     }
 
     private Grid grid = null!;
@@ -155,12 +155,12 @@ public class GenerationTests
         SetupBasicResolver();
         var nextGen = new Generation(grid.RowCount, grid.ColCount);
         generation.ResolveNextGeneration(new Rules(), nextGen);
-        Assert.AreEqual(expectedNextGen, nextGen);
+        Assert.That(nextGen, Is.EqualTo(expectedNextGen));
 
         SetupExpiringResolver();
         nextGen = new Generation(grid.RowCount, grid.ColCount);
         generation.ResolveNextGeneration(new Rules(), nextGen);
-        Assert.AreEqual(expectedNextGen, nextGen);
+        Assert.That(nextGen, Is.EqualTo(expectedNextGen));
     }
 
     [Test]
@@ -184,6 +184,6 @@ public class GenerationTests
         expectedNextGen[cell7] = false;
         expectedNextGen[cell8] = true;
 
-        Assert.AreEqual(expectedNextGen, nextGen);
+        Assert.That(nextGen, Is.EqualTo(expectedNextGen));
     }
 }

@@ -1,4 +1,4 @@
-﻿using Engine;
+using Engine;
 using NUnit.Framework;
 
 namespace Tests;
@@ -10,14 +10,14 @@ public class RowColTests
     public void CanBeCreated()
     {
         var tuple = new RowCol(1, 1);
-        Assert.NotNull(tuple);
+        Assert.That(tuple, Is.Not.Null);
     }
 
     [Test]
     public void ExposesRowAndColProperties()
     {
         var tuple = new RowCol(1, 2);
-        Assert.AreEqual(1, tuple.Row);
-        Assert.AreEqual(2, tuple.Col);
+        Assert.That(tuple.Row, Is.EqualTo(1));
+        Assert.That(tuple.Col, Is.EqualTo(2));
     }
 }
