@@ -15,7 +15,7 @@ public class Gaea
     private int _msIndex;
     private Generation? _spare;
 
-    public Gaea(Grid grid, Rules rules, Action<int, Generation, double> update, Generation? cells = null)
+    public Gaea(Grid grid, Rules rules, Action<int, Generation, double> update, Generation cells)
     {
         ArgumentNullException.ThrowIfNull(grid);
         ArgumentNullException.ThrowIfNull(rules);
@@ -27,7 +27,7 @@ public class Gaea
 
     public Grid Grid { get; }
     public Rules Rules { get; }
-    public Generation? Cells { get; private set; }
+    public Generation Cells { get; private set; }
     public Action<int, Generation, double> UpdateVisualization { get; }
     public event Action? Stopped;
 
@@ -68,7 +68,6 @@ public class Gaea
 
     private void ValidateGenerationPreconditions()
     {
-        if (Cells == null) throw new ArgumentNullException(nameof(Cells), "Cells must not be null before running");
         if (Cells.Count != Grid.CellCount) throw new ArgumentException($"{nameof(Cells)} count and {nameof(Grid)} cell count do not match", nameof(Cells));
     }
 
@@ -83,11 +82,11 @@ public class Gaea
     private async Task ResolveGenerationsAsync(bool runMode, CancellationToken token)
     {
         var startTimestamp = Stopwatch.GetTimestamp();
-        Cells!.ResolveNextGeneration(Rules, _spare!);
-        (Cells, _spare) = (_spare, Cells);
-        UpdateVisualization(++_generationNumber, Cells!, RecordMilliseconds(Stopwatch.GetElapsedTime(startTimestamp).TotalMilliseconds));
+        Cells.ResolveNextGeneration(Rules, _spare!);
+        (Cells, _spare) = (_spare!, Cells);
+        UpdateVisualization(++_generationNumber, Cells, RecordMilliseconds(Stopwatch.GetElapsedTime(startTimestamp).TotalMilliseconds));
 
-        if (Cells!.IsExtinct)
+        if (Cells.IsExtinct)
         {
             Stopped?.Invoke();
             return;
@@ -100,11 +99,11 @@ public class Gaea
             try { await Task.Delay(_delay, token); }
             catch (OperationCanceledException) { return; }
             startTimestamp = Stopwatch.GetTimestamp();
-            Cells!.ResolveNextGeneration(Rules, _spare!);
-            (Cells, _spare) = (_spare, Cells);
-            UpdateVisualization(++_generationNumber, Cells!, RecordMilliseconds(Stopwatch.GetElapsedTime(startTimestamp).TotalMilliseconds));
+            Cells.ResolveNextGeneration(Rules, _spare!);
+            (Cells, _spare) = (_spare!, Cells);
+            UpdateVisualization(++_generationNumber, Cells, RecordMilliseconds(Stopwatch.GetElapsedTime(startTimestamp).TotalMilliseconds));
 
-            if (Cells!.IsExtinct)
+            if (Cells.IsExtinct)
             {
                 Stopped?.Invoke();
                 return;
