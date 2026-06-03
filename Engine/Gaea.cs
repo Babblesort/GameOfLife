@@ -2,6 +2,8 @@ using System.Diagnostics;
 
 namespace Engine;
 
+public delegate void GenerationUpdateHandler(int generationNumber, Generation cells, double averageMilliseconds);
+
 public class Gaea(Grid grid, Rules rules, Generation cells, GenerationUpdateHandler update)
 {
     public const int MinDelayMilliseconds = 25;
