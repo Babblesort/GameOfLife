@@ -68,8 +68,7 @@ public class GaeaTests
         var grid = new Grid();
         var cells = grid.CreateRandomGeneration();
         int latestGeneration = 0;
-        var gaea = new Gaea(grid, stubRules,
-            cells, (i, _, _) => Interlocked.Exchange(ref latestGeneration, i));
+        var gaea = new Gaea(grid, stubRules, cells, (i, _, _) => Interlocked.Exchange(ref latestGeneration, i));
 
         gaea.DelayMilliseconds = Gaea.MinDelayMilliseconds;
         gaea.Run();
