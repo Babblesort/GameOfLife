@@ -42,8 +42,11 @@ public class GaeaTests
         var tooSmall = Gaea.MinDelayMilliseconds - 1;
         var tooBig = Gaea.MaxDelayMilliseconds + 1;
         var gaea = new Gaea(stubGrid, stubRules, stubGen, stubHandler);
-        Assert.That((Action)(() => gaea.DelayMilliseconds = tooSmall), Throws.TypeOf<ArgumentOutOfRangeException>());
-        Assert.That((Action)(() => gaea.DelayMilliseconds = tooBig), Throws.TypeOf<ArgumentOutOfRangeException>());
+        void assignTooSmall() => gaea.DelayMilliseconds = tooSmall;
+        void assignTooBig() => gaea.DelayMilliseconds = tooBig;
+
+        Assert.That((Action)assignTooSmall, Throws.TypeOf<ArgumentOutOfRangeException>());
+        Assert.That((Action)assignTooBig, Throws.TypeOf<ArgumentOutOfRangeException>());
     }
 
     [Test]
@@ -52,8 +55,11 @@ public class GaeaTests
         var genOneByOne = new Generation(1, 1);
         var gridTwoByTwo = new Grid(2, 2);
         var gaea = new Gaea(gridTwoByTwo, stubRules, genOneByOne, stubHandler);
-        Assert.That((Action)(() => gaea.Step()), Throws.TypeOf<InvalidOperationException>());
-        Assert.That((Action)(() => gaea.Run()), Throws.TypeOf<InvalidOperationException>());
+        void callGaeaStep() => gaea.Step();
+        void callGaeaRun() => gaea.Run();
+
+        Assert.That((Action)callGaeaStep, Throws.TypeOf<InvalidOperationException>());
+        Assert.That((Action)callGaeaRun, Throws.TypeOf<InvalidOperationException>());
     }
 
     [Test]
