@@ -2,7 +2,7 @@ using System.Diagnostics;
 
 namespace Engine;
 
-public class Gaea(Grid grid, Rules rules, Action<int, Generation, double> update, Generation cells)
+public class Gaea(Grid grid, Rules rules, GenerationUpdateHandler update, Generation cells)
 {
     public const int MinDelayMilliseconds = 25;
     public const int MaxDelayMilliseconds = 500;
@@ -17,7 +17,7 @@ public class Gaea(Grid grid, Rules rules, Action<int, Generation, double> update
     public Grid Grid { get; } = grid;
     public Rules Rules { get; } = rules;
     public Generation Cells { get; private set; } = cells;
-    public Action<int, Generation, double> UpdateVisualization { get; } = update;
+    public GenerationUpdateHandler UpdateVisualization { get; } = update;
     public event Action? Stopped;
 
     public int DelayMilliseconds

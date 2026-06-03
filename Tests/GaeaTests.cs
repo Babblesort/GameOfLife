@@ -6,7 +6,7 @@ namespace Tests;
 [TestFixture]
 public class GaeaTests
 {
-    private static readonly Action<int, Generation, double> NoOp = (_, _, _) => { };
+    private static readonly GenerationUpdateHandler NoOp = (_, _, _) => { };
 
     [Test]
     public void CanBeCreated()
