@@ -59,13 +59,12 @@ public class Gaea
         CancelIfRunning();
         _tokenSource = new CancellationTokenSource();
         var token = _tokenSource.Token;
-        ValidateGenerationPreconditions();
-        _task = Task.Run(() => ResolveGenerationsAsync(runMode, token), token);
-    }
+        if (Cells.Count != Grid.CellCount)
+        {
+            throw new ArgumentException($"{nameof(Cells)} count and {nameof(Grid)} cell count do not match", nameof(Cells));
+        }
 
-    private void ValidateGenerationPreconditions()
-    {
-        if (Cells.Count != Grid.CellCount) throw new ArgumentException($"{nameof(Cells)} count and {nameof(Grid)} cell count do not match", nameof(Cells));
+        _task = Task.Run(() => ResolveGenerationsAsync(runMode, token), token);
     }
 
     private void CancelIfRunning()
