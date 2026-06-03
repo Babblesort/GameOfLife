@@ -6,21 +6,21 @@ public delegate void GenerationUpdateHandler(int generationNumber, Generation ce
 
 public class Gaea(Grid grid, Rules rules, Generation cells, GenerationUpdateHandler update)
 {
+    public Grid Grid { get; } = grid;
+    public Rules Rules { get; } = rules;
+    public Generation Cells { get; private set; } = cells;
+    public GenerationUpdateHandler UpdateVisualization { get; } = update;
+    public event Action? Stopped;
     public const int MinDelayMilliseconds = 25;
     public const int MaxDelayMilliseconds = 500;
     public const int DefaultDelayMilliseconds = 225;
+    private Generation _spare = new(cells.Rows, cells.Cols);
     private int _generationNumber;
     private int _delay = DefaultDelayMilliseconds;
     private CancellationTokenSource? _tokenSource;
     private Task? _task;
     private readonly double[] _millisecondRingBuffer = new double[60];
     private int _msIndex;
-    private Generation _spare = new(cells.Rows, cells.Cols);
-    public Grid Grid { get; } = grid;
-    public Rules Rules { get; } = rules;
-    public Generation Cells { get; private set; } = cells;
-    public GenerationUpdateHandler UpdateVisualization { get; } = update;
-    public event Action? Stopped;
 
     public int DelayMilliseconds
     {
