@@ -6,15 +6,15 @@ namespace Tests;
 [TestFixture]
 public class GaeaTests
 {
-    private static readonly GenerationUpdateHandler NoOp = (_, _, _) => { };
+    private static readonly Grid stubGrid = new(1, 1);
+    private static readonly Generation stubGen = new(1, 1);
+    private static readonly Rules stubRules = new();
+    private static readonly GenerationUpdateHandler stubHandler = (_, _, _) => { };
 
     [Test]
     public void CanBeCreated()
     {
-        var grid = new Grid();
-        var rules = new Rules();
-
-        var gaea = new Gaea(grid, rules, grid.CreateEmptyGeneration(), NoOp);
+        var gaea = new Gaea(stubGrid, stubRules, stubGen, stubHandler);
         Assert.That(gaea, Is.Not.Null);
     }
 
@@ -29,8 +29,7 @@ public class GaeaTests
     [Test]
     public void DelayMillisecondsPropertyDefaultsAndSets()
     {
-        var grid = new Grid();
-        var gaea = new Gaea(grid, new Rules(), grid.CreateEmptyGeneration(), NoOp);
+        var gaea = new Gaea(stubGrid, stubRules, stubGen, stubHandler);
         Assert.That(gaea.DelayMilliseconds, Is.EqualTo(Gaea.DefaultDelayMilliseconds));
 
         gaea.DelayMilliseconds = 100;
@@ -42,8 +41,7 @@ public class GaeaTests
     {
         var tooSmall = Gaea.MinDelayMilliseconds - 1;
         var tooBig = Gaea.MaxDelayMilliseconds + 1;
-        var grid = new Grid();
-        var gaea = new Gaea(grid, new Rules(), grid.CreateEmptyGeneration(), NoOp);
+        var gaea = new Gaea(stubGrid, stubRules, stubGen, stubHandler);
         Assert.That((Action)(() => gaea.DelayMilliseconds = tooSmall), Throws.TypeOf<ArgumentOutOfRangeException>());
         Assert.That((Action)(() => gaea.DelayMilliseconds = tooBig), Throws.TypeOf<ArgumentOutOfRangeException>());
     }
@@ -53,7 +51,7 @@ public class GaeaTests
     {
         var gen = new Generation(1, 1);
         gen[new RowCol(0, 0)] = false;
-        var gaea = new Gaea(new Grid(2, 2), new Rules(), gen, NoOp);
+        var gaea = new Gaea(new Grid(2, 2), stubRules, gen, stubHandler);
         Assert.That((Action)(() => gaea.Step()), Throws.TypeOf<InvalidOperationException>());
     }
 
@@ -62,7 +60,7 @@ public class GaeaTests
     {
         var gen = new Generation(1, 1);
         gen[new RowCol(0, 0)] = false;
-        var gaea = new Gaea(new Grid(2, 2), new Rules(), gen, NoOp);
+        var gaea = new Gaea(new Grid(2, 2), stubRules, gen, stubHandler);
         Assert.That((Action)(() => gaea.Run()), Throws.TypeOf<InvalidOperationException>());
     }
 
@@ -72,16 +70,16 @@ public class GaeaTests
         var grid = new Grid();
         var cells = grid.CreateRandomGeneration();
         int latestGeneration = 0;
-        var gaea = new Gaea(grid, new Rules(),
+        var gaea = new Gaea(grid, stubRules,
             cells, (i, _, _) => Interlocked.Exchange(ref latestGeneration, i));
 
-        gaea.DelayMilliseconds = Gaea.MinDelayMilliseconds; // 25ms — fast
+        gaea.DelayMilliseconds = Gaea.MinDelayMilliseconds;
         gaea.Run();
-        await Task.Delay(300);                               // 300ms / 25ms ≈ 12 generations
+        await Task.Delay(300);
         int genAfterFast = latestGeneration;
 
-        gaea.DelayMilliseconds = Gaea.MaxDelayMilliseconds; // 500ms — slow
-        await Task.Delay(300);                               // 300ms < 500ms, so 0–1 new generations
+        gaea.DelayMilliseconds = Gaea.MaxDelayMilliseconds;
+        await Task.Delay(300);
         int genAfterSlow = latestGeneration;
 
         gaea.Pause();
