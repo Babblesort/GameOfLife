@@ -26,7 +26,14 @@ public class Generation(int rows, int cols)
         }
     }
 
-    public void CopyTo(bool[] dest) => Array.Copy(_cells, dest, _cells.Length);
+    public void CopyTo(bool[] dest)
+    {
+        if (dest.Length != _cells.Length)
+        {
+            throw new ArgumentException($"Destination length {dest.Length} must equal source length {_cells.Length}", nameof(dest));
+        }
+        Array.Copy(_cells, dest, _cells.Length);
+    }
 
     public void ResolveNextGeneration(Rules rules, Generation destination)
     {
