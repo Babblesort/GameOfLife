@@ -11,6 +11,18 @@ public class GaeaTests
     private static readonly Rules stubRules = new();
     private static readonly GenerationUpdateHandler stubHandler = (_, _, _) => { };
 
+    private static void AssertAllCellsAreFalse(Generation generation, Grid grid)
+    {
+        for (int r = 0; r < grid.RowCount; r++)
+        {
+            for (int c = 0; c < grid.ColCount; c++)
+            {
+                Assert.That(generation[new RowCol(r, c)], Is.False, 
+                    $"Cell at ({r},{c}) should be false after clear");
+            }
+        }
+    }
+
     [Test]
     public void CanBeCreated()
     {
@@ -84,5 +96,54 @@ public class GaeaTests
         Assert.That(genAfterFast, Is.GreaterThan(5));
         Assert.That(genAfterSlow - genAfterFast, Is.LessThan(2));
     }
+
+    [Test]
+    public void ClearWorksWhenNoSimulationIsRunning()
+    {
+        var grid = new Grid(2, 2);
+        var initialCells = grid.CreateRandomGeneration();
+        Generation capturedGeneration = null!;
+        int capturedGenerationNumber = -1;
+        
+        var gaea = new Gaea(grid, new Rules(), initialCells, (genNum, gen, ms) =>
+        {
+            capturedGenerationNumber = genNum;
+            capturedGeneration = gen;
+        });
+
+        gaea.Clear();
+        Assert.That(capturedGenerationNumber, Is.EqualTo(0), "Generation number should be reset to 0");
+        AssertAllCellsAreFalse(capturedGeneration, grid);
+    }
+
+    [Test]
+    public void ClearResetsGameStateAndStopsSimulation()
+    {
+        var grid = new Grid(3, 3);
+        var initialCells = grid.CreateRandomGeneration();
+        Generation capturedGeneration = null!;
+        int capturedGenerationNumber = -1;
+        double capturedMilliseconds = -1;
+        int generationBeforeClear = -1;
+        
+        var gaea = new Gaea(grid, new Rules(), initialCells, (genNum, gen, ms) =>
+        {
+            capturedGenerationNumber = genNum;
+            capturedGeneration = gen;
+            capturedMilliseconds = ms;
+            if (genNum > generationBeforeClear)
+                generationBeforeClear = genNum;
+        });
+
+        gaea.Run();
+        Task.Delay(50).Wait();
+        Assert.That(generationBeforeClear, Is.GreaterThan(0), "Generation should be greater than 0 before clear");
+
+        gaea.Clear();
+        Assert.That(capturedGenerationNumber, Is.EqualTo(0), "Generation number should be reset to 0");
+        Assert.That(capturedMilliseconds, Is.EqualTo(0.0), "Milliseconds should be 0 for cleared state");
+        AssertAllCellsAreFalse(capturedGeneration, grid);
+    }
+
 
 }
