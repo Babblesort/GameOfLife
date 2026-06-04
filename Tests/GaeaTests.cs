@@ -257,4 +257,35 @@ public class GaeaTests
         Assert.That(handlerCallCount, Is.EqualTo(1));
         Assert.That(capturedGenerationNumber, Is.EqualTo(1));
     }
+
+    [Test]
+    public async Task PauseStopsRunningSimulation()
+    {
+        var grid = new Grid();
+        var cells = grid.CreateRandomGeneration();
+        int latestGenerationNumber = 0;
+
+        var gaea = new Gaea(grid, new Rules(), cells, (genNum, _, _) =>
+        {
+            Interlocked.Exchange(ref latestGenerationNumber, genNum);
+        });
+
+        gaea.DelayMilliseconds = Gaea.MinDelayMilliseconds;
+        gaea.Run();
+        await Task.Delay(300);
+
+        gaea.Pause();
+        int genAfterPause = latestGenerationNumber;
+
+        await Task.Delay(300);
+
+        Assert.That(latestGenerationNumber, Is.EqualTo(genAfterPause));
+    }
+
+    [Test]
+    public void PauseDoesNothingWhenNoSimulationRunning()
+    {
+        var gaea = new Gaea(stubGrid, stubRules, stubGen, stubHandler);
+        Assert.That((Action)gaea.Pause, Throws.Nothing);
+    }
 }
