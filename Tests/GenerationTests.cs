@@ -186,4 +186,32 @@ public class GenerationTests
 
         Assert.That(nextGen, Is.EqualTo(expectedNextGen));
     }
+
+    [Test]
+    public void CopyToProducesRowMajorCopyIndependentOfSource()
+    {
+        // 2x3 generation with a known pattern
+        var generation = new Generation(2, 3);
+        generation[new RowCol(0, 0)] = true;
+        generation[new RowCol(0, 1)] = false;
+        generation[new RowCol(0, 2)] = true;
+        generation[new RowCol(1, 0)] = false;
+        generation[new RowCol(1, 1)] = true;
+        generation[new RowCol(1, 2)] = false;
+
+        var dest = new bool[6];
+        generation.CopyTo(dest);
+
+        // Verify row-major order: row 0 cols 0-2, then row 1 cols 0-2
+        Assert.That(dest[0], Is.True);
+        Assert.That(dest[1], Is.False);
+        Assert.That(dest[2], Is.True);
+        Assert.That(dest[3], Is.False);
+        Assert.That(dest[4], Is.True);
+        Assert.That(dest[5], Is.False);
+
+        // Verify the copy is independent: mutating dest does not affect the source
+        dest[0] = false;
+        Assert.That(generation[new RowCol(0, 0)], Is.True);
+    }
 }
