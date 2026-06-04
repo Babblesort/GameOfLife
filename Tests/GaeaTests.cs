@@ -125,14 +125,16 @@ public class GaeaTests
         int capturedGenerationNumber = -1;
         double capturedMilliseconds = -1;
         int generationBeforeClear = -1;
-        
+
         var gaea = new Gaea(grid, new Rules(), initialCells, (genNum, gen, ms) =>
         {
             capturedGenerationNumber = genNum;
             capturedGeneration = gen;
             capturedMilliseconds = ms;
             if (genNum > generationBeforeClear)
+            {
                 generationBeforeClear = genNum;
+            }
         });
 
         gaea.Run();
@@ -145,5 +147,114 @@ public class GaeaTests
         AssertAllCellsAreFalse(capturedGeneration, grid);
     }
 
+    [Test]
+    public async Task StepExecutesSingleGeneration()
+    {
+        // Diagonal pattern on 3x3 with wraparound: each live cell has 2 live neighbors,
+        // each dead cell has 3 live neighbors — default rules birth all dead and survive all live,
+        // so the expected next generation has every cell alive.
+        var grid = new Grid(3, 3);
+        var cells = grid.CreateEmptyGeneration();
+        cells[new RowCol(0, 0)] = true;
+        cells[new RowCol(1, 1)] = true;
+        cells[new RowCol(2, 2)] = true;
 
+        int handlerCallCount = 0;
+        int capturedGenerationNumber = -1;
+        Generation capturedGeneration = null!;
+        double capturedMilliseconds = -1;
+
+        var gaea = new Gaea(grid, new Rules(), cells, (genNum, gen, ms) =>
+        {
+            Interlocked.Increment(ref handlerCallCount);
+            capturedGenerationNumber = genNum;
+            capturedGeneration = gen;
+            capturedMilliseconds = ms;
+        });
+
+        gaea.Step();
+        await Task.Delay(100);
+
+        var expected = grid.CreateEmptyGeneration();
+        foreach (var cell in grid.Cells)
+        {
+            expected[cell] = true;
+        }
+
+        Assert.That(handlerCallCount, Is.EqualTo(1));
+        Assert.That(capturedGenerationNumber, Is.EqualTo(1));
+        Assert.That(capturedGeneration, Is.EqualTo(expected));
+        Assert.That(capturedMilliseconds, Is.GreaterThanOrEqualTo(0));
+    }
+
+    [Test]
+    public async Task StepCancelsRunningSimulation()
+    {
+        var grid = new Grid();
+        var cells = grid.CreateRandomGeneration();
+        int latestGenerationNumber = 0;
+
+        var gaea = new Gaea(grid, new Rules(), cells, (genNum, _, _) =>
+        {
+            Interlocked.Exchange(ref latestGenerationNumber, genNum);
+        });
+
+        gaea.DelayMilliseconds = Gaea.MinDelayMilliseconds;
+        gaea.Run();
+        await Task.Delay(300);
+
+        gaea.Step();
+        await Task.Delay(100);
+        int genAfterStep = latestGenerationNumber;
+
+        // Verify no further advancement after Step completes
+        await Task.Delay(300);
+
+        Assert.That(latestGenerationNumber, Is.EqualTo(genAfterStep));
+    }
+
+    [Test]
+    public async Task StepFiresStoppedEventOnExtinction()
+    {
+        // Single live cell with no neighbors dies under default rules (survive on 2 or 3)
+        var grid = new Grid(3, 3);
+        var cells = grid.CreateEmptyGeneration();
+        cells[new RowCol(1, 1)] = true;
+
+        bool stoppedFired = false;
+        Generation capturedGeneration = null!;
+
+        var gaea = new Gaea(grid, new Rules(), cells, (_, gen, _) =>
+        {
+            capturedGeneration = gen;
+        });
+        gaea.Stopped += () => stoppedFired = true;
+
+        gaea.Step();
+        await Task.Delay(100);
+
+        Assert.That(stoppedFired, Is.True);
+        Assert.That(capturedGeneration.IsExtinct, Is.True);
+    }
+
+    [Test]
+    public async Task StepWorksWithNoSimulationRunning()
+    {
+        var grid = new Grid(3, 3);
+        var cells = grid.CreateRandomGeneration();
+        int handlerCallCount = 0;
+        int capturedGenerationNumber = -1;
+
+        var gaea = new Gaea(grid, new Rules(), cells, (genNum, _, _) =>
+        {
+            Interlocked.Increment(ref handlerCallCount);
+            capturedGenerationNumber = genNum;
+        });
+
+        gaea.Step();
+        await Task.Delay(100);
+
+        Assert.That(handlerCallCount, Is.EqualTo(1));
+        Assert.That(capturedGenerationNumber, Is.EqualTo(1));
+    }
 }
