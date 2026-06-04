@@ -214,4 +214,46 @@ public class GenerationTests
         dest[0] = false;
         Assert.That(generation[new RowCol(0, 0)], Is.True);
     }
+
+    [Test]
+    public void EqualsReturnsTrueForIdenticalGenerations()
+    {
+        var a = new Generation(2, 2);
+        var b = new Generation(2, 2);
+        a[new RowCol(0, 0)] = true;
+        b[new RowCol(0, 0)] = true;
+        Assert.That(a.Equals(b), Is.True);
+    }
+
+    [Test]
+    public void EqualsReturnsFalseForNonGenerationType()
+    {
+        var generation = new Generation(2, 2);
+        Assert.That(generation.Equals("not a generation"), Is.False);
+    }
+
+    [Test]
+    public void EqualsReturnsFalseForNull()
+    {
+        var generation = new Generation(2, 2);
+        Assert.That(generation.Equals(null), Is.False);
+    }
+
+    [Test]
+    public void EqualsReturnsFalseForDifferentDimensions()
+    {
+        var a = new Generation(2, 3);
+        var b = new Generation(3, 2);
+        Assert.That(a.Equals(b), Is.False);
+    }
+
+    [Test]
+    public void EqualsReturnsFalseForDifferentCellData()
+    {
+        var a = new Generation(2, 2);
+        var b = new Generation(2, 2);
+        a[new RowCol(0, 0)] = true;
+        b[new RowCol(0, 0)] = false;
+        Assert.That(a.Equals(b), Is.False);
+    }
 }
