@@ -216,6 +216,16 @@ public class GenerationTests
     }
 
     [Test]
+    public void CopyToThrowsOnMismatchedDestinationLength()
+    {
+        var generation = new Generation(2, 3);
+        var tooShort = new bool[5];
+        var tooLong = new bool[7];
+        Assert.That((Action)(() => generation.CopyTo(tooShort)), Throws.TypeOf<ArgumentException>());
+        Assert.That((Action)(() => generation.CopyTo(tooLong)), Throws.TypeOf<ArgumentException>());
+    }
+
+    [Test]
     public void EqualsReturnsTrueForIdenticalGenerations()
     {
         var a = new Generation(2, 2);
@@ -255,5 +265,15 @@ public class GenerationTests
         a[new RowCol(0, 0)] = true;
         b[new RowCol(0, 0)] = false;
         Assert.That(a.Equals(b), Is.False);
+    }
+
+    [Test]
+    public void EqualGenerationsHaveEqualHashCodes()
+    {
+        var a = new Generation(2, 2);
+        var b = new Generation(2, 2);
+        a[new RowCol(0, 0)] = true;
+        b[new RowCol(0, 0)] = true;
+        Assert.That(a.GetHashCode(), Is.EqualTo(b.GetHashCode()));
     }
 }

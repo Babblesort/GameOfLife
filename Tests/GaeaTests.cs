@@ -288,4 +288,27 @@ public class GaeaTests
         var gaea = new Gaea(stubGrid, stubRules, stubGen, stubHandler);
         Assert.That((Action)gaea.Pause, Throws.Nothing);
     }
+
+    [Test]
+    public async Task RunFiresStoppedEventOnExtinction()
+    {
+        // Diagonal on 3x3 → all alive after step 1 (not extinct, enters run loop).
+        // All alive on 3x3 → all dead after step 2 (each cell has 8 neighbors,
+        // needs 2 or 3 to survive), triggering Stopped from within the run loop.
+        var grid = new Grid(3, 3);
+        var cells = grid.CreateEmptyGeneration();
+        cells[new RowCol(0, 0)] = true;
+        cells[new RowCol(1, 1)] = true;
+        cells[new RowCol(2, 2)] = true;
+
+        bool stoppedFired = false;
+        var gaea = new Gaea(grid, new Rules(), cells, (_, _, _) => { });
+        gaea.Stopped += () => stoppedFired = true;
+
+        gaea.DelayMilliseconds = Gaea.MinDelayMilliseconds;
+        gaea.Run();
+        await Task.Delay(200);
+
+        Assert.That(stoppedFired, Is.True);
+    }
 }

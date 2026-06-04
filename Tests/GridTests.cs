@@ -341,6 +341,57 @@ public class GridTests
         Assert.That(generation.Count, Is.EqualTo(4));
     }
 
+    [Test]
+    public void CreateGenerationFromCopiesSameSizeSource()
+    {
+        var grid = new Grid(2, 2);
+        var old = grid.CreateEmptyGeneration();
+        old[new RowCol(0, 0)] = true;
+        old[new RowCol(1, 1)] = true;
+
+        var result = grid.CreateGenerationFrom(old);
+
+        Assert.That(result[new RowCol(0, 0)], Is.True);
+        Assert.That(result[new RowCol(0, 1)], Is.False);
+        Assert.That(result[new RowCol(1, 0)], Is.False);
+        Assert.That(result[new RowCol(1, 1)], Is.True);
+    }
+
+    [Test]
+    public void CreateGenerationFromCropsLargerSource()
+    {
+        var oldGrid = new Grid(3, 3);
+        var old = oldGrid.CreateEmptyGeneration();
+        old[new RowCol(0, 0)] = true;
+        old[new RowCol(2, 2)] = true;
+
+        var grid = new Grid(2, 2);
+        var result = grid.CreateGenerationFrom(old);
+
+        Assert.That(result[new RowCol(0, 0)], Is.True);
+        Assert.That(result[new RowCol(0, 1)], Is.False);
+        Assert.That(result[new RowCol(1, 0)], Is.False);
+        Assert.That(result[new RowCol(1, 1)], Is.False);
+    }
+
+    [Test]
+    public void CreateGenerationFromPadsSmallerSource()
+    {
+        var oldGrid = new Grid(2, 2);
+        var old = oldGrid.CreateEmptyGeneration();
+        old[new RowCol(0, 0)] = true;
+        old[new RowCol(1, 1)] = true;
+
+        var grid = new Grid(3, 3);
+        var result = grid.CreateGenerationFrom(old);
+
+        Assert.That(result[new RowCol(0, 0)], Is.True);
+        Assert.That(result[new RowCol(1, 1)], Is.True);
+        Assert.That(result[new RowCol(0, 2)], Is.False);
+        Assert.That(result[new RowCol(2, 0)], Is.False);
+        Assert.That(result[new RowCol(2, 2)], Is.False);
+    }
+
     [Test, TestCaseSource(nameof(RowColExpectedNeighbors))]
     public void GridCanDeriveNeighborsForCell(RowCol cell, RowCol[] neighbors)
     {
