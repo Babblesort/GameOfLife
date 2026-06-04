@@ -358,6 +358,29 @@ public class GridTests
     }
 
     [Test]
+    public void CreateGenerationFromHandlesAsymmetricSourceDimensions()
+    {
+        // Old has more rows than the new grid but fewer cols (3x2 → 2x3).
+        // Rows and cols are min'd independently: copy region is 2x2,
+        // leaving the extra col in the new grid padded with false.
+        var oldGrid = new Grid(3, 2);
+        var old = oldGrid.CreateEmptyGeneration();
+        old[new RowCol(0, 0)] = true;
+        old[new RowCol(0, 1)] = true;
+        old[new RowCol(2, 0)] = true;
+
+        var grid = new Grid(2, 3);
+        var result = grid.CreateGenerationFrom(old);
+
+        Assert.That(result[new RowCol(0, 0)], Is.True);
+        Assert.That(result[new RowCol(0, 1)], Is.True);
+        Assert.That(result[new RowCol(0, 2)], Is.False);
+        Assert.That(result[new RowCol(1, 0)], Is.False);
+        Assert.That(result[new RowCol(1, 1)], Is.False);
+        Assert.That(result[new RowCol(1, 2)], Is.False);
+    }
+
+    [Test]
     public void CreateGenerationFromCropsLargerSource()
     {
         var oldGrid = new Grid(3, 3);

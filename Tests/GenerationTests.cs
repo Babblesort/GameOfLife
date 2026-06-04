@@ -9,14 +9,18 @@ public class GenerationTests
     [Test]
     public void ToCsv()
     {
-        var generation = new Generation(1, 2);
+        var generation = new Generation(2, 2);
         generation[new RowCol(0, 0)] = true;
         generation[new RowCol(0, 1)] = false;
+        generation[new RowCol(1, 0)] = false;
+        generation[new RowCol(1, 1)] = true;
 
         var csv = generation.ToCsv().ToList();
-        Assert.That(csv.Count, Is.EqualTo(2));
+        Assert.That(csv.Count, Is.EqualTo(4));
         Assert.That(csv[0], Is.EqualTo("0,0,True"));
         Assert.That(csv[1], Is.EqualTo("0,1,False"));
+        Assert.That(csv[2], Is.EqualTo("1,0,False"));
+        Assert.That(csv[3], Is.EqualTo("1,1,True"));
     }
 
     [Test]
