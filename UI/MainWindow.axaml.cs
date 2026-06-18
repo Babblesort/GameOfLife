@@ -187,12 +187,11 @@ public partial class MainWindow : Window
         _gaea!.Pause();
     }
 
-    private void UpdateGameVisualization(int generationNumber, Generation cells, double avgMs = 0.0)
+    private void UpdateGameVisualization(int generationNumber, Generation cells)
     {
         Dispatcher.UIThread.Post(() =>
         {
             lblGeneration.Text = generationNumber.ToString("N0");
-            lblMsPerGen.Text = avgMs > 0 ? $"{avgMs:F2}" : "";
             gamePanel.Cells = cells;
         });
     }

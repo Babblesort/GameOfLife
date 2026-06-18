@@ -1,8 +1,6 @@
-using System.Diagnostics;
-
 namespace Engine;
 
-public delegate void GenerationUpdateHandler(int generationNumber, Generation cells, double averageMilliseconds);
+public delegate void GenerationUpdateHandler(int generationNumber, Generation cells);
 
 public class Gaea(Grid grid, Rules rules, Generation cells, GenerationUpdateHandler update)
 {
@@ -18,8 +16,6 @@ public class Gaea(Grid grid, Rules rules, Generation cells, GenerationUpdateHand
     private int _generationNumber;
     private CancellationTokenSource? _tokenSource;
     private Task? _task;
-    private readonly double[] _millisecondRingBuffer = new double[60];
-    private int _msIndex;
 
     public int DelayMilliseconds
     {
@@ -40,7 +36,7 @@ public class Gaea(Grid grid, Rules rules, Generation cells, GenerationUpdateHand
     {
         CancelIfRunning();
         _generationNumber = 0;
-        UpdateVisualization(_generationNumber, Grid.CreateEmptyGeneration(), 0.0);
+        UpdateVisualization(_generationNumber, Grid.CreateEmptyGeneration());
     }
 
     private void PerformGenerationTask(bool runMode)
@@ -66,10 +62,9 @@ public class Gaea(Grid grid, Rules rules, Generation cells, GenerationUpdateHand
 
     private async Task ResolveGenerationsAsync(bool runMode, CancellationToken token)
     {
-        var startTimestamp = Stopwatch.GetTimestamp();
         Cells.ResolveNextGeneration(Rules, _spare);
         (Cells, _spare) = (_spare, Cells);
-        UpdateVisualization(++_generationNumber, Cells, RecordMilliseconds(Stopwatch.GetElapsedTime(startTimestamp).TotalMilliseconds));
+        UpdateVisualization(++_generationNumber, Cells);
 
         if (Cells.IsExtinct)
         {
@@ -83,10 +78,9 @@ public class Gaea(Grid grid, Rules rules, Generation cells, GenerationUpdateHand
         {
             try { await Task.Delay(DelayMilliseconds, token); }
             catch (OperationCanceledException) { return; }
-            startTimestamp = Stopwatch.GetTimestamp();
             Cells.ResolveNextGeneration(Rules, _spare);
             (Cells, _spare) = (_spare, Cells);
-            UpdateVisualization(++_generationNumber, Cells, RecordMilliseconds(Stopwatch.GetElapsedTime(startTimestamp).TotalMilliseconds));
+            UpdateVisualization(++_generationNumber, Cells);
 
             if (Cells.IsExtinct)
             {
@@ -96,16 +90,4 @@ public class Gaea(Grid grid, Rules rules, Generation cells, GenerationUpdateHand
         }
     }
 
-    private double RecordMilliseconds(double ms)
-    {
-        _millisecondRingBuffer[_msIndex % 60] = ms;
-        _msIndex++;
-        int count = Math.Min(_msIndex, 60);
-        double sum = 0;
-        for (int i = 0; i < count; i++)
-        {
-            sum += _millisecondRingBuffer[i];
-        }
-        return sum / count;
-    }
 }

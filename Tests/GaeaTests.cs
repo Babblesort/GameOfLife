@@ -9,7 +9,7 @@ public class GaeaTests
     private static readonly Grid stubGrid = new(1, 1);
     private static readonly Generation stubGen = new(1, 1);
     private static readonly Rules stubRules = new();
-    private static readonly GenerationUpdateHandler stubHandler = (_, _, _) => { };
+    private static readonly GenerationUpdateHandler stubHandler = (_, _) => { };
 
     private static void AssertAllCellsAreFalse(Generation generation, Grid grid)
     {
@@ -80,7 +80,7 @@ public class GaeaTests
         var grid = new Grid();
         var cells = grid.CreateRandomGeneration();
         int latestGeneration = 0;
-        var gaea = new Gaea(grid, stubRules, cells, (i, _, _) => Interlocked.Exchange(ref latestGeneration, i));
+        var gaea = new Gaea(grid, stubRules, cells, (i, _) => Interlocked.Exchange(ref latestGeneration, i));
 
         gaea.DelayMilliseconds = Gaea.MinDelayMilliseconds;
         gaea.Run();
@@ -105,7 +105,7 @@ public class GaeaTests
         Generation capturedGeneration = null!;
         int capturedGenerationNumber = -1;
         
-        var gaea = new Gaea(grid, new Rules(), initialCells, (genNum, gen, ms) =>
+        var gaea = new Gaea(grid, new Rules(), initialCells, (genNum, gen) =>
         {
             capturedGenerationNumber = genNum;
             capturedGeneration = gen;
@@ -123,14 +123,12 @@ public class GaeaTests
         var initialCells = grid.CreateRandomGeneration();
         Generation capturedGeneration = null!;
         int capturedGenerationNumber = -1;
-        double capturedMilliseconds = -1;
         int generationBeforeClear = -1;
 
-        var gaea = new Gaea(grid, new Rules(), initialCells, (genNum, gen, ms) =>
+        var gaea = new Gaea(grid, new Rules(), initialCells, (genNum, gen) =>
         {
             capturedGenerationNumber = genNum;
             capturedGeneration = gen;
-            capturedMilliseconds = ms;
             if (genNum > generationBeforeClear)
             {
                 generationBeforeClear = genNum;
@@ -143,7 +141,6 @@ public class GaeaTests
 
         gaea.Clear();
         Assert.That(capturedGenerationNumber, Is.EqualTo(0), "Generation number should be reset to 0");
-        Assert.That(capturedMilliseconds, Is.EqualTo(0.0), "Milliseconds should be 0 for cleared state");
         AssertAllCellsAreFalse(capturedGeneration, grid);
     }
 
@@ -162,14 +159,12 @@ public class GaeaTests
         int handlerCallCount = 0;
         int capturedGenerationNumber = -1;
         Generation capturedGeneration = null!;
-        double capturedMilliseconds = -1;
 
-        var gaea = new Gaea(grid, new Rules(), cells, (genNum, gen, ms) =>
+        var gaea = new Gaea(grid, new Rules(), cells, (genNum, gen) =>
         {
             Interlocked.Increment(ref handlerCallCount);
             capturedGenerationNumber = genNum;
             capturedGeneration = gen;
-            capturedMilliseconds = ms;
         });
 
         gaea.Step();
@@ -184,7 +179,6 @@ public class GaeaTests
         Assert.That(handlerCallCount, Is.EqualTo(1));
         Assert.That(capturedGenerationNumber, Is.EqualTo(1));
         Assert.That(capturedGeneration, Is.EqualTo(expected));
-        Assert.That(capturedMilliseconds, Is.GreaterThanOrEqualTo(0));
     }
 
     [Test]
@@ -194,7 +188,7 @@ public class GaeaTests
         var cells = grid.CreateRandomGeneration();
         int latestGenerationNumber = 0;
 
-        var gaea = new Gaea(grid, new Rules(), cells, (genNum, _, _) =>
+        var gaea = new Gaea(grid, new Rules(), cells, (genNum, _) =>
         {
             Interlocked.Exchange(ref latestGenerationNumber, genNum);
         });
@@ -224,7 +218,7 @@ public class GaeaTests
         bool stoppedFired = false;
         Generation capturedGeneration = null!;
 
-        var gaea = new Gaea(grid, new Rules(), cells, (_, gen, _) =>
+        var gaea = new Gaea(grid, new Rules(), cells, (_, gen) =>
         {
             capturedGeneration = gen;
         });
@@ -245,7 +239,7 @@ public class GaeaTests
         int handlerCallCount = 0;
         int capturedGenerationNumber = -1;
 
-        var gaea = new Gaea(grid, new Rules(), cells, (genNum, _, _) =>
+        var gaea = new Gaea(grid, new Rules(), cells, (genNum, _) =>
         {
             Interlocked.Increment(ref handlerCallCount);
             capturedGenerationNumber = genNum;
@@ -265,7 +259,7 @@ public class GaeaTests
         var cells = grid.CreateRandomGeneration();
         int latestGenerationNumber = 0;
 
-        var gaea = new Gaea(grid, new Rules(), cells, (genNum, _, _) =>
+        var gaea = new Gaea(grid, new Rules(), cells, (genNum, _) =>
         {
             Interlocked.Exchange(ref latestGenerationNumber, genNum);
         });
@@ -302,7 +296,7 @@ public class GaeaTests
         cells[new RowCol(2, 2)] = true;
 
         bool stoppedFired = false;
-        var gaea = new Gaea(grid, new Rules(), cells, (_, _, _) => { });
+        var gaea = new Gaea(grid, new Rules(), cells, (_, _) => { });
         gaea.Stopped += () => stoppedFired = true;
 
         gaea.DelayMilliseconds = Gaea.MinDelayMilliseconds;
