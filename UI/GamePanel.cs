@@ -10,40 +10,35 @@ namespace UI;
 
 public class GamePanel : Control
 {
-    private EngineGrid? _grid;
-    private Generation? _cells;
     private bool[] _snapshot = Array.Empty<bool>();
     private int _snapshotRows;
     private int _snapshotCols;
-    private VisualSettings _settings = new();
 
     public event EventHandler<CellClickedEventArgs>? GridCellClicked;
 
-    private int RowCount => _grid?.RowCount ?? 1;
-    private int ColCount => _grid?.ColCount ?? 1;
+    private int RowCount => Grid?.RowCount ?? 1;
+    private int ColCount => Grid?.ColCount ?? 1;
     private double CellHeight => (Bounds.Height - 5) / RowCount;
     private double CellWidth => (Bounds.Width - 5) / ColCount;
 
     public EngineGrid? Grid
     {
-        get => _grid;
+        get;
         set
         {
-            if (_grid != null)
-                _grid.PropertyChanged -= OnGridPropertyChanged;
-            _grid = value;
-            if (_grid != null)
-                _grid.PropertyChanged += OnGridPropertyChanged;
+            field?.PropertyChanged -= OnGridPropertyChanged;
+            field = value;
+            field?.PropertyChanged += OnGridPropertyChanged;
             InvalidateVisual();
         }
     }
 
     public Generation? Cells
     {
-        get => _cells;
+        get;
         set
         {
-            _cells = value;
+            field = value;
             if (value != null)
             {
                 if (_snapshot.Length != value.Count)
@@ -60,21 +55,21 @@ public class GamePanel : Control
 
     public VisualSettings Settings
     {
-        get => _settings;
-        set { _settings = value; InvalidateVisual(); }
-    }
+        get;
+        set { field = value; InvalidateVisual(); }
+    } = new();
 
     private void OnGridPropertyChanged(object? sender, PropertyChangedEventArgs e) =>
         InvalidateVisual();
 
     public override void Render(DrawingContext context)
     {
-        if (_grid == null) return;
+        if (Grid == null) return;
 
         context.FillRectangle(Brushes.Transparent, new Rect(Bounds.Size));
 
-        var gridLinePen = new Pen(new SolidColorBrush(_settings.GridLineColor), _settings.GridLineThickness);
-        var cellBrush   = new SolidColorBrush(_settings.CellColor);
+        var gridLinePen = new Pen(new SolidColorBrush(Settings.GridLineColor), Settings.GridLineThickness);
+        var cellBrush   = new SolidColorBrush(Settings.CellColor);
 
         var gridWidth  = ColCount * CellWidth;
         var gridHeight = RowCount * CellHeight;

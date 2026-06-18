@@ -16,7 +16,6 @@ public class Gaea(Grid grid, Rules rules, Generation cells, GenerationUpdateHand
     public const int DefaultDelayMilliseconds = 225;
     private Generation _spare = new(cells.Rows, cells.Cols);
     private int _generationNumber;
-    private int _delay = DefaultDelayMilliseconds;
     private CancellationTokenSource? _tokenSource;
     private Task? _task;
     private readonly double[] _millisecondRingBuffer = new double[60];
@@ -24,14 +23,14 @@ public class Gaea(Grid grid, Rules rules, Generation cells, GenerationUpdateHand
 
     public int DelayMilliseconds
     {
-        get => _delay;
+        get;
         set
         {
             ArgumentOutOfRangeException.ThrowIfLessThan(value, MinDelayMilliseconds);
             ArgumentOutOfRangeException.ThrowIfGreaterThan(value, MaxDelayMilliseconds);
-            _delay = value;
+            field = value;
         }
-    }
+    } = DefaultDelayMilliseconds;
 
     public void Run() => PerformGenerationTask(runMode: true);
     public void Step() => PerformGenerationTask(runMode: false);
@@ -82,7 +81,7 @@ public class Gaea(Grid grid, Rules rules, Generation cells, GenerationUpdateHand
 
         while (true)
         {
-            try { await Task.Delay(_delay, token); }
+            try { await Task.Delay(DelayMilliseconds, token); }
             catch (OperationCanceledException) { return; }
             startTimestamp = Stopwatch.GetTimestamp();
             Cells.ResolveNextGeneration(Rules, _spare);
