@@ -36,18 +36,39 @@ dotnet run --project UI
 | Visualization Settings | Cmd+, | Ctrl+, |
 | Exit | Cmd+Q | Ctrl+Q |
 
+## Slash Commands
+
+### View all TODOs
+
+See all outstanding TODOs in the codebase without leaving the terminal:
+
+**macOS / Linux:**
+```bash
+./todos
+```
+
+**Windows:**
+```cmd
+todos.bat
+```
+
+For more details, see [TODO_FINDER.md](./TODO_FINDER.md).
+
 ## Project structure
 
 ```
 GameOfLife/
-├── Engine/     # Platform-independent game logic
-├── UI/         # Avalonia desktop application
-└── Tests/      # NUnit test suite for the Engine
+├── Engine/        # Platform-independent game logic
+├── UI/            # Avalonia desktop application
+├── Tests/         # NUnit test suite for the Engine
+└── TodoCommand/   # CLI tool for finding TODOs
 ```
 
 **Engine** contains the core simulation: `Grid` manages dimensions and cell coordinates; `Generation` stores the cell state and computes the next generation; `Rules` encodes Conway's B3/S23 rules using a bitmask for O(1) lookup; `Gaea` drives the async simulation loop; `FileManager` handles saving and loading generations.
 
 **UI** is an Avalonia 12 desktop app using the Fluent theme. `GamePanel` is a custom `Control` that renders the grid with `DrawingContext`. `SettingsWindow` exposes color pickers for cells, grid lines, and border.
+
+**TodoCommand** is a console application that scans the codebase for TODO comments and displays them in a formatted table.
 
 ## Running the tests
 
