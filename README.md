@@ -1,3 +1,5 @@
+This is a test from Forge AI
+
 # Game of Life
 
 A desktop implementation of [Conway's Game of Life](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life) built with .NET 10 and Avalonia 12.
