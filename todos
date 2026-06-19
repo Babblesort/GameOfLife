@@ -1,0 +1,15 @@
+#!/bin/bash
+# Slash command to find all TODOs in the codebase
+# Usage: /todos [path]
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$SCRIPT_DIR"
+
+# Build the TodoCommand if not already built
+if [ ! -f "$PROJECT_ROOT/TodoCommand/bin/Release/net10.0/todos" ] && [ ! -f "$PROJECT_ROOT/TodoCommand/bin/Debug/net10.0/todos" ]; then
+    echo "Building TodoCommand..."
+    dotnet build "$PROJECT_ROOT/TodoCommand/TodoCommand.csproj" -c Release > /dev/null 2>&1
+fi
+
+# Run the command
+dotnet run --project "$PROJECT_ROOT/TodoCommand/TodoCommand.csproj" -- "${1:-.}"
