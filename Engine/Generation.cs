@@ -52,15 +52,7 @@ public class Generation(int rows, int cols)
                 int left = c == 0 ? Cols - 1 : c - 1;
                 int right = c == Cols - 1 ? 0 : c + 1;
 
-                int n = 0;
-                if (src[up * Cols + left]) { n++; }
-                if (src[up * Cols + c]) { n++; }
-                if (src[up * Cols + right]) { n++; }
-                if (src[r * Cols + left]) { n++; }
-                if (src[r * Cols + right]) { n++; }
-                if (src[down * Cols + left]) { n++; }
-                if (src[down * Cols + c]) { n++; }
-                if (src[down * Cols + right]) { n++; }
+                int n = CountLiveNeighbors(src, r, up, down, left, right, c);
 
                 bool alive = src[r * Cols + c];
                 dst[r * Cols + c] = alive
@@ -68,6 +60,24 @@ public class Generation(int rows, int cols)
                     : IsBitSet(rules.BirthMask, n);
             }
         }
+    }
+
+    /// <summary>
+    /// Counts the number of live neighbors for a cell at the given row and column indices.
+    /// Accounts for grid wrapping on all edges.
+    /// </summary>
+    private int CountLiveNeighbors(bool[] cells, int row, int up, int down, int left, int right, int col)
+    {
+        int count = 0;
+        if (cells[up * Cols + left]) { count++; }
+        if (cells[up * Cols + col]) { count++; }
+        if (cells[up * Cols + right]) { count++; }
+        if (cells[row * Cols + left]) { count++; }
+        if (cells[row * Cols + right]) { count++; }
+        if (cells[down * Cols + left]) { count++; }
+        if (cells[down * Cols + col]) { count++; }
+        if (cells[down * Cols + right]) { count++; }
+        return count;
     }
 
     private static bool IsBitSet(int mask, int neighborCount) => ((mask >> neighborCount) & 1) != 0;
