@@ -1,0 +1,31 @@
+The Game of Life
+
+In a grid of black and white,
+Where simple rules ignite,
+A universe unfolds its dance,
+Born from mathematics' glance.
+
+Each cell awaits its fate,
+Counting neighbors at the gate,
+Three to birth, two or three to stay,
+All others fade away.
+
+Gliders sail across the plane,
+Blinkers pulse in their refrain,
+Still lifes rest in perfect peace,
+While chaos finds release.
+
+From random seeds, patterns grow,
+Emergent beauty starts to show,
+Complex forms from simple laws,
+Life without a cause.
+
+Conway's vision, pure and bright,
+Proves that order springs from slight
+Rules that govern, cell by cell,
+Stories only time can tell.
+
+In this digital domain,
+Life and death in one campaign,
+A reminder, small but true:
+Simple rules make worlds anew.
